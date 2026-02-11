@@ -3,7 +3,16 @@ from bs4 import BeautifulSoup
 import re
 import time
 import random
+from urllib.parse import urlparse
 from config import Config
+
+def normalize_url(offer_link):
+  parsed = urlparse(offer_link)
+  path_parts = parsed.path.split("-")
+  job_id = path_parts[-1]
+  normalized_url = f"{parsed.scheme}://{parsed.netloc}/jobs/view/{job_id}"
+
+  return normalized_url
 
 def get_description(offer_link):
   try:
@@ -60,20 +69,21 @@ def extract_offers(linkedin_api):
         location = job.find('span', class_=re.compile("location")).get_text(strip=True)
         a_link = job.find('a', class_=re.compile("full-link"))
         link = a_link["href"] if a_link and a_link.has_attr("href") else ""
-        description = get_description(link) if link else ""
+        url_parsed = normalize_url(link)
+        description = get_description(url_parsed) if url_parsed else ""
 
         offer = {
           "title": title,
           "company": company,
           "location": location,
-          "link": link,
+          "link": url_parsed,
           "description": description
         }
 
         print(f"Titulo: {title}")
         print(f"Empresa: {company}")
         print(f"Ubicación: {location}")
-        print(f"Enlace: {link}")
+        print(f"Enlace: {url_parsed}")
         print(f"Descripción: {description}")
         print("-" * 50)
 
