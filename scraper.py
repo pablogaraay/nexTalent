@@ -5,6 +5,7 @@ import time
 import random
 from urllib.parse import urlparse
 from config import Config
+from dbConn import MongoManager
 
 def normalize_url(offer_link):
   parsed = urlparse(offer_link)
@@ -44,6 +45,8 @@ def get_description(offer_link):
   
 
 def extract_offers(linkedin_api):
+  db = MongoManager()
+  offers_array = []
   for keyword in Config.KEYWORDS:
     i = 0
     while True:
@@ -80,14 +83,14 @@ def extract_offers(linkedin_api):
           "description": description
         }
 
-        print(f"Titulo: {title}")
-        print(f"Empresa: {company}")
-        print(f"Ubicación: {location}")
-        print(f"Enlace: {url_parsed}")
-        print(f"Descripción: {description}")
+        print(offer)
         print("-" * 50)
-
+        offers_array.append(offer)
         print(f"Se han mostrado {i} ofertas para {keyword}\n")
+        
+        if i % 50 == 0:
+          db.insert_offers("offers", offers_array)
+          offers_array = []
 
         time.sleep(random.uniform(0,1))
       time.sleep(random.uniform(1,2))
