@@ -21,6 +21,7 @@ def extract_offers(linkedin_api):
       jobs = soup.find_all('li')
 
       if len(jobs) == 0:
+        print(f"No se han encontrado mas ofertas de {keyword}. Codigo de estado: {response.status_code}")
         break
 
       for job in jobs:
