@@ -3,14 +3,13 @@ from bs4 import BeautifulSoup
 import re
 import time
 import random
+from config import Config
 
 def extract_offers(linkedin_api):
-  keywords = ["Deloitte", "Accenture", "KPMG", "EY", "Capgemini", "PwC", "Indra", "NTT Data", "BCG", "Kyndryl"]
-  for keyword in keywords:
+  for keyword in Config.KEYWORDS:
     i = 0
     while True:
-      parameters = {'keywords': keyword, 'location': 'Spain', 'start': i}
-      
+      parameters = {'keywords': keyword, 'location': Config.LOCATION, 'start': i}
       try:
         response = requests.get(linkedin_api, params=parameters)
       except requests.exceptions.RequestException as e:
@@ -21,7 +20,7 @@ def extract_offers(linkedin_api):
       jobs = soup.find_all('li')
 
       if len(jobs) == 0:
-        print(f"No se han encontrado mas ofertas de {keyword}. Codigo de estado: {response.status_code}")
+        print(f"No se han encontrado mas ofertas de {keyword}. Codigo de estado: {response.status_code}\n")
         break
 
       for job in jobs:
@@ -40,7 +39,7 @@ def extract_offers(linkedin_api):
           "link": link
         }
 
-        print(f"Oferta {i}: {title}")
+        print(f"Titulo: {title}")
         print(f"Empresa: {company}")
         print(f"Ubicación: {location}")
         print(f"Enlace: {link}")
@@ -52,5 +51,4 @@ def extract_offers(linkedin_api):
       time.sleep(random.uniform(1,2))
 
 if __name__ == "__main__":
-  linkedin_api = "https://www.linkedin.com/jobs-guest/jobs/api/seeMoreJobPostings/search"
-  extract_offers(linkedin_api)
+  extract_offers(Config.LINKEDIN_API)
