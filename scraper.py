@@ -5,6 +5,35 @@ import time
 import random
 from config import Config
 
+def get_description(offer_link):
+  try:
+    response = requests.get(offer_link)
+  except requests.exceptions.RequestException as e:
+    print(f"Error al obtener la descripción de la oferta {offer_link}: {e}")
+    return ""
+
+  soup = BeautifulSoup(response.text, 'html.parser')
+  try:
+    description = soup.find('div', class_=re.compile("show-more-less-html__markup")).get_text(strip=True)
+    
+    try:
+      details_list = soup.find_all('li', class_=re.compile("description__job-criteria"))
+      details = ""
+      for detail in details_list:
+        title = detail.find('h3').get_text(strip=True)
+        value = detail.find('span').get_text(strip=True)
+        details += f"{title}: {value}\n"
+      info = description + "\n\n" + details
+      return info
+    
+    except AttributeError:
+      print(f"Error al obtener los detalles de la oferta {offer_link}")
+      return description
+  except AttributeError:
+    print(f"Error al obtener la descripcion de la oferta {offer_link}")
+    return ""
+  
+
 def extract_offers(linkedin_api):
   for keyword in Config.KEYWORDS:
     i = 0
@@ -31,18 +60,21 @@ def extract_offers(linkedin_api):
         location = job.find('span', class_=re.compile("location")).get_text(strip=True)
         a_link = job.find('a', class_=re.compile("full-link"))
         link = a_link["href"] if a_link and a_link.has_attr("href") else ""
+        description = get_description(link) if link else ""
 
         offer = {
           "title": title,
           "company": company,
           "location": location,
-          "link": link
+          "link": link,
+          "description": description
         }
 
         print(f"Titulo: {title}")
         print(f"Empresa: {company}")
         print(f"Ubicación: {location}")
         print(f"Enlace: {link}")
+        print(f"Descripción: {description}")
         print("-" * 50)
 
         print(f"Se han mostrado {i} ofertas para {keyword}\n")
