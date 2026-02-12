@@ -46,6 +46,7 @@ def get_description(offer_link):
 
 def extract_offers(linkedin_api):
   db = MongoManager()
+  db.verify_connection()
   offers_array = []
   for keyword in Config.KEYWORDS:
     i = 0
@@ -94,6 +95,10 @@ def extract_offers(linkedin_api):
 
         time.sleep(random.uniform(0,1))
       time.sleep(random.uniform(1,2))
+    
+  if offers_array:
+    db.insert_offers("offers", offers_array)
+    print("Se han insertado todas las ofertas")
 
 if __name__ == "__main__":
   extract_offers(Config.LINKEDIN_API)
