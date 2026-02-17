@@ -2,6 +2,7 @@ from config import Config
 from pymongo import MongoClient
 from pymongo.server_api import ServerApi
 from datetime import datetime, timezone
+from config import Config
 
 class MongoManager:
   def __init__(self):
@@ -40,7 +41,7 @@ class MongoManager:
 
   def create_indexes(self):
     try:
-      self.db["offers"].create_index([("url", 1)], unique=True)
-      print("Indice URL creado exitosamente para la coleccion offers")
+      self.db[Config.SCRAPED_COLL].create_index([("url", 1)], unique=True)
+      print(f"Indice URL creado exitosamente para la coleccion {Config.SCRAPED_COLL}")
     except Exception as e:
       print(f"Error al crear el indice: {e}")
