@@ -46,7 +46,6 @@ def get_description(offer_link):
 
 def extract_offers(linkedin_api):
   db = MongoManager()
-  db.verify_connection()
   offers_array = []
   for keyword in Config.KEYWORDS:
     i = 0
@@ -80,7 +79,7 @@ def extract_offers(linkedin_api):
           "title": title,
           "company": company,
           "location": location,
-          "link": url_parsed,
+          "url": url_parsed,
           "description": description
         }
 
@@ -90,14 +89,14 @@ def extract_offers(linkedin_api):
         print(f"Se han mostrado {i} ofertas para {keyword}\n")
         
         if i % 50 == 0:
-          db.insert_offers("offers", offers_array)
+          db.upsert_offers("offers", offers_array)
           offers_array = []
 
         time.sleep(random.uniform(0,1))
       time.sleep(random.uniform(1,2))
     
   if offers_array:
-    db.insert_offers("offers", offers_array)
+    db.upsert_offers("offers", offers_array)
     print("Se han insertado todas las ofertas")
 
 if __name__ == "__main__":
