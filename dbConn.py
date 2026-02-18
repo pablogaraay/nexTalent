@@ -1,5 +1,4 @@
-from config import Config
-from pymongo import MongoClient
+from pymongo import MongoClient, UpdateOne
 from pymongo.server_api import ServerApi
 from datetime import datetime, timezone
 from config import Config
@@ -38,6 +37,26 @@ class MongoManager:
         )
     except Exception as e:
       print(f"Error al actualizar las ofertas: {e}")
+
+  def upsert_bulk_offers(self, coll, offers_array):
+    ops = []
+    for offer in offers_array:
+      ops.append(
+        UpdateOne(
+          {"url": offer["url"]},
+          {
+            "$set": {"last_scraped": datetime.now(timezone.utc)},
+            "$setOnInsert": {**offer, "first_scraped": datetime.now(timezone.utc)}
+          },
+          upsert=True
+        )
+      )
+    try:
+      res = self.db[coll].bulk_write(ops, ordered=False)
+      print(f"Se han insertado {res.upserted_count} ofertas en la coleccion {coll}")
+      print(f"Se han actualizado {res.modified_count} ofertas en la coleccion {coll}")
+    except Exception as e:
+      print(f"Error al insertar las ofertas: {e}")
 
   def create_indexes(self):
     try:
