@@ -17,27 +17,6 @@ class MongoManager:
     except Exception as e:
       print(f"Servidor no disponible: {e}")
 
-  def insert_offers(self, coll, offers_array):
-    try:
-      self.db[coll].insert_many(offers_array)
-      print(f"Se han insertado {len(offers_array)} ofertas en la coleccion {coll}")
-    except Exception as e:
-      print(f"Error al insertar las ofertas: {e}")
-
-  def upsert_offers(self, coll, offers_array):
-    try:
-      for offer in offers_array:
-        self.db[coll].update_one(
-          {"url": offer["url"]},
-          {
-            "$set": {"last_scraped": datetime.now(timezone.utc)},
-            "$setOnInsert": {**offer, "first_scraped": datetime.now(timezone.utc)}
-          },
-          upsert=True
-        )
-    except Exception as e:
-      print(f"Error al actualizar las ofertas: {e}")
-
   def upsert_bulk_offers(self, coll, offers_array):
     ops = []
     for offer in offers_array:
