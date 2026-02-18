@@ -83,7 +83,7 @@ def extract_offers(linkedin_api):
           "description": description
         }
 
-        print(offer)
+        print(f'Titulo: {offer["title"]}\nEmpresa: {offer["company"]}\nUbicacion: {offer["location"]}\nURL: {offer["url"]}')
         print("-" * 50)
         offers_array.append(offer)
         print(f"Se han mostrado {i} ofertas para {keyword}\n")
