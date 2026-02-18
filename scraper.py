@@ -1,8 +1,5 @@
-import requests
+import requests, re, time, random
 from bs4 import BeautifulSoup
-import re
-import time
-import random
 from urllib.parse import urlparse
 from config import Config
 from dbConn import MongoManager
