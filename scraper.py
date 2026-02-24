@@ -95,6 +95,7 @@ def extract_offers(linkedin_api):
   if offers_array:
     db.upsert_bulk_offers(Config.SCRAPED_COLL, offers_array)
     print("Se han insertado/actualizado todas las ofertas")
+  db.close_connection()
 
 if __name__ == "__main__":
   extract_offers(Config.LINKEDIN_API)

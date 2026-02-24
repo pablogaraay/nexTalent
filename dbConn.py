@@ -43,3 +43,15 @@ class MongoManager:
       print(f"Indice URL creado exitosamente para la coleccion {Config.SCRAPED_COLL}")
     except Exception as e:
       print(f"Error al crear el indice: {e}")
+
+  def load_offers(self, coll):
+    try:
+      offers = list(self.db[coll].find())
+      return offers
+    except Exception as e:
+      print(f"Error al cargar las ofertas: {e}")
+
+  def close_connection(self):
+    self.client.close()
+    print("Conexion cerrada")
+      
