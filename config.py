@@ -13,3 +13,4 @@ class Config:
   MONGO_URI = os.getenv("MONGO_URI")
   DB_NAME = "nexTalent"
   SCRAPED_COLL = "offers"
+  STRUCTURED_COLL = "offers_structured"

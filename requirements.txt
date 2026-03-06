@@ -1,3 +1,4 @@
 requests==2.32.5
 beautifulsoup4==4.12.3
 pymongo==4.14.0
+pandas==3.0.1
