@@ -8,6 +8,7 @@ class DataWrangler:
     db = MongoManager()
     offers = db.load_offers(Config.SCRAPED_COLL)
     df = pd.DataFrame(offers)
+    db.close_connection()
     return df
 
   def check_empty_values(df):
@@ -30,7 +31,7 @@ class DataWrangler:
     print(rows)
  
   def structure_data(df):
-    print("Se renombran los campos description y location a campos raw y se estructura la localizacion")
+    print("Se renombran los campos description y location a campos raw, se estructura la localizacion y se elimina _id para evitar problemas de duplicados")
     df_structured = df.copy()
     df_structured = df_structured.rename(columns={"location": "location_raw", "description": "description_raw"})
     df_structured["location_num_parts"] = df_structured["location_raw"].astype(str).str.split(",").str.len()
@@ -51,9 +52,17 @@ class DataWrangler:
         df_structured["country"] = parts[col]
 
     df_structured["location_structured"] = df_structured["location_num_parts"] == 3
+
+    df_structured = df_structured.drop(columns=["_id"])
     
     return df_structured
 
+  def save_structured_data(df_structured):
+    print("Se guardan los datos estructurados en la coleccion offers_structured")
+    db = MongoManager()
+    offers_array = df_structured.to_dict(orient="records")
+    db.upsert_bulk_offers_structured(Config.STRUCTURED_COLL, offers_array)
+    db.close_connection()
 
 
     
@@ -62,3 +71,5 @@ if __name__ == "__main__":
   print(df.head(3))
   print(df.info())
   DataWrangler.check_empty_values(df)
+  df_structured = DataWrangler.structure_data(df)
+  DataWrangler.save_structured_data(df_structured)

@@ -17,15 +17,35 @@ class MongoManager:
     except Exception as e:
       print(f"Servidor no disponible: {e}")
 
-  def upsert_bulk_offers(self, coll, offers_array):
+  def upsert_bulk_offers_raw(self, coll, offers_array):
     ops = []
     for offer in offers_array:
       ops.append(
         UpdateOne(
           {"url": offer["url"]},
           {
-            "$set": {"last_scraped": datetime.now(timezone.utc)},
-            "$setOnInsert": {**offer, "first_scraped": datetime.now(timezone.utc)}
+            "$set": {**offer, "last_scraped": datetime.now(timezone.utc)},
+            "$setOnInsert": {"first_scraped": datetime.now(timezone.utc)}
+          },
+          upsert=True
+        )
+      )
+    try:
+      res = self.db[coll].bulk_write(ops, ordered=False)
+      print(f"Se han insertado {res.upserted_count} ofertas en la coleccion {coll}")
+      print(f"Se han actualizado {res.modified_count} ofertas en la coleccion {coll}")
+    except Exception as e:
+      print(f"Error al insertar las ofertas: {e}")
+
+  def upsert_bulk_offers_structured(self, coll, offers_array):
+    ops = []
+    for offer in offers_array:
+      ops.append(
+        UpdateOne(
+          {"url": offer["url"]},
+          {
+            "$set": {**offer, "last_updated": datetime.now(timezone.utc)},
+            "$setOnInsert": {"first_structured": datetime.now(timezone.utc)}
           },
           upsert=True
         )
@@ -41,6 +61,9 @@ class MongoManager:
     try:
       self.db[Config.SCRAPED_COLL].create_index([("url", 1)], unique=True)
       print(f"Indice URL creado exitosamente para la coleccion {Config.SCRAPED_COLL}")
+
+      self.db[Config.STRUCTURED_COLL].create_index([("url", 1)], unique=True)
+      print(f"Indice URL creado exitosamente para la coleccion {Config.STRUCTURED_COLL}")
     except Exception as e:
       print(f"Error al crear el indice: {e}")
 
