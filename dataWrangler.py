@@ -38,20 +38,22 @@ class DataWrangler:
 
     parts = df_structured["location_raw"].astype(str).str.split(",", expand=True)
 
+    df_structured["location_structured"] = df_structured["location_num_parts"] == 3
+
     df_structured["city"] = None
     df_structured["region"] = None
     df_structured["country"] = None
 
     for col in parts.columns:
       parts[col] = parts[col].str.strip()
-      if col == 0:
-        df_structured["city"] = parts[col]
-      elif col == 1:
-        df_structured["region"] = parts[col]
-      elif col == 2:
-        df_structured["country"] = parts[col]
-
-    df_structured["location_structured"] = df_structured["location_num_parts"] == 3
+    
+    location_structured = df_structured["location_structured"]
+    if 0 in parts.columns:
+      df_structured.loc[location_structured, "city"] = parts.loc[0]
+    if 1 in parts.columns:
+      df_structured.loc[location_structured, "region"] = parts.loc[1]
+    if 2 in parts.columns:
+      df_structured.loc[location_structured, "country"] = parts.loc[2]
 
     df_structured = df_structured.drop(columns=["_id"])
     
