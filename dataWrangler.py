@@ -64,12 +64,27 @@ class DataWrangler:
     db.upsert_bulk_offers_structured(Config.STRUCTURED_COLL, offers_array)
     db.close_connection()
 
+  def is_non_empty_text(series):
+    return series.notna() & (series.astype(str).str.strip() != "") & (series.astype(str).str.strip() != '""')
+  
+  def apply_cleaning_rules(df_structured):
+    df_structured_copy = df_structured.copy()
+    valid_urls = DataWrangler.is_non_empty_text(df_structured_copy["url"])
+    valid_titles = DataWrangler.is_non_empty_text(df_structured_copy["title"])
+    valid_companies = DataWrangler.is_non_empty_text(df_structured_copy["company"])
+    valid_locations = DataWrangler.is_non_empty_text(df_structured_copy["location_raw"])
+    valid_descriptions = DataWrangler.is_non_empty_text(df_structured_copy["description_raw"])
 
-    
+    valid_offers = valid_urls & valid_titles & valid_companies & valid_locations & valid_descriptions
+    df_cleaned = df_structured_copy[valid_offers].copy()
+    df_invalid = df_structured_copy[~valid_offers].copy()
+    return df_cleaned, df_invalid
+
+
 if __name__ == "__main__":
   df = DataWrangler.get_df()
-  print(df.head(3))
-  print(df.info())
   DataWrangler.check_empty_values(df)
   df_structured = DataWrangler.structure_data(df)
   DataWrangler.save_structured_data(df_structured)
+  df_cleaned, df_invalid = DataWrangler.apply_cleaning_rules(df_structured)
+  print(df_invalid.head(10))
