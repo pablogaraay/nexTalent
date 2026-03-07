@@ -14,3 +14,4 @@ class Config:
   DB_NAME = "nexTalent"
   SCRAPED_COLL = "offers"
   STRUCTURED_COLL = "offers_structured"
+  CLEANED_COLL = "offers_cleaned"

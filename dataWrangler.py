@@ -1,6 +1,7 @@
 from dbConn import MongoManager
 from config import Config
 import pandas as pd
+import re
 
 class DataWrangler:
 
@@ -78,15 +79,41 @@ class DataWrangler:
     valid_descriptions = DataWrangler.is_non_empty_text(df_structured_copy["description_raw"])
 
     valid_offers = valid_urls & valid_titles & valid_companies & valid_locations & valid_descriptions
-    df_cleaned = df_structured_copy[valid_offers].copy()
+    df_valid = df_structured_copy[valid_offers].copy()
     df_invalid = df_structured_copy[~valid_offers].copy()
-    return df_cleaned, df_invalid
+    return df_valid, df_invalid
 
+  def clean_description(df_valid):
+    df_cleaned = df_valid.copy()
+    df_cleaned["description_clean"] = (
+      df_cleaned["description_raw"]
+      .str.replace(r"\r\n", "\n", regex=True)
+      .str.replace(r"\r", "\n", regex=True)
+      .str.replace(r"\t", " ", regex=True)
+      .str.replace(r"\n+", "\n", regex=True)
+      .str.replace(r"[ ]+", " ", regex=True)
+      .str.replace(
+      r"([a-záéíóúñ](?=[A-ZÁÉÍÓÚÑ])|[.!?](?=[A-ZÁÉÍÓÚÑa-záéíóúñ]))",
+      r"\1 ",
+      regex=True
+      )
+      .str.strip()
+    )
+    return df_cleaned
+  
+  def save_cleaned_data(df_cleaned):
+    print("Se guardan los datos limpios en la coleccion offers_cleaned")
+    db = MongoManager()
+    offers_array = df_cleaned.to_dict(orient="records")
+    db.upsert_bulk_offers_cleaned(Config.CLEANED_COLL, offers_array)
+    db.close_connection()
 
 if __name__ == "__main__":
   df = DataWrangler.get_df()
   DataWrangler.check_empty_values(df)
   df_structured = DataWrangler.structure_data(df)
   DataWrangler.save_structured_data(df_structured)
-  df_cleaned, df_invalid = DataWrangler.apply_cleaning_rules(df_structured)
+  df_valid, df_invalid = DataWrangler.apply_cleaning_rules(df_structured)
   print(df_invalid.head(10))
+  df_cleaned = DataWrangler.clean_description(df_valid)
+  DataWrangler.save_cleaned_data(df_cleaned)
