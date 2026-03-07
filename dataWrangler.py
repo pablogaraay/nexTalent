@@ -1,18 +1,17 @@
 from dbConn import MongoManager
 from config import Config
 import pandas as pd
-import re
 
 class DataWrangler:
 
-  def get_df():
+  def get_df(self):
     db = MongoManager()
     offers = db.load_offers(Config.SCRAPED_COLL)
     df = pd.DataFrame(offers)
     db.close_connection()
     return df
 
-  def check_empty_values(df):
+  def check_empty_values(self, df):
     print("Se comprueban las campos con valores nulos, dobles comillas o vacios")
     rows = []
 
@@ -31,7 +30,7 @@ class DataWrangler:
       })
     print(rows)
  
-  def structure_data(df):
+  def structure_data(self, df):
     print("Se renombran los campos description y location a campos raw, se estructura la localizacion y se elimina _id para evitar problemas de duplicados")
     df_structured = df.copy()
     df_structured = df_structured.rename(columns={"location": "location_raw", "description": "description_raw"})
@@ -60,30 +59,30 @@ class DataWrangler:
     
     return df_structured
 
-  def save_structured_data(df_structured):
+  def save_structured_data(self, df_structured):
     print("Se guardan los datos estructurados en la coleccion offers_structured")
     db = MongoManager()
     offers_array = df_structured.to_dict(orient="records")
     db.upsert_bulk_offers_structured(Config.STRUCTURED_COLL, offers_array)
     db.close_connection()
 
-  def is_non_empty_text(series):
+  def is_non_empty_text(self, series):
     return series.notna() & (series.astype(str).str.strip() != "") & (series.astype(str).str.strip() != '""')
   
-  def apply_cleaning_rules(df_structured):
+  def apply_cleaning_rules(self, df_structured):
     df_structured_copy = df_structured.copy()
-    valid_urls = DataWrangler.is_non_empty_text(df_structured_copy["url"])
-    valid_titles = DataWrangler.is_non_empty_text(df_structured_copy["title"])
-    valid_companies = DataWrangler.is_non_empty_text(df_structured_copy["company"])
-    valid_locations = DataWrangler.is_non_empty_text(df_structured_copy["location_raw"])
-    valid_descriptions = DataWrangler.is_non_empty_text(df_structured_copy["description_raw"])
+    valid_urls = self.is_non_empty_text(df_structured_copy["url"])
+    valid_titles = self.is_non_empty_text(df_structured_copy["title"])
+    valid_companies = self.is_non_empty_text(df_structured_copy["company"])
+    valid_locations = self.is_non_empty_text(df_structured_copy["location_raw"])
+    valid_descriptions = self.is_non_empty_text(df_structured_copy["description_raw"])
 
     valid_offers = valid_urls & valid_titles & valid_companies & valid_locations & valid_descriptions
     df_valid = df_structured_copy[valid_offers].copy()
     df_invalid = df_structured_copy[~valid_offers].copy()
     return df_valid, df_invalid
 
-  def clean_description(df_valid):
+  def clean_description(self, df_valid):
     df_cleaned = df_valid.copy()
     df_cleaned["description_clean"] = (
       df_cleaned["description_raw"]
@@ -101,7 +100,7 @@ class DataWrangler:
     )
     return df_cleaned
   
-  def save_cleaned_data(df_cleaned):
+  def save_cleaned_data(self, df_cleaned):
     print("Se guardan los datos limpios en la coleccion offers_cleaned")
     db = MongoManager()
     offers_array = df_cleaned.to_dict(orient="records")
@@ -109,11 +108,12 @@ class DataWrangler:
     db.close_connection()
 
 if __name__ == "__main__":
-  df = DataWrangler.get_df()
-  DataWrangler.check_empty_values(df)
-  df_structured = DataWrangler.structure_data(df)
-  DataWrangler.save_structured_data(df_structured)
-  df_valid, df_invalid = DataWrangler.apply_cleaning_rules(df_structured)
+  dw = DataWrangler()
+  df = dw.get_df()
+  dw.check_empty_values(df)
+  df_structured = dw.structure_data(df)
+  dw.save_structured_data(df_structured)
+  df_valid, df_invalid = dw.apply_cleaning_rules(df_structured)
   print(df_invalid.head(10))
-  df_cleaned = DataWrangler.clean_description(df_valid)
-  DataWrangler.save_cleaned_data(df_cleaned)
+  df_cleaned = dw.clean_description(df_valid)
+  dw.save_cleaned_data(df_cleaned)
