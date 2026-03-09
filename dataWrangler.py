@@ -49,11 +49,11 @@ class DataWrangler:
     
     location_structured = df_structured["location_structured"]
     if 0 in parts.columns:
-      df_structured.loc[location_structured, "city"] = parts.loc[0]
+      df_structured.loc[location_structured, "city"] = parts[0]
     if 1 in parts.columns:
-      df_structured.loc[location_structured, "region"] = parts.loc[1]
+      df_structured.loc[location_structured, "region"] = parts[1]
     if 2 in parts.columns:
-      df_structured.loc[location_structured, "country"] = parts.loc[2]
+      df_structured.loc[location_structured, "country"] = parts[2]
 
     df_structured = df_structured.drop(columns=["_id"])
     
@@ -69,8 +69,8 @@ class DataWrangler:
   def is_non_empty_text(self, series):
     return series.notna() & (series.astype(str).str.strip() != "") & (series.astype(str).str.strip() != '""')
   
-  def apply_cleaning_rules(self, df_structured):
-    df_structured_copy = df_structured.copy()
+  def filter_valid_offers(self, df_company_cleaned):
+    df_structured_copy = df_company_cleaned.copy()
     valid_urls = self.is_non_empty_text(df_structured_copy["url"])
     valid_titles = self.is_non_empty_text(df_structured_copy["title"])
     valid_companies = self.is_non_empty_text(df_structured_copy["company"])
@@ -82,8 +82,15 @@ class DataWrangler:
     df_invalid = df_structured_copy[~valid_offers].copy()
     return df_valid, df_invalid
 
-  def clean_description(self, df_valid):
-    df_cleaned = df_valid.copy()
+  def filter_company_by_kw(self, df_valid):
+    keywords = Config.KEYWORDS
+    pattern = "|".join(keywords)
+    df_company_cleaned = df_valid[df_valid["company"].str.contains(pattern, case=False, na=False)].copy()
+    return df_company_cleaned
+  
+
+  def clean_description(self, df_company_cleaned):
+    df_cleaned = df_company_cleaned.copy()
     df_cleaned["description_clean"] = (
       df_cleaned["description_raw"]
       .str.replace(r"\r\n", "\n", regex=True)
@@ -113,7 +120,8 @@ if __name__ == "__main__":
   dw.check_empty_values(df)
   df_structured = dw.structure_data(df)
   dw.save_structured_data(df_structured)
-  df_valid, df_invalid = dw.apply_cleaning_rules(df_structured)
+  df_valid, df_invalid = dw.filter_valid_offers(df_structured)
   print(df_invalid.head(10))
-  df_cleaned = dw.clean_description(df_valid)
+  df_company_cleaned = dw.filter_company_by_kw(df_valid)
+  df_cleaned = dw.clean_description(df_company_cleaned)
   dw.save_cleaned_data(df_cleaned)
