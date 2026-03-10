@@ -1,4 +1,4 @@
-name: Run LinkedIn Scraper
+name: Run LinkedIn Scraper & Prepare Data
 
 on:
   schedule:
