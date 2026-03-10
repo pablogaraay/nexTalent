@@ -76,6 +76,26 @@ class MongoManager:
       print(f"Se han actualizado {res.modified_count} ofertas en la coleccion {coll}")
     except Exception as e:
       print(f"Error al insertar las ofertas: {e}")
+  
+  def upsert_bulk_offers_llm(self, coll, offers_array):
+    ops = []
+    for offer in offers_array:
+      ops.append(
+        UpdateOne(
+          {"url": offer["url"]},
+          {
+            "$set": {**offer, "last_llm": datetime.now(timezone.utc)},
+            "$setOnInsert": {"first_llm": datetime.now(timezone.utc)}
+          },
+          upsert=True
+        )
+      )
+    try:
+      res = self.db[coll].bulk_write(ops, ordered=False)
+      print(f"Se han insertado {res.upserted_count} ofertas en la coleccion {coll}")
+      print(f"Se han actualizado {res.modified_count} ofertas en la coleccion {coll}")
+    except Exception as e:
+      print(f"Error al insertar las ofertas: {e}")
 
   def create_indexes(self):
     try:
@@ -87,7 +107,7 @@ class MongoManager:
 
       self.db[Config.CLEANED_COLL].create_index([("url", 1)], unique=True)
       print(f"Indice URL creado exitosamente para la coleccion {Config.CLEANED_COLL}")
-      
+
     except Exception as e:
       print(f"Error al crear el indice: {e}")
 
@@ -97,6 +117,14 @@ class MongoManager:
       return offers
     except Exception as e:
       print(f"Error al cargar las ofertas: {e}")
+
+  def load_offers_batch(self, coll, batch_size, skip=0):
+    try:
+      batch_offers = list(self.db[coll].find().sort("_id", 1).limit(batch_size).skip(skip))
+      skip += batch_size
+      return batch_offers
+    except Exception as e:
+      print(f"Error al cargar el lote de ofertas: {e}")
 
   def close_connection(self):
     self.client.close()
