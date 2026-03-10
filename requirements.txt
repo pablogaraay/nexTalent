@@ -3,3 +3,4 @@ beautifulsoup4==4.12.3
 pymongo==4.14.0
 pandas==3.0.1
 ollama==0.6.0
+python-dotenv==1.0.0
