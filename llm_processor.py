@@ -2,7 +2,7 @@ from dbConn import MongoManager
 from config import Config
 import schemas
 import json
-from groq import Groq
+from groq import Groq, RateLimitError
 import time
 
 class LLMProcessor:
@@ -175,7 +175,7 @@ class LLMProcessor:
           ],
           stream = False,
           temperature=0.0,
-          max_completion_tokens=4000,
+          max_completion_tokens=8000,
           response_format = {
             "type": "json_schema",
             "json_schema": {
@@ -192,28 +192,35 @@ class LLMProcessor:
         return parsed_json.get("ofertas", [])
 
       except RateLimitError as e:
-        headers = e.response.headers if hasattr(e, 'response') else {}
+        headers = e.response.headers
         remaining_requests = headers.get('x-ratelimit-remaining-requests')
         
         if remaining_requests == '0':
-          print("ALCANZADO EL LÍMITE DIARIO DE PETICIONES (RPD)")
-          print("El script se detendrá ahora.")
-          exit(1)
+            print("CUOTA DIARIA AGOTADA (RPD)")
+            print("Se han consumido todas las peticiones permitidas para hoy.")
+            exit(1)
 
         retry_after = headers.get('retry-after')
         reset_tokens = headers.get('x-ratelimit-reset-tokens')
         
+        wait_time = 0
         if retry_after:
             wait_time = float(retry_after)
-            print(f"\nLímite por minuto. La cabecera 'retry-after' pide esperar {wait_time}s... (Intento {attempt + 1}/{retries})")
         elif reset_tokens:
-              wait_time = float(reset_tokens.replace('s', ''))
-              print(f"\nLímite por minuto. La cabecera 'reset-tokens' pide esperar {wait_time}s...")
+            wait_time = float(reset_tokens.replace('s', ''))
+
+        if wait_time > 120:
+            print(f"La API solicita esperar {wait_time/60:.2f} minutos.")
+            exit(1)
+        
+        if wait_time > 0:
+            print(f"Límite por minuto. Esperando {wait_time}s... (Intento {attempt + 1}/{retries})")
+            time.sleep(wait_time)
         else:
-            wait_time = (attempt + 1) * 5 
-            print(f"\nLímite por minuto alcanzado. Esperando {wait_time}s de seguridad...")
-            
-        time.sleep(wait_time)
+            wait_time = (attempt + 1) * 10
+            print(f"Cabeceras no encontradas. Esperando {wait_time}s...")
+            time.sleep(wait_time)
+
     return []
   
   def merge_results(self, cleaned_offers, llm_results):
