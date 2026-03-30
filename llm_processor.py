@@ -2,13 +2,16 @@ from dbConn import MongoManager
 from config import Config
 import schemas
 import json
+from groq import Groq
+import time
 
 class LLMProcessor:
   
-  def __init__(self, provider="ollama", model="qwen2.5:3b"):
+  def __init__(self, provider="groq", model="openai/gpt-oss-20b"):
     self.db = MongoManager()
     self.provider = provider
     self.model = model
+    self.client = Groq(api_key=Config.GROQ_API_KEY)
 
   def prepare_batch(self,batch):
     fields_required = []
@@ -22,54 +25,196 @@ class LLMProcessor:
     return fields_required
     
   def build_prompts(self, json_batch):
-    system_prompt = (
-      "Extrae información de ofertas de empleo.\n"
-      "Si un dato no aparece claramente, deja '' o [].\n\n"
-      "Devuelve un único array JSON global para todo el lote.\n"
-      "No devuelvas un array separado por cada oferta.\n"
-      "Cada oferta debe corresponder a un único objeto dentro del mismo array final.\n\n"
+    system_prompt = """
+      1. CONTEXTO
 
-      "Reglas:\n"
-      "- No puede haber campos con información duplicada. Sin repeticiones dentro de una misma lista\n"
-      "- Separar claramente las hard skills de las soft skills y de las herramientas.\n"
-      
-      "Criterios:\n"
-      "- hard_skills_raw: conocimientos técnicos, metodologías, certificaciones e idiomas profesionales requeridos.\n"
-      "- soft_skills_raw: competencias personales o interpersonales requeridas.\n"
-      "- tools: herramientas, software, plataformas o tecnologías concretas requeridas.\n"
-      "- seniority: usa solo 'practicas', 'beca', 'junior', 'mid', 'senior', 'lead', 'manager' o 'director' si hay evidencia suficiente; si no, ''.\n"
-      "- work_modality: usa 'presencial', 'remoto' o 'hibrido' solo si aparece claramente; si no, ''.\n"
-      "- employment_type: tipo de jornada o relación laboral solo si aparece claramente; si no, ''.\n"
-    )
+      Eres un experto en extracción de información estructurada a partir de ofertas de empleo.
+      Tu tarea consiste en analizar el título y la descripción de varias ofertas de trabajo y extraer determinados campos de forma precisa, consistente y sin inventar información.
+
+      2. INSTRUCCIONES
+
+      Debes extraer, para cada oferta del lote, los siguientes campos:
+
+      - url
+      - hard_skills_raw
+      - soft_skills_raw
+      - tools_raw
+      - seniority_raw
+      - work_modality_raw
+      - employment_type_raw
+
+      Debes analizar únicamente la información contenida en el título y la descripción de cada oferta.
+
+      Criterios de extracción:
+
+      - hard_skills_raw: conocimientos técnicos, metodologías, certificaciones, técnicas e idiomas profesionales requeridos.
+        No incluyas aquí software, plataformas, librerías o herramientas concretas si deben ir en tools_raw.
+
+      - soft_skills_raw: competencias personales o interpersonales requeridas.
+
+      - tools_raw: herramientas, software, plataformas, frameworks, librerías o tecnologías concretas requeridas.
+
+      - seniority_raw: usa solo uno de estos valores si hay evidencia suficiente:
+        'practicas', 'beca', 'junior', 'mid', 'senior', 'lead', 'manager', 'director'
+        Si no hay evidencia clara, devuelve ''.
+
+      - work_modality_raw: usa solo 'presencial', 'remoto' o 'hibrido' si aparece claramente.
+        Si no aparece de forma clara, devuelve ''.
+
+      - employment_type_raw: indica el tipo de jornada o relación laboral solo si aparece claramente.
+        Si no aparece de forma clara, devuelve ''.
+
+      3. FORMATO DE SALIDA
+
+      Devuelve únicamente un objeto JSON válido con esta estructura exacta:
+
+      {
+        "ofertas": [
+          {
+            "url": "",
+            "hard_skills_raw": [],
+            "soft_skills_raw": [],
+            "tools_raw": [],
+            "seniority_raw": "",
+            "work_modality_raw": "",
+            "employment_type_raw": ""
+          }
+        ]
+      }
+
+      Reglas del formato:
+      - La raíz debe ser un objeto JSON, no un array.
+      - La clave principal debe ser exactamente "ofertas".
+      - El valor de "ofertas" debe ser un array con un objeto por cada oferta del lote.
+      - No devuelvas texto adicional.
+      - No devuelvas explicaciones.
+      - No devuelvas comentarios.
+      - No devuelvas markdown.
+      - No devuelvas bloques de código.
+
+      4. EJEMPLOS
+
+      Ejemplo 1
+
+      Input:
+      Título: Data Analyst Junior
+      Descripción: Buscamos perfil con experiencia en SQL, Power BI y Excel. Se valorará capacidad analítica, comunicación y trabajo en equipo. Modalidad híbrida. Contrato indefinido.
+      URL: https://example.com/job1
+
+      Output:
+      {
+        "ofertas": [
+          {
+            "url": "https://example.com/job1",
+            "hard_skills_raw": ["SQL"],
+            "soft_skills_raw": ["capacidad analítica", "comunicación", "trabajo en equipo"],
+            "tools_raw": ["Power BI", "Excel"],
+            "seniority_raw": "junior",
+            "work_modality_raw": "hibrido",
+            "employment_type_raw": "contrato indefinido"
+          }
+        ]
+      }
+
+      Ejemplo 2
+
+      Input:
+      Título: Machine Learning Engineer
+      Descripción: Se requiere experiencia con Python, TensorFlow, MLOps y despliegue de modelos. Se valorará autonomía y proactividad.
+      URL: https://example.com/job2
+
+      Output:
+      {
+        "ofertas": [
+          {
+            "url": "https://example.com/job2",
+            "hard_skills_raw": ["Python", "MLOps", "despliegue de modelos"],
+            "soft_skills_raw": ["autonomía", "proactividad"],
+            "tools_raw": ["TensorFlow"],
+            "seniority_raw": "",
+            "work_modality_raw": "",
+            "employment_type_raw": ""
+          }
+        ]
+      }
+
+      5. RESTRICCIONES
+
+      - Si un dato no aparece claramente, deja '' o [] según corresponda.
+      - No inventes información.
+      - No deduzcas seniority, modalidad o tipo de contrato si no hay evidencia suficiente.
+      - No repitas elementos dentro de una misma lista.
+      - No puede haber información duplicada entre campos si pertenece claramente a otra categoría.
+      - Separa claramente hard_skills_raw, soft_skills_raw y tools_raw.
+      - Cada oferta debe aparecer una sola vez dentro de "ofertas".
+      - Conserva siempre la misma url de entrada en cada resultado.
+
+      Ahora procesa el lote de ofertas que se proporciona a continuación.
+      """
+
     user_prompt = (
       "Analiza el siguiente lote de ofertas. "
-      "Devuelve un único array JSON que contenga un objeto por cada oferta del lote, "
-      "conservando siempre la misma 'url' en cada resultado.\n\n"
+      "Devuelve un único objeto JSON con la clave 'ofertas', "
+      "donde 'ofertas' sea un array con un objeto por cada oferta del lote. "
+      "Conserva siempre la misma 'url' en cada resultado.\n\n"
       f"{json.dumps(json_batch, ensure_ascii=False, indent=2)}"
     )
     return system_prompt, user_prompt
   
-  def call_model(self, system_prompt, user_prompt):
-    if self.provider == "ollama":
-      from ollama import chat
-      print("\nLlamando al modelo...")
-      response = chat(
-        self.model,
-        messages=[
-          {"role": "system", "content": system_prompt},
-          {"role": "user", "content": user_prompt}
-        ],
-        stream=True,
-        format=schemas.build_extraction_schema(Config.BATCH_SIZE),
-        options={"temperature": 0.2}
-      )
-      output = ""
-      for chunk in response:
-        text = chunk["message"]["content"]
-        print(text, end='', flush=True)
-        output += text
-    
-    return json.loads(output)
+  def call_model(self, system_prompt, user_prompt, retries=3):
+    print(f"\nLlamando al modelo {self.provider} - {self.model}...")
+    output_schema = schemas.build_extraction_schema()
+
+    for attempt in range(retries):
+      try:
+        response = self.client.chat.completions.create(
+          model = self.model,
+          messages = [
+            {"role": "system", "content": system_prompt},
+            {"role": "user", "content": user_prompt}
+          ],
+          stream = False,
+          temperature=0.0,
+          max_completion_tokens=4000,
+          response_format = {
+            "type": "json_schema",
+            "json_schema": {
+              "name": "job_offers_extraction",
+              "strict": True,
+              "schema": output_schema
+            }
+          }
+        )
+        output = response.choices[0].message.content or "{}"
+        print("¡Extracción completada con éxito!\n")
+
+        parsed_json = json.loads(output)
+        return parsed_json.get("ofertas", [])
+
+      except RateLimitError as e:
+        headers = e.response.headers if hasattr(e, 'response') else {}
+        remaining_requests = headers.get('x-ratelimit-remaining-requests')
+        
+        if remaining_requests == '0':
+          print("ALCANZADO EL LÍMITE DIARIO DE PETICIONES (RPD)")
+          print("El script se detendrá ahora.")
+          exit(1)
+
+        retry_after = headers.get('retry-after')
+        reset_tokens = headers.get('x-ratelimit-reset-tokens')
+        
+        if retry_after:
+            wait_time = float(retry_after)
+            print(f"\nLímite por minuto. La cabecera 'retry-after' pide esperar {wait_time}s... (Intento {attempt + 1}/{retries})")
+        elif reset_tokens:
+              wait_time = float(reset_tokens.replace('s', ''))
+              print(f"\nLímite por minuto. La cabecera 'reset-tokens' pide esperar {wait_time}s...")
+        else:
+            wait_time = (attempt + 1) * 5 
+            print(f"\nLímite por minuto alcanzado. Esperando {wait_time}s de seguridad...")
+            
+        time.sleep(wait_time)
+    return []
   
   def merge_results(self, cleaned_offers, llm_results):
     merged = []
@@ -80,7 +225,20 @@ class LLMProcessor:
     return merged
   
   def process_all_batches(self, batch_size=Config.BATCH_SIZE):
-    skip = 0
+    try:
+        offers_processed = self.db.db[Config.LLM_RAW_COLL].count_documents({})
+    except Exception as e:
+        print(f"Error al contar documentos: {e}")
+        offers_processed = 0
+    
+    skip = offers_processed
+
+    if skip > 0:
+        print(f"\nReanudando el proceso. Se han encontrado {skip} ofertas ya procesadas en '{Config.LLM_RAW_COLL}'.")
+        print(f"Empezando lectura en origen a partir de la oferta {skip + 1}...\n")
+    else:
+        print(f"\nNo hay ofertas previas en '{Config.LLM_RAW_COLL}'. Empezando desde 0.\n")
+
     while True:
       batch = self.db.load_offers_batch(Config.CLEANED_COLL, batch_size, skip)
       if not batch:
@@ -90,9 +248,29 @@ class LLMProcessor:
       prepared_batch = self.prepare_batch(batch)
       system_prompt, user_prompt = self.build_prompts(prepared_batch)
       llm_ouput = self.call_model(system_prompt, user_prompt)
-      merged_offers = self.merge_results(batch, llm_ouput)
-      self.db.upsert_bulk_offers_llm(Config.LLM_RAW_COLL, merged_offers)
+
+      if llm_ouput:
+        merged_offers = self.merge_results(batch, llm_ouput)
+        self.db.upsert_bulk_offers_llm(Config.LLM_RAW_COLL, merged_offers)
+      else:
+        print(f"Lote en skip {skip} no se ha podido procesar. Se guarda el marcador del error")
+        error_offers = []
+        for offer in batch:
+          error_offer = {
+            **offer,
+            "llm_error": True,
+            "hard_skills_raw": [],
+            "soft_skills_raw": [],
+            "tools_raw": [],
+            "seniority_raw": "",
+            "work_modality_raw": "",
+            "employment_type_raw": ""
+          }
+          error_offers.append(error_offer)
+        
+        self.db.upsert_bulk_offers_llm(Config.LLM_RAW_COLL, error_offers)
       skip += batch_size
+      time.sleep(15)
   
 if __name__ == "__main__":
   processor = LLMProcessor()

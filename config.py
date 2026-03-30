@@ -19,3 +19,4 @@ class Config:
 
   #LLM Config
   BATCH_SIZE = 3
+  GROQ_API_KEY = os.getenv("GROQ_API_KEY")

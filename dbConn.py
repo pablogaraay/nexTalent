@@ -121,7 +121,6 @@ class MongoManager:
   def load_offers_batch(self, coll, batch_size, skip=0):
     try:
       batch_offers = list(self.db[coll].find().sort("_id", 1).limit(batch_size).skip(skip))
-      skip += batch_size
       return batch_offers
     except Exception as e:
       print(f"Error al cargar el lote de ofertas: {e}")
