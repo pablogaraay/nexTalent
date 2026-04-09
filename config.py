@@ -18,5 +18,5 @@ class Config:
   LLM_RAW_COLL = "offers_llm_raw"
 
   #LLM Config
-  BATCH_SIZE = 3
+  BATCH_SIZE = 2
   GROQ_API_KEY = os.getenv("GROQ_API_KEY")

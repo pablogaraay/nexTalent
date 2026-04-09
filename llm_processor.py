@@ -7,7 +7,7 @@ import time
 
 class LLMProcessor:
   
-  def __init__(self, provider="groq", model="openai/gpt-oss-20b"):
+  def __init__(self, provider="groq", model="openai/gpt-oss-120b"):
     self.db = MongoManager()
     self.provider = provider
     self.model = model
@@ -17,7 +17,6 @@ class LLMProcessor:
     fields_required = []
     for offer in batch:
       fields_required.append({
-        "url": offer["url"],
         "title": offer["title"],
         "description": offer["description_clean"],
         "company": offer["company"],
@@ -35,7 +34,7 @@ class LLMProcessor:
 
       Debes extraer, para cada oferta del lote, los siguientes campos:
 
-      - url
+      - role_raw
       - hard_skills_raw
       - soft_skills_raw
       - tools_raw
@@ -46,6 +45,8 @@ class LLMProcessor:
       Debes analizar únicamente la información contenida en el título y la descripción de cada oferta.
 
       Criterios de extracción:
+
+      - role_raw: el rol principal del puesto, expresado de forma breve.
 
       - hard_skills_raw: conocimientos técnicos, metodologías, certificaciones, técnicas e idiomas profesionales requeridos.
         No incluyas aquí software, plataformas, librerías o herramientas concretas si deben ir en tools_raw.
@@ -71,7 +72,7 @@ class LLMProcessor:
       {
         "ofertas": [
           {
-            "url": "",
+            "role_raw": "",
             "hard_skills_raw": [],
             "soft_skills_raw": [],
             "tools_raw": [],
@@ -99,13 +100,12 @@ class LLMProcessor:
       Input:
       Título: Data Analyst Junior
       Descripción: Buscamos perfil con experiencia en SQL, Power BI y Excel. Se valorará capacidad analítica, comunicación y trabajo en equipo. Modalidad híbrida. Contrato indefinido.
-      URL: https://example.com/job1
 
       Output:
       {
         "ofertas": [
           {
-            "url": "https://example.com/job1",
+            "role_raw": "data analyst",
             "hard_skills_raw": ["SQL"],
             "soft_skills_raw": ["capacidad analítica", "comunicación", "trabajo en equipo"],
             "tools_raw": ["Power BI", "Excel"],
@@ -121,13 +121,12 @@ class LLMProcessor:
       Input:
       Título: Machine Learning Engineer
       Descripción: Se requiere experiencia con Python, TensorFlow, MLOps y despliegue de modelos. Se valorará autonomía y proactividad.
-      URL: https://example.com/job2
 
       Output:
       {
         "ofertas": [
           {
-            "url": "https://example.com/job2",
+            "role_raw": "machine learning engineer",
             "hard_skills_raw": ["Python", "MLOps", "despliegue de modelos"],
             "soft_skills_raw": ["autonomía", "proactividad"],
             "tools_raw": ["TensorFlow"],
@@ -147,7 +146,7 @@ class LLMProcessor:
       - No puede haber información duplicada entre campos si pertenece claramente a otra categoría.
       - Separa claramente hard_skills_raw, soft_skills_raw y tools_raw.
       - Cada oferta debe aparecer una sola vez dentro de "ofertas".
-      - Conserva siempre la misma url de entrada en cada resultado.
+      - Devuelve los resultados en el mismo orden en que llegan las ofertas en la entrada.
 
       Ahora procesa el lote de ofertas que se proporciona a continuación.
       """
@@ -156,7 +155,7 @@ class LLMProcessor:
       "Analiza el siguiente lote de ofertas. "
       "Devuelve un único objeto JSON con la clave 'ofertas', "
       "donde 'ofertas' sea un array con un objeto por cada oferta del lote. "
-      "Conserva siempre la misma 'url' en cada resultado.\n\n"
+      "Devuelve los objetos en el mismo orden de las ofertas de entrada.\n\n"
       f"{json.dumps(json_batch, ensure_ascii=False, indent=2)}"
     )
     return system_prompt, user_prompt
@@ -175,7 +174,7 @@ class LLMProcessor:
           ],
           stream = False,
           temperature=0.0,
-          max_completion_tokens=8000,
+          #max_completion_tokens=4000,
           response_format = {
             "type": "json_schema",
             "json_schema": {
@@ -185,6 +184,8 @@ class LLMProcessor:
             }
           }
         )
+        print(f"Prompt tokens: {response.usage.prompt_tokens}")
+        print(f"Completion tokens: {response.usage.completion_tokens}")
         output = response.choices[0].message.content or "{}"
         print("¡Extracción completada con éxito!\n")
 
@@ -225,9 +226,8 @@ class LLMProcessor:
   
   def merge_results(self, cleaned_offers, llm_results):
     merged = []
-    llm_by_url = {item["url"]: item for item in llm_results}
-    for offer in cleaned_offers:
-      llm_offer = llm_by_url.get(offer["url"], {})
+    for i, offer in enumerate(cleaned_offers):
+      llm_offer = llm_results[i] if i < len(llm_results) else {}
       merged.append({**offer, **llm_offer})
     return merged
   
@@ -271,7 +271,8 @@ class LLMProcessor:
             "tools_raw": [],
             "seniority_raw": "",
             "work_modality_raw": "",
-            "employment_type_raw": ""
+            "employment_type_raw": "",
+            "role_raw": ""
           }
           error_offers.append(error_offer)
         

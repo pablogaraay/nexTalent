@@ -7,7 +7,6 @@ def build_extraction_schema():
                 "items": {
                     "type": "object",
                     "properties": {
-                        "url": {"type": "string"},
                         "hard_skills_raw": {
                             "type": "array",
                             "items": {"type": "string"}
@@ -22,16 +21,17 @@ def build_extraction_schema():
                         },
                         "seniority_raw": {"type": "string"},
                         "work_modality_raw": {"type": "string"},
-                        "employment_type_raw": {"type": "string"}
+                        "employment_type_raw": {"type": "string"},
+                        "role_raw": {"type": "string"}
                     },
                     "required": [
-                        "url",
                         "hard_skills_raw",
                         "soft_skills_raw",
                         "tools_raw",
                         "seniority_raw",
                         "work_modality_raw",
-                        "employment_type_raw"
+                        "employment_type_raw",
+                        "role_raw"
                     ],
                     "additionalProperties": False
                 }
