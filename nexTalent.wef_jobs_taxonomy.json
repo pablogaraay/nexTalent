@@ -1,0 +1,2483 @@
+[{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb755"
+  },
+  "job_id": "WEF_JOB_003",
+  "job_family": "Architecture and Engineering",
+  "occupation": "Chemical Engineers",
+  "useful_consulting": false,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb761"
+  },
+  "job_id": "WEF_JOB_015",
+  "job_family": "Architecture and Engineering",
+  "occupation": "Robotics Engineers",
+  "useful_consulting": true,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb76f"
+  },
+  "job_id": "WEF_JOB_029",
+  "job_family": "Business and Financial Operations",
+  "occupation": "Business Intelligence Analysts",
+  "useful_consulting": true,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb772"
+  },
+  "job_id": "WEF_JOB_032",
+  "job_family": "Business and Financial Operations",
+  "occupation": "Credit and Loans Officers",
+  "useful_consulting": false,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb774"
+  },
+  "job_id": "WEF_JOB_034",
+  "job_family": "Business and Financial Operations",
+  "occupation": "Digital Transformation Specialists",
+  "useful_consulting": true,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb781"
+  },
+  "job_id": "WEF_JOB_047",
+  "job_family": "Business and Financial Operations",
+  "occupation": "Training and Development Specialists",
+  "useful_consulting": true,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb792"
+  },
+  "job_id": "WEF_JOB_064",
+  "job_family": "Computer and Mathematical",
+  "occupation": "ICT Operations and User Support Technicians",
+  "useful_consulting": true,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb795"
+  },
+  "job_id": "WEF_JOB_067",
+  "job_family": "Computer and Mathematical",
+  "occupation": "Mathematicians, Actuaries and Statisticians",
+  "useful_consulting": true,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb7a3"
+  },
+  "job_id": "WEF_JOB_081",
+  "job_family": "Education and Training",
+  "occupation": "Secondary Education Teachers",
+  "useful_consulting": false,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb7b7"
+  },
+  "job_id": "WEF_JOB_101",
+  "job_family": "Healthcare Practitioners and Technicians",
+  "occupation": "Pharmacists and Associated Professions",
+  "useful_consulting": false,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb7d6"
+  },
+  "job_id": "WEF_JOB_132",
+  "job_family": "Management",
+  "occupation": "Relationship Managers",
+  "useful_consulting": true,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb7d9"
+  },
+  "job_id": "WEF_JOB_135",
+  "job_family": "Manufacturing and Production",
+  "occupation": "Chemical Processing Plant Operators",
+  "useful_consulting": false,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb7dc"
+  },
+  "job_id": "WEF_JOB_138",
+  "job_family": "Manufacturing and Production",
+  "occupation": "Petroleum and Natural Gas Refining Plant Operators",
+  "useful_consulting": false,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb7e5"
+  },
+  "job_id": "WEF_JOB_147",
+  "job_family": "Natural Science and Sustainability",
+  "occupation": "Life Scientists",
+  "useful_consulting": false,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb7f9"
+  },
+  "job_id": "WEF_JOB_167",
+  "job_family": "Sales",
+  "occupation": "Cashiers and Ticket Clerks",
+  "useful_consulting": false,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb7fc"
+  },
+  "job_id": "WEF_JOB_170",
+  "job_family": "Sales",
+  "occupation": "Sales and Purchasing Agents and Brokers",
+  "useful_consulting": false,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb7fe"
+  },
+  "job_id": "WEF_JOB_172",
+  "job_family": "Sales",
+  "occupation": "Securities and Finance Dealers and Brokers",
+  "useful_consulting": false,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb800"
+  },
+  "job_id": "WEF_JOB_174",
+  "job_family": "Sales",
+  "occupation": "Telemarketers",
+  "useful_consulting": false,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb80d"
+  },
+  "job_id": "WEF_JOB_187",
+  "job_family": "Transportation and Logistics",
+  "occupation": "Refuse Workers",
+  "useful_consulting": false,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb75d"
+  },
+  "job_id": "WEF_JOB_011",
+  "job_family": "Architecture and Engineering",
+  "occupation": "Mechanical Engineers",
+  "useful_consulting": false,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb764"
+  },
+  "job_id": "WEF_JOB_018",
+  "job_family": "Arts, Design, Entertainment, Sports and Media",
+  "occupation": "Commercial and Industrial Designers",
+  "useful_consulting": false,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb765"
+  },
+  "job_id": "WEF_JOB_019",
+  "job_family": "Arts, Design, Entertainment, Sports and Media",
+  "occupation": "Entertainers and Performers, Sports and Related Workers",
+  "useful_consulting": false,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb76c"
+  },
+  "job_id": "WEF_JOB_026",
+  "job_family": "Arts, Design, Entertainment, Sports and Media",
+  "occupation": "Video Game Designers",
+  "useful_consulting": false,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb775"
+  },
+  "job_id": "WEF_JOB_035",
+  "job_family": "Business and Financial Operations",
+  "occupation": "E-commerce Specialists",
+  "useful_consulting": true,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb77c"
+  },
+  "job_id": "WEF_JOB_042",
+  "job_family": "Business and Financial Operations",
+  "occupation": "Recruiters and Technical Recruiters",
+  "useful_consulting": true,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb77f"
+  },
+  "job_id": "WEF_JOB_045",
+  "job_family": "Business and Financial Operations",
+  "occupation": "Sales and Marketing Professionals",
+  "useful_consulting": true,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb785"
+  },
+  "job_id": "WEF_JOB_051",
+  "job_family": "Community, Social Service and Protective Services",
+  "occupation": "Security Guards",
+  "useful_consulting": false,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb787"
+  },
+  "job_id": "WEF_JOB_053",
+  "job_family": "Computer and Mathematical",
+  "occupation": "AI and Machine Learning Specialists",
+  "useful_consulting": true,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb78c"
+  },
+  "job_id": "WEF_JOB_058",
+  "job_family": "Computer and Mathematical",
+  "occupation": "Data Warehousing Specialists",
+  "useful_consulting": true,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb78e"
+  },
+  "job_id": "WEF_JOB_060",
+  "job_family": "Computer and Mathematical",
+  "occupation": "Database Architects",
+  "useful_consulting": true,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb796"
+  },
+  "job_id": "WEF_JOB_068",
+  "job_family": "Computer and Mathematical",
+  "occupation": "Online Learning Managers",
+  "useful_consulting": false,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb7a4"
+  },
+  "job_id": "WEF_JOB_082",
+  "job_family": "Education and Training",
+  "occupation": "Special Education Teachers",
+  "useful_consulting": false,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb7a6"
+  },
+  "job_id": "WEF_JOB_084",
+  "job_family": "Education and Training",
+  "occupation": "Vocational Education Teachers",
+  "useful_consulting": false,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb7b3"
+  },
+  "job_id": "WEF_JOB_097",
+  "job_family": "Healthcare Practitioners and Technicians",
+  "occupation": "Nursing Professionals",
+  "useful_consulting": false,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb7be"
+  },
+  "job_id": "WEF_JOB_108",
+  "job_family": "Hospitality and Food Related",
+  "occupation": "Chefs and Cooks",
+  "useful_consulting": false,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb7c8"
+  },
+  "job_id": "WEF_JOB_118",
+  "job_family": "Legal",
+  "occupation": "Lawyers",
+  "useful_consulting": true,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb7cc"
+  },
+  "job_id": "WEF_JOB_122",
+  "job_family": "Management",
+  "occupation": "Business Services and Administration Managers",
+  "useful_consulting": true,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb7ce"
+  },
+  "job_id": "WEF_JOB_124",
+  "job_family": "Management",
+  "occupation": "Health and Education Services Managers",
+  "useful_consulting": false,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb7df"
+  },
+  "job_id": "WEF_JOB_141",
+  "job_family": "Manufacturing and Production",
+  "occupation": "Renewable Energy Technicians",
+  "useful_consulting": true,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb7e1"
+  },
+  "job_id": "WEF_JOB_143",
+  "job_family": "Manufacturing and Production",
+  "occupation": "Solar Energy Installation and System Engineers",
+  "useful_consulting": true,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb7fa"
+  },
+  "job_id": "WEF_JOB_168",
+  "job_family": "Sales",
+  "occupation": "Door-To-Door Sales Workers, News and Street Vendors, and Related Workers",
+  "useful_consulting": false,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb801"
+  },
+  "job_id": "WEF_JOB_175",
+  "job_family": "Social Science",
+  "occupation": "Economists",
+  "useful_consulting": true,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb804"
+  },
+  "job_id": "WEF_JOB_178",
+  "job_family": "Social Science",
+  "occupation": "Survey Researchers",
+  "useful_consulting": true,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb807"
+  },
+  "job_id": "WEF_JOB_181",
+  "job_family": "Transportation and Logistics",
+  "occupation": "Commercial Pilots",
+  "useful_consulting": false,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb75f"
+  },
+  "job_id": "WEF_JOB_013",
+  "job_family": "Architecture and Engineering",
+  "occupation": "Nuclear Engineers",
+  "useful_consulting": false,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb762"
+  },
+  "job_id": "WEF_JOB_016",
+  "job_family": "Arts, Design, Entertainment, Sports and Media",
+  "occupation": "Advertising and Public Relations Professionals",
+  "useful_consulting": true,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb767"
+  },
+  "job_id": "WEF_JOB_021",
+  "job_family": "Arts, Design, Entertainment, Sports and Media",
+  "occupation": "Graphic Designers",
+  "useful_consulting": true,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb768"
+  },
+  "job_id": "WEF_JOB_022",
+  "job_family": "Arts, Design, Entertainment, Sports and Media",
+  "occupation": "Handicraft Workers",
+  "useful_consulting": false,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb769"
+  },
+  "job_id": "WEF_JOB_023",
+  "job_family": "Arts, Design, Entertainment, Sports and Media",
+  "occupation": "Interior Designers",
+  "useful_consulting": false,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb76a"
+  },
+  "job_id": "WEF_JOB_024",
+  "job_family": "Arts, Design, Entertainment, Sports and Media",
+  "occupation": "Media and Communication Workers",
+  "useful_consulting": true,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb776"
+  },
+  "job_id": "WEF_JOB_036",
+  "job_family": "Business and Financial Operations",
+  "occupation": "Financial Analysts",
+  "useful_consulting": true,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb77b"
+  },
+  "job_id": "WEF_JOB_041",
+  "job_family": "Business and Financial Operations",
+  "occupation": "Management and Organisation Analysts",
+  "useful_consulting": true,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb780"
+  },
+  "job_id": "WEF_JOB_046",
+  "job_family": "Business and Financial Operations",
+  "occupation": "Social Media Strategist",
+  "useful_consulting": true,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb786"
+  },
+  "job_id": "WEF_JOB_052",
+  "job_family": "Community, Social Service and Protective Services",
+  "occupation": "Social Work and Counselling Professionals",
+  "useful_consulting": false,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb789"
+  },
+  "job_id": "WEF_JOB_055",
+  "job_family": "Computer and Mathematical",
+  "occupation": "Blockchain Developers",
+  "useful_consulting": true,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb790"
+  },
+  "job_id": "WEF_JOB_062",
+  "job_family": "Computer and Mathematical",
+  "occupation": "FinTech Engineers",
+  "useful_consulting": true,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb79d"
+  },
+  "job_id": "WEF_JOB_075",
+  "job_family": "Computer and Mathematical",
+  "occupation": "Web Developers",
+  "useful_consulting": true,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb7a7"
+  },
+  "job_id": "WEF_JOB_085",
+  "job_family": "Farming, Fishing, and Forestry",
+  "occupation": "Farmworkers, Labourers, and Other Agricultural Workers",
+  "useful_consulting": false,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb7ab"
+  },
+  "job_id": "WEF_JOB_089",
+  "job_family": "Healthcare Practitioners and Technicians",
+  "occupation": "Audiologists and Speech Therapists",
+  "useful_consulting": false,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb7ac"
+  },
+  "job_id": "WEF_JOB_090",
+  "job_family": "Healthcare Practitioners and Technicians",
+  "occupation": "Dentists and Associated Professions",
+  "useful_consulting": false,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb7b4"
+  },
+  "job_id": "WEF_JOB_098",
+  "job_family": "Healthcare Practitioners and Technicians",
+  "occupation": "Optometrists and Opticians",
+  "useful_consulting": false,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb7bd"
+  },
+  "job_id": "WEF_JOB_107",
+  "job_family": "Hospitality and Food Related",
+  "occupation": "Baristas",
+  "useful_consulting": false,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb7c6"
+  },
+  "job_id": "WEF_JOB_116",
+  "job_family": "Legal",
+  "occupation": "Judges",
+  "useful_consulting": false,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb7c7"
+  },
+  "job_id": "WEF_JOB_117",
+  "job_family": "Legal",
+  "occupation": "Judicial Law Clerks",
+  "useful_consulting": false,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb7d1"
+  },
+  "job_id": "WEF_JOB_127",
+  "job_family": "Management",
+  "occupation": "Manufacturing, Mining, Construction, and Distribution Managers",
+  "useful_consulting": false,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb7d3"
+  },
+  "job_id": "WEF_JOB_129",
+  "job_family": "Management",
+  "occupation": "Product Managers",
+  "useful_consulting": true,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb7dd"
+  },
+  "job_id": "WEF_JOB_139",
+  "job_family": "Manufacturing and Production",
+  "occupation": "Power Production Plant Operators",
+  "useful_consulting": false,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb7e3"
+  },
+  "job_id": "WEF_JOB_145",
+  "job_family": "Natural Science and Sustainability",
+  "occupation": "Environmental Protection Professionals",
+  "useful_consulting": true,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb7e9"
+  },
+  "job_id": "WEF_JOB_151",
+  "job_family": "Office and Administrative",
+  "occupation": "Administrative Assistants and Executive Secretaries",
+  "useful_consulting": false,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb7f1"
+  },
+  "job_id": "WEF_JOB_159",
+  "job_family": "Personal Care, Maintenance and Installation",
+  "occupation": "Childcare Workers",
+  "useful_consulting": false,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb7ff"
+  },
+  "job_id": "WEF_JOB_173",
+  "job_family": "Sales",
+  "occupation": "Shop Salespersons",
+  "useful_consulting": false,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb808"
+  },
+  "job_id": "WEF_JOB_182",
+  "job_family": "Transportation and Logistics",
+  "occupation": "Flight Attendants",
+  "useful_consulting": false,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb809"
+  },
+  "job_id": "WEF_JOB_183",
+  "job_family": "Transportation and Logistics",
+  "occupation": "Heavy Truck and Bus Drivers",
+  "useful_consulting": false,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb756"
+  },
+  "job_id": "WEF_JOB_004",
+  "job_family": "Architecture and Engineering",
+  "occupation": "Civil Engineers",
+  "useful_consulting": false,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb75b"
+  },
+  "job_id": "WEF_JOB_009",
+  "job_family": "Architecture and Engineering",
+  "occupation": "Industrial and Production Engineers",
+  "useful_consulting": true,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb77e"
+  },
+  "job_id": "WEF_JOB_044",
+  "job_family": "Business and Financial Operations",
+  "occupation": "Risk Management Specialists",
+  "useful_consulting": true,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb783"
+  },
+  "job_id": "WEF_JOB_049",
+  "job_family": "Community, Social Service and Protective Services",
+  "occupation": "Law Enforcement Workers, including Police Officers and Immigration Inspectors",
+  "useful_consulting": false,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb78d"
+  },
+  "job_id": "WEF_JOB_059",
+  "job_family": "Computer and Mathematical",
+  "occupation": "Database and Network Professionals",
+  "useful_consulting": true,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb78f"
+  },
+  "job_id": "WEF_JOB_061",
+  "job_family": "Computer and Mathematical",
+  "occupation": "Devops Engineers",
+  "useful_consulting": true,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb79e"
+  },
+  "job_id": "WEF_JOB_076",
+  "job_family": "Construction and Extraction",
+  "occupation": "Building Framers, Finishers, and Related Trades Workers",
+  "useful_consulting": false,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb7b5"
+  },
+  "job_id": "WEF_JOB_099",
+  "job_family": "Healthcare Practitioners and Technicians",
+  "occupation": "Paramedical and Emergency Medical Technicians",
+  "useful_consulting": false,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb7bf"
+  },
+  "job_id": "WEF_JOB_109",
+  "job_family": "Hospitality and Food Related",
+  "occupation": "Concierges and Hotel Desk Clerks",
+  "useful_consulting": false,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb7c9"
+  },
+  "job_id": "WEF_JOB_119",
+  "job_family": "Legal",
+  "occupation": "Legal Secretaries",
+  "useful_consulting": false,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb7de"
+  },
+  "job_id": "WEF_JOB_140",
+  "job_family": "Manufacturing and Production",
+  "occupation": "Printing and Related Trades Workers",
+  "useful_consulting": false,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb7e0"
+  },
+  "job_id": "WEF_JOB_142",
+  "job_family": "Manufacturing and Production",
+  "occupation": "Sheet and Structural Metal Workers, Moulders and Welders",
+  "useful_consulting": false,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb7ec"
+  },
+  "job_id": "WEF_JOB_154",
+  "job_family": "Office and Administrative",
+  "occupation": "Data Entry Clerks",
+  "useful_consulting": false,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb7fb"
+  },
+  "job_id": "WEF_JOB_169",
+  "job_family": "Sales",
+  "occupation": "Real Estate Sales Agents",
+  "useful_consulting": false,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb7fd"
+  },
+  "job_id": "WEF_JOB_171",
+  "job_family": "Sales",
+  "occupation": "Sales Representatives, Wholesale and Manufacturing, Technical and Scientific Products",
+  "useful_consulting": false,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb803"
+  },
+  "job_id": "WEF_JOB_177",
+  "job_family": "Social Science",
+  "occupation": "Social Scientists and Related Workers",
+  "useful_consulting": true,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb80a"
+  },
+  "job_id": "WEF_JOB_184",
+  "job_family": "Transportation and Logistics",
+  "occupation": "Light Truck or Delivery Services Drivers",
+  "useful_consulting": false,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb754"
+  },
+  "job_id": "WEF_JOB_002",
+  "job_family": "Architecture and Engineering",
+  "occupation": "Biochemical and Biomedical Engineers",
+  "useful_consulting": false,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb758"
+  },
+  "job_id": "WEF_JOB_006",
+  "job_family": "Architecture and Engineering",
+  "occupation": "Electrotechnology Engineers",
+  "useful_consulting": false,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb75a"
+  },
+  "job_id": "WEF_JOB_008",
+  "job_family": "Architecture and Engineering",
+  "occupation": "Environmental Engineers",
+  "useful_consulting": true,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb763"
+  },
+  "job_id": "WEF_JOB_017",
+  "job_family": "Arts, Design, Entertainment, Sports and Media",
+  "occupation": "Broadcasting Technicians",
+  "useful_consulting": false,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb766"
+  },
+  "job_id": "WEF_JOB_020",
+  "job_family": "Arts, Design, Entertainment, Sports and Media",
+  "occupation": "Fashion Designers",
+  "useful_consulting": false,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb76d"
+  },
+  "job_id": "WEF_JOB_027",
+  "job_family": "Arts, Design, Entertainment, Sports and Media",
+  "occupation": "Writers and Authors",
+  "useful_consulting": true,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb777"
+  },
+  "job_id": "WEF_JOB_037",
+  "job_family": "Business and Financial Operations",
+  "occupation": "Financial and Investment Advisers",
+  "useful_consulting": true,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb778"
+  },
+  "job_id": "WEF_JOB_038",
+  "job_family": "Business and Financial Operations",
+  "occupation": "Human Resources Specialists",
+  "useful_consulting": true,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb78a"
+  },
+  "job_id": "WEF_JOB_056",
+  "job_family": "Computer and Mathematical",
+  "occupation": "Data Analysts and Scientists",
+  "useful_consulting": true,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb794"
+  },
+  "job_id": "WEF_JOB_066",
+  "job_family": "Computer and Mathematical",
+  "occupation": "Internet of Things Specialists",
+  "useful_consulting": true,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb797"
+  },
+  "job_id": "WEF_JOB_069",
+  "job_family": "Computer and Mathematical",
+  "occupation": "Process Automation Specialists",
+  "useful_consulting": true,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb798"
+  },
+  "job_id": "WEF_JOB_070",
+  "job_family": "Computer and Mathematical",
+  "occupation": "Security Management Specialists",
+  "useful_consulting": true,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb79f"
+  },
+  "job_id": "WEF_JOB_077",
+  "job_family": "Construction and Extraction",
+  "occupation": "Construction Laborers",
+  "useful_consulting": false,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb7a1"
+  },
+  "job_id": "WEF_JOB_079",
+  "job_family": "Construction and Extraction",
+  "occupation": "Mining, Petroleum and Other Extraction Workers",
+  "useful_consulting": false,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb7a2"
+  },
+  "job_id": "WEF_JOB_080",
+  "job_family": "Education and Training",
+  "occupation": "Primary School and Early Childhood Teachers",
+  "useful_consulting": false,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb7a8"
+  },
+  "job_id": "WEF_JOB_086",
+  "job_family": "Farming, Fishing, and Forestry",
+  "occupation": "Fishing and Hunting Workers",
+  "useful_consulting": false,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb7aa"
+  },
+  "job_id": "WEF_JOB_088",
+  "job_family": "Farming, Fishing, and Forestry",
+  "occupation": "Gardeners, Horticultural and Nursery Workers",
+  "useful_consulting": false,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb7b8"
+  },
+  "job_id": "WEF_JOB_102",
+  "job_family": "Healthcare Practitioners and Technicians",
+  "occupation": "Physical Therapists",
+  "useful_consulting": false,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb7c5"
+  },
+  "job_id": "WEF_JOB_115",
+  "job_family": "Legal",
+  "occupation": "Court Reporters",
+  "useful_consulting": false,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb7cd"
+  },
+  "job_id": "WEF_JOB_123",
+  "job_family": "Management",
+  "occupation": "General and Operations Managers",
+  "useful_consulting": true,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb7d5"
+  },
+  "job_id": "WEF_JOB_131",
+  "job_family": "Management",
+  "occupation": "Project Managers",
+  "useful_consulting": true,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb7ea"
+  },
+  "job_id": "WEF_JOB_152",
+  "job_family": "Office and Administrative",
+  "occupation": "Bank Tellers and Related Clerks",
+  "useful_consulting": false,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb7f2"
+  },
+  "job_id": "WEF_JOB_160",
+  "job_family": "Personal Care, Maintenance and Installation",
+  "occupation": "Electronics and Telecommunications Installers and Repairers",
+  "useful_consulting": false,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb7f5"
+  },
+  "job_id": "WEF_JOB_163",
+  "job_family": "Personal Care, Maintenance and Installation",
+  "occupation": "Mechanics and Machinery Repairers",
+  "useful_consulting": false,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb811"
+  },
+  "job_id": "WEF_JOB_191",
+  "job_family": "Transportation and Logistics",
+  "occupation": "Water Transportation Workers, including Ship and Marine Cargo Workers, Controllers, and Technicians",
+  "useful_consulting": false,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb753"
+  },
+  "job_id": "WEF_JOB_001",
+  "job_family": "Architecture and Engineering",
+  "occupation": "Architects and Surveyors",
+  "useful_consulting": false,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb76e"
+  },
+  "job_id": "WEF_JOB_028",
+  "job_family": "Business and Financial Operations",
+  "occupation": "Accountants and Auditors",
+  "useful_consulting": true,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb771"
+  },
+  "job_id": "WEF_JOB_031",
+  "job_family": "Business and Financial Operations",
+  "occupation": "Compliance Officers",
+  "useful_consulting": true,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb773"
+  },
+  "job_id": "WEF_JOB_033",
+  "job_family": "Business and Financial Operations",
+  "occupation": "Digital Marketing and Strategy Specialists",
+  "useful_consulting": true,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb788"
+  },
+  "job_id": "WEF_JOB_054",
+  "job_family": "Computer and Mathematical",
+  "occupation": "Big Data Specialists",
+  "useful_consulting": true,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb78b"
+  },
+  "job_id": "WEF_JOB_057",
+  "job_family": "Computer and Mathematical",
+  "occupation": "Data Engineers",
+  "useful_consulting": true,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb791"
+  },
+  "job_id": "WEF_JOB_063",
+  "job_family": "Computer and Mathematical",
+  "occupation": "Full Stack Engineers",
+  "useful_consulting": true,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb799"
+  },
+  "job_id": "WEF_JOB_071",
+  "job_family": "Computer and Mathematical",
+  "occupation": "Software and Applications Developers",
+  "useful_consulting": true,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb79c"
+  },
+  "job_id": "WEF_JOB_074",
+  "job_family": "Computer and Mathematical",
+  "occupation": "UI and UX Designers",
+  "useful_consulting": true,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb7a0"
+  },
+  "job_id": "WEF_JOB_078",
+  "job_family": "Construction and Extraction",
+  "occupation": "Electrical Equipment Installers and Repairers",
+  "useful_consulting": false,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb7a5"
+  },
+  "job_id": "WEF_JOB_083",
+  "job_family": "Education and Training",
+  "occupation": "University and Higher Education Teachers",
+  "useful_consulting": false,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb7ae"
+  },
+  "job_id": "WEF_JOB_092",
+  "job_family": "Healthcare Practitioners and Technicians",
+  "occupation": "Environmental and Occupational Health and Hygiene Professionals",
+  "useful_consulting": true,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb7af"
+  },
+  "job_id": "WEF_JOB_093",
+  "job_family": "Healthcare Practitioners and Technicians",
+  "occupation": "Epidemiologists and Public Health Specialists",
+  "useful_consulting": false,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb7bc"
+  },
+  "job_id": "WEF_JOB_106",
+  "job_family": "Healthcare Practitioners and Technicians",
+  "occupation": "Veterinarians",
+  "useful_consulting": false,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb7c1"
+  },
+  "job_id": "WEF_JOB_111",
+  "job_family": "Hospitality and Food Related",
+  "occupation": "Food and Beverage Serving Workers",
+  "useful_consulting": false,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb7cb"
+  },
+  "job_id": "WEF_JOB_121",
+  "job_family": "Legal",
+  "occupation": "Title Examiners, Abstractors, and Searchers",
+  "useful_consulting": false,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb7d2"
+  },
+  "job_id": "WEF_JOB_128",
+  "job_family": "Management",
+  "occupation": "Organisational Development Specialists",
+  "useful_consulting": true,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb7da"
+  },
+  "job_id": "WEF_JOB_136",
+  "job_family": "Manufacturing and Production",
+  "occupation": "Food Processing and Related Trades Workers",
+  "useful_consulting": false,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb7e2"
+  },
+  "job_id": "WEF_JOB_144",
+  "job_family": "Natural Science and Sustainability",
+  "occupation": "Chemists and Chemical Laboratory Scientists",
+  "useful_consulting": false,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb7e6"
+  },
+  "job_id": "WEF_JOB_148",
+  "job_family": "Natural Science and Sustainability",
+  "occupation": "Physical Scientists",
+  "useful_consulting": false,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb7e7"
+  },
+  "job_id": "WEF_JOB_149",
+  "job_family": "Natural Science and Sustainability",
+  "occupation": "Sustainability Specialists",
+  "useful_consulting": true,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb7eb"
+  },
+  "job_id": "WEF_JOB_153",
+  "job_family": "Office and Administrative",
+  "occupation": "Client Information and Customer Service Workers",
+  "useful_consulting": false,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb7ee"
+  },
+  "job_id": "WEF_JOB_156",
+  "job_family": "Office and Administrative",
+  "occupation": "Postal Service Clerks",
+  "useful_consulting": false,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb7ef"
+  },
+  "job_id": "WEF_JOB_157",
+  "job_family": "Office and Administrative",
+  "occupation": "Statistical, Finance and Insurance Clerks",
+  "useful_consulting": false,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb7f4"
+  },
+  "job_id": "WEF_JOB_162",
+  "job_family": "Personal Care, Maintenance and Installation",
+  "occupation": "Home Appliance Installers and Repairers",
+  "useful_consulting": false,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb7f8"
+  },
+  "job_id": "WEF_JOB_166",
+  "job_family": "Sales",
+  "occupation": "Business Development Professionals",
+  "useful_consulting": true,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb806"
+  },
+  "job_id": "WEF_JOB_180",
+  "job_family": "Transportation and Logistics",
+  "occupation": "Car, Van and Motorcycle Drivers",
+  "useful_consulting": false,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb80b"
+  },
+  "job_id": "WEF_JOB_185",
+  "job_family": "Transportation and Logistics",
+  "occupation": "Locomotive Engine Drivers and Related Workers",
+  "useful_consulting": false,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb80c"
+  },
+  "job_id": "WEF_JOB_186",
+  "job_family": "Transportation and Logistics",
+  "occupation": "Postal Service Mail Carriers",
+  "useful_consulting": false,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb757"
+  },
+  "job_id": "WEF_JOB_005",
+  "job_family": "Architecture and Engineering",
+  "occupation": "Drafters, Engineering Technicians, and Mapping Technicians",
+  "useful_consulting": false,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb75e"
+  },
+  "job_id": "WEF_JOB_012",
+  "job_family": "Architecture and Engineering",
+  "occupation": "Mining Engineers, Metallurgists and Related Professionals",
+  "useful_consulting": false,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb770"
+  },
+  "job_id": "WEF_JOB_030",
+  "job_family": "Business and Financial Operations",
+  "occupation": "Claims Adjusters, Examiners, and Investigators",
+  "useful_consulting": false,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb779"
+  },
+  "job_id": "WEF_JOB_039",
+  "job_family": "Business and Financial Operations",
+  "occupation": "Insurance Underwriters, Valuers, and Loss Assessors",
+  "useful_consulting": false,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb77a"
+  },
+  "job_id": "WEF_JOB_040",
+  "job_family": "Business and Financial Operations",
+  "occupation": "Investment Fund Managers",
+  "useful_consulting": false,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb77d"
+  },
+  "job_id": "WEF_JOB_043",
+  "job_family": "Business and Financial Operations",
+  "occupation": "Regulatory and Government Associate Professionals",
+  "useful_consulting": true,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb7ad"
+  },
+  "job_id": "WEF_JOB_091",
+  "job_family": "Healthcare Practitioners and Technicians",
+  "occupation": "Dietitians and Nutritionists",
+  "useful_consulting": false,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb7b0"
+  },
+  "job_id": "WEF_JOB_094",
+  "job_family": "Healthcare Practitioners and Technicians",
+  "occupation": "Generalist Medical Practitioners",
+  "useful_consulting": false,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb7b1"
+  },
+  "job_id": "WEF_JOB_095",
+  "job_family": "Healthcare Practitioners and Technicians",
+  "occupation": "Health Technologists and Technicians",
+  "useful_consulting": false,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb7b9"
+  },
+  "job_id": "WEF_JOB_103",
+  "job_family": "Healthcare Practitioners and Technicians",
+  "occupation": "Psychologists and Psychiatrists",
+  "useful_consulting": false,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb7c2"
+  },
+  "job_id": "WEF_JOB_112",
+  "job_family": "Hospitality and Food Related",
+  "occupation": "Food Service Counter Attendants",
+  "useful_consulting": false,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb7c3"
+  },
+  "job_id": "WEF_JOB_113",
+  "job_family": "Hospitality and Food Related",
+  "occupation": "Hotel and Restaurant Managers",
+  "useful_consulting": false,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb7c4"
+  },
+  "job_id": "WEF_JOB_114",
+  "job_family": "Legal",
+  "occupation": "Arbitrators, Mediators, and Conciliators",
+  "useful_consulting": true,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb7d4"
+  },
+  "job_id": "WEF_JOB_130",
+  "job_family": "Management",
+  "occupation": "Production Managers in Agriculture, Forestry and Fisheries",
+  "useful_consulting": false,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb7d8"
+  },
+  "job_id": "WEF_JOB_134",
+  "job_family": "Manufacturing and Production",
+  "occupation": "Assembly and Factory Workers",
+  "useful_consulting": false,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb7e4"
+  },
+  "job_id": "WEF_JOB_146",
+  "job_family": "Natural Science and Sustainability",
+  "occupation": "Food Scientists and Technologists",
+  "useful_consulting": false,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb7f6"
+  },
+  "job_id": "WEF_JOB_164",
+  "job_family": "Personal Care, Maintenance and Installation",
+  "occupation": "Personal Care Aides",
+  "useful_consulting": false,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb805"
+  },
+  "job_id": "WEF_JOB_179",
+  "job_family": "Transportation and Logistics",
+  "occupation": "Autonomous and Electric Vehicle Specialists",
+  "useful_consulting": true,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb80e"
+  },
+  "job_id": "WEF_JOB_188",
+  "job_family": "Transportation and Logistics",
+  "occupation": "Supply Chain and Logistics Specialists",
+  "useful_consulting": true,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb759"
+  },
+  "job_id": "WEF_JOB_007",
+  "job_family": "Architecture and Engineering",
+  "occupation": "Energy Engineers",
+  "useful_consulting": true,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb75c"
+  },
+  "job_id": "WEF_JOB_010",
+  "job_family": "Architecture and Engineering",
+  "occupation": "Materials Engineers",
+  "useful_consulting": false,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb760"
+  },
+  "job_id": "WEF_JOB_014",
+  "job_family": "Architecture and Engineering",
+  "occupation": "Renewable Energy Engineers",
+  "useful_consulting": true,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb76b"
+  },
+  "job_id": "WEF_JOB_025",
+  "job_family": "Arts, Design, Entertainment, Sports and Media",
+  "occupation": "Photographers",
+  "useful_consulting": false,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb782"
+  },
+  "job_id": "WEF_JOB_048",
+  "job_family": "Community, Social Service and Protective Services",
+  "occupation": "Firefighting and Prevention Workers",
+  "useful_consulting": false,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb784"
+  },
+  "job_id": "WEF_JOB_050",
+  "job_family": "Community, Social Service and Protective Services",
+  "occupation": "Religious Professionals",
+  "useful_consulting": false,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb793"
+  },
+  "job_id": "WEF_JOB_065",
+  "job_family": "Computer and Mathematical",
+  "occupation": "Information Security Analysts",
+  "useful_consulting": true,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb79a"
+  },
+  "job_id": "WEF_JOB_072",
+  "job_family": "Computer and Mathematical",
+  "occupation": "Software Testers",
+  "useful_consulting": true,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb79b"
+  },
+  "job_id": "WEF_JOB_073",
+  "job_family": "Computer and Mathematical",
+  "occupation": "System Engineers",
+  "useful_consulting": true,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb7a9"
+  },
+  "job_id": "WEF_JOB_087",
+  "job_family": "Farming, Fishing, and Forestry",
+  "occupation": "Forestry Workers",
+  "useful_consulting": false,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb7b2"
+  },
+  "job_id": "WEF_JOB_096",
+  "job_family": "Healthcare Practitioners and Technicians",
+  "occupation": "Midwifery Professionals",
+  "useful_consulting": false,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb7b6"
+  },
+  "job_id": "WEF_JOB_100",
+  "job_family": "Healthcare Practitioners and Technicians",
+  "occupation": "Personal Care Workers in Health Services",
+  "useful_consulting": false,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb7ba"
+  },
+  "job_id": "WEF_JOB_104",
+  "job_family": "Healthcare Practitioners and Technicians",
+  "occupation": "Specialist Medical Practitioners",
+  "useful_consulting": false,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb7bb"
+  },
+  "job_id": "WEF_JOB_105",
+  "job_family": "Healthcare Practitioners and Technicians",
+  "occupation": "Traditional and Complementary Medicine Professionals",
+  "useful_consulting": false,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb7c0"
+  },
+  "job_id": "WEF_JOB_110",
+  "job_family": "Hospitality and Food Related",
+  "occupation": "Event Managers",
+  "useful_consulting": true,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb7ca"
+  },
+  "job_id": "WEF_JOB_120",
+  "job_family": "Legal",
+  "occupation": "Paralegals and Legal Assistants",
+  "useful_consulting": true,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb7cf"
+  },
+  "job_id": "WEF_JOB_125",
+  "job_family": "Management",
+  "occupation": "Legislators and Officials",
+  "useful_consulting": false,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb7d0"
+  },
+  "job_id": "WEF_JOB_126",
+  "job_family": "Management",
+  "occupation": "Managing Directors and Chief Executives",
+  "useful_consulting": true,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb7d7"
+  },
+  "job_id": "WEF_JOB_133",
+  "job_family": "Management",
+  "occupation": "Strategic Advisors",
+  "useful_consulting": true,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb7db"
+  },
+  "job_id": "WEF_JOB_137",
+  "job_family": "Manufacturing and Production",
+  "occupation": "Garment and Related Trades Workers",
+  "useful_consulting": false,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb7e8"
+  },
+  "job_id": "WEF_JOB_150",
+  "job_family": "Office and Administrative",
+  "occupation": "Accounting, Bookkeeping and Payroll Clerks",
+  "useful_consulting": false,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb7ed"
+  },
+  "job_id": "WEF_JOB_155",
+  "job_family": "Office and Administrative",
+  "occupation": "Material-Recording and Stock-Keeping Clerks",
+  "useful_consulting": false,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb7f0"
+  },
+  "job_id": "WEF_JOB_158",
+  "job_family": "Personal Care, Maintenance and Installation",
+  "occupation": "Building Caretakers, Cleaners and Housekeepers",
+  "useful_consulting": false,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb7f3"
+  },
+  "job_id": "WEF_JOB_161",
+  "job_family": "Personal Care, Maintenance and Installation",
+  "occupation": "Hairdressers, Beauticians and Related Workers",
+  "useful_consulting": false,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb7f7"
+  },
+  "job_id": "WEF_JOB_165",
+  "job_family": "Personal Care, Maintenance and Installation",
+  "occupation": "Sports and Fitness Workers",
+  "useful_consulting": false,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb802"
+  },
+  "job_id": "WEF_JOB_176",
+  "job_family": "Social Science",
+  "occupation": "Social Science Research Assistants",
+  "useful_consulting": false,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb80f"
+  },
+  "job_id": "WEF_JOB_189",
+  "job_family": "Transportation and Logistics",
+  "occupation": "Transportation Attendants and Conductors",
+  "useful_consulting": false,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "69af18abdf6105cf730cb810"
+  },
+  "job_id": "WEF_JOB_190",
+  "job_family": "Transportation and Logistics",
+  "occupation": "Transportation Inspectors",
+  "useful_consulting": false,
+  "source_report": "Future of Jobs Report 2025",
+  "source_table": "Table A3",
+  "version": "2025",
+  "active": true
+}]

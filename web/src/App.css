@@ -1,0 +1,39 @@
+html {
+  scroll-behavior: smooth;
+}
+
+a {
+  text-decoration: none;
+}
+
+.card-hover {
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.card-hover:hover {
+  transform: translateY(-2px);
+  box-shadow: rgba(0, 0, 0, 0.08) 0px 8px 32px;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.echarts-for-react {
+  width: 100% !important;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  ring-color: var(--focus-blue);
+  border-color: var(--focus-blue) !important;
+}
+
+@media (max-width: 640px) {
+  .font-serif {
+    letter-spacing: -0.01em;
+  }
+}

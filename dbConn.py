@@ -17,75 +17,25 @@ class MongoManager:
     except Exception as e:
       print(f"Servidor no disponible: {e}")
 
-  def upsert_bulk_offers_raw(self, coll, offers_array):
+  def upsert_bulk_offers(self, coll: str, offers_array: list, stage_prefix: str):
+    if not offers_array:
+      print(f"No hay ofertas para insertar en la coleccion {coll}")
+      return
+      
     ops = []
     for offer in offers_array:
+      source_id = offer.get("_id")
+      offer_without_id = {k: v for k, v in offer.items() if k != "_id"}
+      set_on_insert = {f"first_{stage_prefix}": datetime.now(timezone.utc)}
+      if source_id is not None:
+        set_on_insert["_id"] = source_id
+        
       ops.append(
         UpdateOne(
-          {"url": offer["url"]},
+          {"url": offer_without_id.get("url")},
           {
-            "$set": {**offer, "last_scraped": datetime.now(timezone.utc)},
-            "$setOnInsert": {"first_scraped": datetime.now(timezone.utc)}
-          },
-          upsert=True
-        )
-      )
-    try:
-      res = self.db[coll].bulk_write(ops, ordered=False)
-      print(f"Se han insertado {res.upserted_count} ofertas en la coleccion {coll}")
-      print(f"Se han actualizado {res.modified_count} ofertas en la coleccion {coll}")
-    except Exception as e:
-      print(f"Error al insertar las ofertas: {e}")
-
-  def upsert_bulk_offers_structured(self, coll, offers_array):
-    ops = []
-    for offer in offers_array:
-      ops.append(
-        UpdateOne(
-          {"url": offer["url"]},
-          {
-            "$set": {**offer, "last_updated": datetime.now(timezone.utc)},
-            "$setOnInsert": {"first_structured": datetime.now(timezone.utc)}
-          },
-          upsert=True
-        )
-      )
-    try:
-      res = self.db[coll].bulk_write(ops, ordered=False)
-      print(f"Se han insertado {res.upserted_count} ofertas en la coleccion {coll}")
-      print(f"Se han actualizado {res.modified_count} ofertas en la coleccion {coll}")
-    except Exception as e:
-      print(f"Error al insertar las ofertas: {e}")
-
-  def upsert_bulk_offers_cleaned(self, coll, offers_array):
-    ops = []
-    for offer in offers_array:
-      ops.append(
-        UpdateOne(
-          {"url": offer["url"]},
-          {
-            "$set": {**offer, "last_updated": datetime.now(timezone.utc)},
-            "$setOnInsert": {"first_cleaned": datetime.now(timezone.utc)}
-          },
-          upsert=True
-        )
-      )
-    try:
-      res = self.db[coll].bulk_write(ops, ordered=False)
-      print(f"Se han insertado {res.upserted_count} ofertas en la coleccion {coll}")
-      print(f"Se han actualizado {res.modified_count} ofertas en la coleccion {coll}")
-    except Exception as e:
-      print(f"Error al insertar las ofertas: {e}")
-  
-  def upsert_bulk_offers_llm(self, coll, offers_array):
-    ops = []
-    for offer in offers_array:
-      ops.append(
-        UpdateOne(
-          {"url": offer["url"]},
-          {
-            "$set": {**offer, "last_llm": datetime.now(timezone.utc)},
-            "$setOnInsert": {"first_llm": datetime.now(timezone.utc)}
+            "$set": {**offer_without_id, f"last_{stage_prefix}": datetime.now(timezone.utc)},
+            "$setOnInsert": set_on_insert
           },
           upsert=True
         )
@@ -100,13 +50,14 @@ class MongoManager:
   def create_indexes(self):
     try:
       self.db[Config.SCRAPED_COLL].create_index([("url", 1)], unique=True)
-      print(f"Indice URL creado exitosamente para la coleccion {Config.SCRAPED_COLL}")
 
       self.db[Config.STRUCTURED_COLL].create_index([("url", 1)], unique=True)
-      print(f"Indice URL creado exitosamente para la coleccion {Config.STRUCTURED_COLL}")
 
       self.db[Config.CLEANED_COLL].create_index([("url", 1)], unique=True)
-      print(f"Indice URL creado exitosamente para la coleccion {Config.CLEANED_COLL}")
+
+      self.db[Config.LLM_RAW_COLL].create_index([("url", 1)], unique=True)
+
+      self.db[Config.MAPPED_COLL].create_index([("url", 1)], unique=True)
 
     except Exception as e:
       print(f"Error al crear el indice: {e}")
@@ -124,6 +75,26 @@ class MongoManager:
       return batch_offers
     except Exception as e:
       print(f"Error al cargar el lote de ofertas: {e}")
+
+  def load_unprocessed_offers(self, source_coll, processed_coll):
+    try:
+      pipeline = [
+        {
+          "$lookup": {
+            "from": processed_coll,
+            "localField": "url",
+            "foreignField": "url",
+            "as": "processed_docs"
+          }
+        },
+        {"$match": {"processed_docs": {"$eq": []}}},
+        {"$project": {"processed_docs": 0}},
+        {"$sort": {"_id": 1}}
+      ]
+      return self.db[source_coll].aggregate(pipeline, allowDiskUse=True)
+    except Exception as e:
+      print(f"Error al cargar ofertas no procesadas: {e}")
+      return []
 
   def close_connection(self):
     self.client.close()

@@ -1,0 +1,226 @@
+@import url("https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --parchment: #f5f4ed;
+  --ivory: #faf9f5;
+  --pure-white: #ffffff;
+  --warm-sand: #e8e6dc;
+  --near-black: #141413;
+  --dark-surface: #30302e;
+  --deep-dark: #141413;
+  --terracotta: #c96442;
+  --coral: #d97757;
+  --charcoal-warm: #4d4c48;
+  --olive-gray: #5e5d59;
+  --stone-gray: #87867f;
+  --dark-warm: #3d3d3a;
+  --warm-silver: #b0aea5;
+  --border-cream: #f0eee6;
+  --border-warm: #e8e6dc;
+  --border-dark: #30302e;
+  --ring-warm: #d1cfc5;
+  --ring-subtle: #dedc01;
+  --ring-deep: #c2c0b6;
+  --error-crimson: #b53333;
+  --focus-blue: #3898ec;
+}
+
+@layer base {
+  :root {
+    --background: 48 20% 94.5%;
+    --foreground: 60 4% 8%;
+    --card: 45 25% 97%;
+    --card-foreground: 60 4% 8%;
+    --popover: 45 25% 97%;
+    --popover-foreground: 60 4% 8%;
+    --primary: 60 4% 8%;
+    --primary-foreground: 45 25% 97%;
+    --secondary: 43 14% 89%;
+    --secondary-foreground: 50 3% 30%;
+    --muted: 43 14% 89%;
+    --muted-foreground: 47 4% 52%;
+    --accent: 18 53% 53%;
+    --accent-foreground: 45 25% 97%;
+    --destructive: 0 55% 46%;
+    --destructive-foreground: 45 25% 97%;
+    --border: 43 20% 92%;
+    --input: 43 20% 92%;
+    --ring: 18 53% 53%;
+    --chart-1: 18 53% 53%;
+    --chart-2: 20 60% 60%;
+    --chart-3: 47 4% 52%;
+    --chart-4: 43 14% 70%;
+    --chart-5: 60 4% 8%;
+    --radius: 0.5rem;
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "DM Sans", Georgia, -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: var(--parchment);
+  color: var(--near-black);
+  line-height: 1.6;
+}
+
+code {
+  font-family: "JetBrains Mono", source-code-pro, Menlo, monospace;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.font-serif {
+  font-family: "Playfair Display", Georgia, serif;
+  font-weight: 500;
+}
+
+.font-sans {
+  font-family: "DM Sans", system-ui, sans-serif;
+}
+
+.font-mono {
+  font-family: "JetBrains Mono", monospace;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--parchment);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--ring-warm);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--stone-gray);
+}
+
+::selection {
+  background-color: rgba(201, 100, 66, 0.15);
+  color: var(--near-black);
+}
+
+a,
+button,
+input,
+textarea {
+  transition: all 0.2s ease;
+}
+
+@layer base {
+  [data-debug-wrapper="true"] {
+    display: contents !important;
+  }
+  [data-debug-wrapper="true"] > * {
+    margin-left: inherit;
+    margin-right: inherit;
+    margin-top: inherit;
+    margin-bottom: inherit;
+    padding-left: inherit;
+    padding-right: inherit;
+    padding-top: inherit;
+    padding-bottom: inherit;
+    column-gap: inherit;
+    row-gap: inherit;
+    gap: inherit;
+    border-left-width: inherit;
+    border-right-width: inherit;
+    border-top-width: inherit;
+    border-bottom-width: inherit;
+    border-left-style: inherit;
+    border-right-style: inherit;
+    border-top-style: inherit;
+    border-bottom-style: inherit;
+    border-left-color: inherit;
+    border-right-color: inherit;
+    border-top-color: inherit;
+    border-bottom-color: inherit;
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes pulse-warm {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(201, 100, 66, 0.2);
+  }
+  50% {
+    box-shadow: 0 0 0 8px rgba(201, 100, 66, 0);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.5s ease forwards;
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.4s ease forwards;
+}
+
+.animate-slide-in-right {
+  animation: slideInRight 0.4s ease forwards;
+}
+
+.stagger-1 {
+  animation-delay: 0.1s;
+}
+.stagger-2 {
+  animation-delay: 0.2s;
+}
+.stagger-3 {
+  animation-delay: 0.3s;
+}
+.stagger-4 {
+  animation-delay: 0.4s;
+}
+.stagger-5 {
+  animation-delay: 0.5s;
+}
+.stagger-6 {
+  animation-delay: 0.6s;
+}

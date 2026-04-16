@@ -1,0 +1,3068 @@
+[
+  {
+    "skill_id": "SFIA_ATTR_ADAP",
+    "skill_code": "ADAP",
+    "skill_name": "Adaptabilidad",
+    "item_type": "attribute",
+    "skill_cluster": "Business skills/Behavioural factors",
+    "skill_family": "Atributos SFIA 9",
+    "description": "Ajustarse al cambio y persistir a través de desafíos a nivel personal, del equipo y de la organización.",
+    "levels_defined": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "source_framework": "SFIA",
+    "version": "9",
+    "active": true
+  },
+  {
+    "skill_id": "SFIA_ATTR_AUTO",
+    "skill_code": "AUTO",
+    "skill_name": "Autonomía",
+    "item_type": "attribute",
+    "skill_cluster": "Attributes",
+    "skill_family": "Atributos SFIA 9",
+    "description": "El nivel de independencia, discreción y responsabilidad por los resultados en su función.",
+    "levels_defined": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "source_framework": "SFIA",
+    "version": "9",
+    "active": true
+  },
+  {
+    "skill_id": "SFIA_ATTR_COLL",
+    "skill_code": "COLL",
+    "skill_name": "Colaboración",
+    "item_type": "attribute",
+    "skill_cluster": "Business skills/Behavioural factors",
+    "skill_family": "Atributos SFIA 9",
+    "description": "Trabajar eficazmente con otros, compartir recursos y coordinar esfuerzos para alcanzar objetivos compartidos.",
+    "levels_defined": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "source_framework": "SFIA",
+    "version": "9",
+    "active": true
+  },
+  {
+    "skill_id": "SFIA_ATTR_COMM",
+    "skill_code": "COMM",
+    "skill_name": "Comunicación",
+    "item_type": "attribute",
+    "skill_cluster": "Business skills/Behavioural factors",
+    "skill_family": "Atributos SFIA 9",
+    "description": "Intercambiar información, ideas y puntos de vista con claridad para permitir el entendimiento mutuo y la cooperación.",
+    "levels_defined": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "source_framework": "SFIA",
+    "version": "9",
+    "active": true
+  },
+  {
+    "skill_id": "SFIA_ATTR_COMP",
+    "skill_code": "COMP",
+    "skill_name": "Complejidad",
+    "item_type": "attribute",
+    "skill_cluster": "Attributes",
+    "skill_family": "Atributos SFIA 9",
+    "description": "La variedad y complejidad de las tareas y responsabilidades que conlleva su función.",
+    "levels_defined": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "source_framework": "SFIA",
+    "version": "9",
+    "active": true
+  },
+  {
+    "skill_id": "SFIA_ATTR_CRTY",
+    "skill_code": "CRTY",
+    "skill_name": "Creatividad",
+    "item_type": "attribute",
+    "skill_cluster": "Business skills/Behavioural factors",
+    "skill_family": "Atributos SFIA 9",
+    "description": "Generar y aplicar ideas innovadoras para mejorar los procesos, resolver problemas e impulsar el éxito organizacional.",
+    "levels_defined": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "source_framework": "SFIA",
+    "version": "9",
+    "active": true
+  },
+  {
+    "skill_id": "SFIA_ATTR_DECM",
+    "skill_code": "DECM",
+    "skill_name": "Toma de decisiones",
+    "item_type": "attribute",
+    "skill_cluster": "Business skills/Behavioural factors",
+    "skill_family": "Atributos SFIA 9",
+    "description": "Aplicar el pensamiento crítico para evaluar opciones, estimar riesgos y seleccionar el curso de acción más adecuado.",
+    "levels_defined": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "source_framework": "SFIA",
+    "version": "9",
+    "active": true
+  },
+  {
+    "skill_id": "SFIA_ATTR_DIGI",
+    "skill_code": "DIGI",
+    "skill_name": "Mentalidad digital",
+    "item_type": "attribute",
+    "skill_cluster": "Business skills/Behavioural factors",
+    "skill_family": "Atributos SFIA 9",
+    "description": "Adoptar y utilizar eficazmente las herramientas y tecnologías digitales para mejorar el rendimiento y la productividad.",
+    "levels_defined": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "source_framework": "SFIA",
+    "version": "9",
+    "active": true
+  },
+  {
+    "skill_id": "SFIA_ATTR_IMPM",
+    "skill_code": "IMPM",
+    "skill_name": "Mentalidad de mejora",
+    "item_type": "attribute",
+    "skill_cluster": "Business skills/Behavioural factors",
+    "skill_family": "Atributos SFIA 9",
+    "description": "Identificar continuamente oportunidades para perfeccionar las prácticas de trabajo, procesos, productos o servicios para lograr una mayor eficiencia e impacto.",
+    "levels_defined": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "source_framework": "SFIA",
+    "version": "9",
+    "active": true
+  },
+  {
+    "skill_id": "SFIA_ATTR_INFL",
+    "skill_code": "INFL",
+    "skill_name": "Influencia",
+    "item_type": "attribute",
+    "skill_cluster": "Attributes",
+    "skill_family": "Atributos SFIA 9",
+    "description": "El alcance y el impacto de sus decisiones y acciones, tanto dentro como fuera de la organización.",
+    "levels_defined": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "source_framework": "SFIA",
+    "version": "9",
+    "active": true
+  },
+  {
+    "skill_id": "SFIA_ATTR_KNGE",
+    "skill_code": "KNGE",
+    "skill_name": "Conocimiento",
+    "item_type": "attribute",
+    "skill_cluster": "Attributes",
+    "skill_family": "Atributos SFIA 9",
+    "description": "La profundidad y amplitud de la comprensión requerida para realizar e influir en el trabajo de manera efectiva.",
+    "levels_defined": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "source_framework": "SFIA",
+    "version": "9",
+    "active": true
+  },
+  {
+    "skill_id": "SFIA_ATTR_LADV",
+    "skill_code": "LADV",
+    "skill_name": "Aprendizaje y desarrollo",
+    "item_type": "attribute",
+    "skill_cluster": "Business skills/Behavioural factors",
+    "skill_family": "Atributos SFIA 9",
+    "description": "Adquirir continuamente nuevos conocimientos y habilidades para mejorar el rendimiento personal y organizacional.",
+    "levels_defined": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "source_framework": "SFIA",
+    "version": "9",
+    "active": true
+  },
+  {
+    "skill_id": "SFIA_ATTR_LEAD",
+    "skill_code": "LEAD",
+    "skill_name": "Liderazgo",
+    "item_type": "attribute",
+    "skill_cluster": "Business skills/Behavioural factors",
+    "skill_family": "Atributos SFIA 9",
+    "description": "Guiar e influir en las personas o equipos para alinear las acciones con los objetivos estratégicos e impulsar resultados positivos.",
+    "levels_defined": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "source_framework": "SFIA",
+    "version": "9",
+    "active": true
+  },
+  {
+    "skill_id": "SFIA_ATTR_PLAN",
+    "skill_code": "PLAN",
+    "skill_name": "Planificación",
+    "item_type": "attribute",
+    "skill_cluster": "Business skills/Behavioural factors",
+    "skill_family": "Atributos SFIA 9",
+    "description": "Adoptar un enfoque sistemático para organizar las tareas, los recursos y los plazos a fin de alcanzar los objetivos definidos.",
+    "levels_defined": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "source_framework": "SFIA",
+    "version": "9",
+    "active": true
+  },
+  {
+    "skill_id": "SFIA_ATTR_PROB",
+    "skill_code": "PROB",
+    "skill_name": "Resolución de problemas",
+    "item_type": "attribute",
+    "skill_cluster": "Business skills/Behavioural factors",
+    "skill_family": "Atributos SFIA 9",
+    "description": "Analizar retos, aplicar métodos lógicos y desarrollar soluciones eficaces para superar los obstáculos.",
+    "levels_defined": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "source_framework": "SFIA",
+    "version": "9",
+    "active": true
+  },
+  {
+    "skill_id": "SFIA_ATTR_SCPE",
+    "skill_code": "SCPE",
+    "skill_name": "Seguridad, privacidad y ética",
+    "item_type": "attribute",
+    "skill_cluster": "Business skills/Behavioural factors",
+    "skill_family": "Atributos SFIA 9",
+    "description": "Garantizar la protección de la información confidencial, mantener la privacidad de los datos y las personas, y demostrar una conducta ética dentro y fuera de la organización.",
+    "levels_defined": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "source_framework": "SFIA",
+    "version": "9",
+    "active": true
+  },
+  {
+    "skill_id": "SFIA_SKILL_ACIN",
+    "skill_code": "ACIN",
+    "skill_name": "Accesibilidad e inclusión",
+    "item_type": "skill",
+    "skill_cluster": "Diseño centrado en el usuario",
+    "skill_family": "Desarrollo e implementación",
+    "description": "Conducir la accesibilidad y la inclusión en servicios y productos.",
+    "levels_defined": [
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "source_framework": "SFIA",
+    "version": "9",
+    "active": true
+  },
+  {
+    "skill_id": "SFIA_SKILL_ADEV",
+    "skill_code": "ADEV",
+    "skill_name": "Desarrollo de animación",
+    "item_type": "skill",
+    "skill_cluster": "Desarrollo de sistemas",
+    "skill_family": "Desarrollo e implementación",
+    "description": "Diseñar y desarrollar sistemas animados e interactivos, tales como juegos, simulaciones y ambientes virtuales.",
+    "levels_defined": [
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "source_framework": "SFIA",
+    "version": "9",
+    "active": true
+  },
+  {
+    "skill_id": "SFIA_SKILL_ADMN",
+    "skill_code": "ADMN",
+    "skill_name": "Administración de empresas",
+    "item_type": "skill",
+    "skill_cluster": "Gestión de los interesados",
+    "skill_family": "Relaciones y compromiso",
+    "description": "Gestionar y realizar tareas y servicios administrativos para permitir que las personas, los equipos y las organizaciones tengan éxito en sus objetivos.",
+    "levels_defined": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "source_framework": "SFIA",
+    "version": "9",
+    "active": true
+  },
+  {
+    "skill_id": "SFIA_SKILL_AIDE",
+    "skill_code": "AIDE",
+    "skill_name": "Inteligencia artificial (IA) y ética de datos",
+    "item_type": "skill",
+    "skill_cluster": "Gobierno, riesgo y cumplimiento",
+    "skill_family": "Estrategia y arquitectura",
+    "description": "Implementar y promover prácticas éticas en el diseño, desarrollo, despliegue y uso de IA y tecnologías relacionadas con datos.",
+    "levels_defined": [
+      3,
+      4,
+      5,
+      6
+    ],
+    "source_framework": "SFIA",
+    "version": "9",
+    "active": true
+  },
+  {
+    "skill_id": "SFIA_SKILL_ANCC",
+    "skill_code": "ANCC",
+    "skill_name": "Clasificación analítica y codificación",
+    "item_type": "skill",
+    "skill_cluster": "Operaciones de datos y registros",
+    "skill_family": "Prestación y funcionamiento",
+    "description": "Interpretación de la información y asignación de clasificaciones o etiquetas basadas en conocimientos, normas y directrices específicos de cada dominio para permitir el análisis y uso de los datos.",
+    "levels_defined": [
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "source_framework": "SFIA",
+    "version": "9",
+    "active": true
+  },
+  {
+    "skill_id": "SFIA_SKILL_ARCH",
+    "skill_code": "ARCH",
+    "skill_name": "Arquitectura de solución",
+    "item_type": "skill",
+    "skill_cluster": "Estrategia y planificación",
+    "skill_family": "Estrategia y arquitectura",
+    "description": "Desarrollar y comunicar una arquitectura de solución multidimensional para ofrecer resultados comerciales acordados.",
+    "levels_defined": [
+      4,
+      5,
+      6
+    ],
+    "source_framework": "SFIA",
+    "version": "9",
+    "active": true
+  },
+  {
+    "skill_id": "SFIA_SKILL_ASMG",
+    "skill_code": "ASMG",
+    "skill_name": "Gestión de activos",
+    "item_type": "skill",
+    "skill_cluster": "Gestión de servicios",
+    "skill_family": "Prestación y funcionamiento",
+    "description": "Gestionar el ciclo de vida completo de los activos desde la adquisición, operación y mantenimiento hasta su retiro del ambiente productivo.",
+    "levels_defined": [
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "source_framework": "SFIA",
+    "version": "9",
+    "active": true
+  },
+  {
+    "skill_id": "SFIA_SKILL_ASUP",
+    "skill_code": "ASUP",
+    "skill_name": "Soporte de aplicaciones",
+    "item_type": "skill",
+    "skill_cluster": "Gestión de tecnologías",
+    "skill_family": "Prestación y funcionamiento",
+    "description": "Prestar servicios de gestión, técnicos y administrativos para apoyar y mantener aplicaciones en vivo.",
+    "levels_defined": [
+      2,
+      3,
+      4,
+      5
+    ],
+    "source_framework": "SFIA",
+    "version": "9",
+    "active": true
+  },
+  {
+    "skill_id": "SFIA_SKILL_AUDT",
+    "skill_code": "AUDT",
+    "skill_name": "Auditar",
+    "item_type": "skill",
+    "skill_cluster": "Gobierno, riesgo y cumplimiento",
+    "skill_family": "Estrategia y arquitectura",
+    "description": "Brindar evaluaciones independientes basadas en los riesgos y la efectividad de los procesos, los controles y el entorno de cumplimiento de una organización.",
+    "levels_defined": [
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "source_framework": "SFIA",
+    "version": "9",
+    "active": true
+  },
+  {
+    "skill_id": "SFIA_SKILL_AVMT",
+    "skill_code": "AVMT",
+    "skill_name": "Gestión de la disponibilidad",
+    "item_type": "skill",
+    "skill_cluster": "Gestión de servicios",
+    "skill_family": "Prestación y funcionamiento",
+    "description": "Garantizar que los servicios ofrezcan los niveles acordados de disponibilidad para satisfacer las necesidades actuales y futuras del negocio.",
+    "levels_defined": [
+      3,
+      4,
+      5,
+      6
+    ],
+    "source_framework": "SFIA",
+    "version": "9",
+    "active": true
+  },
+  {
+    "skill_id": "SFIA_SKILL_BENM",
+    "skill_code": "BENM",
+    "skill_name": "Gestión de beneficios",
+    "item_type": "skill",
+    "skill_cluster": "Gestión financiera y de valor",
+    "skill_family": "Estrategia y arquitectura",
+    "description": "Pronosticar, planificar y controlar el surgimiento y la realización efectiva de los beneficios anticipados de los proyectos y programas.",
+    "levels_defined": [
+      3,
+      4,
+      5,
+      6
+    ],
+    "source_framework": "SFIA",
+    "version": "9",
+    "active": true
+  },
+  {
+    "skill_id": "SFIA_SKILL_BIDM",
+    "skill_code": "BIDM",
+    "skill_name": "Gestión de ofertas/propuestas",
+    "item_type": "skill",
+    "skill_cluster": "Gestión de ventas y ofertas",
+    "skill_family": "Relaciones y compromiso",
+    "description": "Gestionar la preparación y presentación de ofertas y propuestas de contratos, adjudicaciones, proyectos o servicios.",
+    "levels_defined": [
+      3,
+      4,
+      5,
+      6
+    ],
+    "source_framework": "SFIA",
+    "version": "9",
+    "active": true
+  },
+  {
+    "skill_id": "SFIA_SKILL_BINT",
+    "skill_code": "BINT",
+    "skill_name": "Inteligencia empresarial",
+    "item_type": "skill",
+    "skill_cluster": "Datos y analítica",
+    "skill_family": "Desarrollo e implementación",
+    "description": "Desarrollar, producir y entregar información de gestión periódica y única para ofrecer conocimientos y ayudar en la toma de decisiones.",
+    "levels_defined": [
+      2,
+      3,
+      4,
+      5
+    ],
+    "source_framework": "SFIA",
+    "version": "9",
+    "active": true
+  },
+  {
+    "skill_id": "SFIA_SKILL_BPRE",
+    "skill_code": "BPRE",
+    "skill_name": "Mejora de procesos de negocio",
+    "item_type": "skill",
+    "skill_cluster": "Planificación de cambios",
+    "skill_family": "Cambio y transformación",
+    "description": "Crear enfoques nuevos y potencialmente disruptivos para llevar a cabo actividades comerciales.",
+    "levels_defined": [
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "source_framework": "SFIA",
+    "version": "9",
+    "active": true
+  },
+  {
+    "skill_id": "SFIA_SKILL_BPTS",
+    "skill_code": "BPTS",
+    "skill_name": "Pruebas de aceptación del usuario final",
+    "item_type": "skill",
+    "skill_cluster": "Análisis de cambios",
+    "skill_family": "Cambio y transformación",
+    "description": "Validar sistemas, productos, procesos de negocio o servicios para determinar si se han cumplido los criterios de aceptación.",
+    "levels_defined": [
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "source_framework": "SFIA",
+    "version": "9",
+    "active": true
+  },
+  {
+    "skill_id": "SFIA_SKILL_BRMG",
+    "skill_code": "BRMG",
+    "skill_name": "Gestión de marca",
+    "item_type": "skill",
+    "skill_cluster": "Marketing",
+    "skill_family": "Relaciones y compromiso",
+    "description": "Gestionar la estrategia de marca para establecer y mejorar la identidad de marca y el valor alineados con los objetivos de la organización.",
+    "levels_defined": [
+      4,
+      5,
+      6
+    ],
+    "source_framework": "SFIA",
+    "version": "9",
+    "active": true
+  },
+  {
+    "skill_id": "SFIA_SKILL_BSMO",
+    "skill_code": "BSMO",
+    "skill_name": "Modelado de negocios",
+    "item_type": "skill",
+    "skill_cluster": "Análisis de cambios",
+    "skill_family": "Cambio y transformación",
+    "description": "Crear modelos abstractos o sublimados de escenarios de negocio, que representen procesos, datos y roles para apoyar los análisis y la toma de decisiones.",
+    "levels_defined": [
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "source_framework": "SFIA",
+    "version": "9",
+    "active": true
+  },
+  {
+    "skill_id": "SFIA_SKILL_BUDF",
+    "skill_code": "BUDF",
+    "skill_name": "Presupuesto y previsión",
+    "item_type": "skill",
+    "skill_cluster": "Gestión financiera y de valor",
+    "skill_family": "Estrategia y arquitectura",
+    "description": "Elaboración y gestión del presupuesto, así como de las previsiones financieras que permitan tanto la eficaz toma de decisiones y la asignación de recursos.",
+    "levels_defined": [
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "source_framework": "SFIA",
+    "version": "9",
+    "active": true
+  },
+  {
+    "skill_id": "SFIA_SKILL_BURM",
+    "skill_code": "BURM",
+    "skill_name": "Gestión del riesgo",
+    "item_type": "skill",
+    "skill_cluster": "Gobierno, riesgo y cumplimiento",
+    "skill_family": "Estrategia y arquitectura",
+    "description": "Planificación e implementación de procesos de gestión de riesgos en toda la empresa, alineados con la estrategia organizativa y los marcos de gobernanza.",
+    "levels_defined": [
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "source_framework": "SFIA",
+    "version": "9",
+    "active": true
+  },
+  {
+    "skill_id": "SFIA_SKILL_BUSA",
+    "skill_code": "BUSA",
+    "skill_name": "Análisis de la situación empresarial",
+    "item_type": "skill",
+    "skill_cluster": "Análisis de cambios",
+    "skill_family": "Cambio y transformación",
+    "description": "Investigar las situaciones del negocio para definir recomendaciones a fin de tomar medidas que permitan mejorar.",
+    "levels_defined": [
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "source_framework": "SFIA",
+    "version": "9",
+    "active": true
+  },
+  {
+    "skill_id": "SFIA_SKILL_CELO",
+    "skill_code": "CELO",
+    "skill_name": "Compromiso y lealtad de los clientes",
+    "item_type": "skill",
+    "skill_cluster": "Marketing",
+    "skill_family": "Relaciones y compromiso",
+    "description": "Desarrolla y ejecuta estrategias para atraer, comprometer y retener a los clientes mediante comunicaciones específicas e iniciativas de lealtad.",
+    "levels_defined": [
+      3,
+      4,
+      5,
+      6
+    ],
+    "source_framework": "SFIA",
+    "version": "9",
+    "active": true
+  },
+  {
+    "skill_id": "SFIA_SKILL_CEXP",
+    "skill_code": "CEXP",
+    "skill_name": "Experiencia del cliente",
+    "item_type": "skill",
+    "skill_cluster": "Diseño centrado en el usuario",
+    "skill_family": "Desarrollo e implementación",
+    "description": "Garantizar la entrega de interacciones y experiencias de alta calidad que cumplan las expectativas de los clientes en todos los puntos de contacto y canales.",
+    "levels_defined": [
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "source_framework": "SFIA",
+    "version": "9",
+    "active": true
+  },
+  {
+    "skill_id": "SFIA_SKILL_CFMG",
+    "skill_code": "CFMG",
+    "skill_name": "Gestión de la configuración",
+    "item_type": "skill",
+    "skill_cluster": "Gestión de tecnologías",
+    "skill_family": "Prestación y funcionamiento",
+    "description": "Planificar, identificar, controlar, contabilizar y auditar elementos de configuración (CI) y sus interrelaciones.",
+    "levels_defined": [
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "source_framework": "SFIA",
+    "version": "9",
+    "active": true
+  },
+  {
+    "skill_id": "SFIA_SKILL_CHMG",
+    "skill_code": "CHMG",
+    "skill_name": "Control de cambios",
+    "item_type": "skill",
+    "skill_cluster": "Gestión de servicios",
+    "skill_family": "Prestación y funcionamiento",
+    "description": "Evaluar los riesgos asociados con los cambios propuestos y garantizar el control y la coordinación de los cambios en los productos, servicios o sistemas.",
+    "levels_defined": [
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "source_framework": "SFIA",
+    "version": "9",
+    "active": true
+  },
+  {
+    "skill_id": "SFIA_SKILL_CIPM",
+    "skill_code": "CIPM",
+    "skill_name": "Gestión del cambio organizativo",
+    "item_type": "skill",
+    "skill_cluster": "Planificación de cambios",
+    "skill_family": "Cambio y transformación",
+    "description": "Planificar, diseñar e implementar actividades para la transición de la organización y las personas al estado futuro requerido.",
+    "levels_defined": [
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "source_framework": "SFIA",
+    "version": "9",
+    "active": true
+  },
+  {
+    "skill_id": "SFIA_SKILL_CNSL",
+    "skill_code": "CNSL",
+    "skill_name": "Consultoría",
+    "item_type": "skill",
+    "skill_cluster": "Asesoramiento y orientación",
+    "skill_family": "Estrategia y arquitectura",
+    "description": "Proporciona consejos y recomendaciones, basados en conocimientos y experiencia, para abordar las necesidades del cliente.",
+    "levels_defined": [
+      4,
+      5,
+      6,
+      7
+    ],
+    "source_framework": "SFIA",
+    "version": "9",
+    "active": true
+  },
+  {
+    "skill_id": "SFIA_SKILL_COMG",
+    "skill_code": "COMG",
+    "skill_name": "Gestión de costos",
+    "item_type": "skill",
+    "skill_cluster": "Gestión financiera y de valor",
+    "skill_family": "Estrategia y arquitectura",
+    "description": "Planificar, controlar y analizar los costos para permitir el uso eficaz de los recursos financieros.",
+    "levels_defined": [
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "source_framework": "SFIA",
+    "version": "9",
+    "active": true
+  },
+  {
+    "skill_id": "SFIA_SKILL_COPL",
+    "skill_code": "COPL",
+    "skill_name": "Gestión de la continuidad",
+    "item_type": "skill",
+    "skill_cluster": "Gestión de servicios",
+    "skill_family": "Prestación y funcionamiento",
+    "description": "Desarrollar, implementar y probar un marco de la continuidad del negocio.",
+    "levels_defined": [
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "source_framework": "SFIA",
+    "version": "9",
+    "active": true
+  },
+  {
+    "skill_id": "SFIA_SKILL_CPMG",
+    "skill_code": "CPMG",
+    "skill_name": "Gestión de la capacidad",
+    "item_type": "skill",
+    "skill_cluster": "Gestión de servicios",
+    "skill_family": "Prestación y funcionamiento",
+    "description": "Garantizar que los componentes del servicio tengan la capacidad y el rendimiento necesarios para satisfacer las necesidades actuales y planificadas del negocio.",
+    "levels_defined": [
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "source_framework": "SFIA",
+    "version": "9",
+    "active": true
+  },
+  {
+    "skill_id": "SFIA_SKILL_CRIM",
+    "skill_code": "CRIM",
+    "skill_name": "Investigación de delitos cibernéticos",
+    "item_type": "skill",
+    "skill_cluster": "Servicios de seguridad",
+    "skill_family": "Prestación y funcionamiento",
+    "description": "Investiga ciberdelitos, recopila evidencia, determina los impactos de los incidentes y colabora con los equipos legales para proteger los activos digitales.",
+    "levels_defined": [
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "source_framework": "SFIA",
+    "version": "9",
+    "active": true
+  },
+  {
+    "skill_id": "SFIA_SKILL_CSMG",
+    "skill_code": "CSMG",
+    "skill_name": "Soporte de servicio al cliente",
+    "item_type": "skill",
+    "skill_cluster": "Gestión de los interesados",
+    "skill_family": "Relaciones y compromiso",
+    "description": "Gestionar y operar las funciones del servicio de atención al cliente o del servicio técnico.",
+    "levels_defined": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "source_framework": "SFIA",
+    "version": "9",
+    "active": true
+  },
+  {
+    "skill_id": "SFIA_SKILL_CSOP",
+    "skill_code": "CSOP",
+    "skill_name": "Operación del esquema de certificación",
+    "item_type": "skill",
+    "skill_cluster": "Gestión de habilidades",
+    "skill_family": "Personas y habilidades",
+    "description": "Diseñar, desarrollar y operar esquemas de certificación, acreditaciones y credenciales, incluidas credenciales o insignias digitales.",
+    "levels_defined": [
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "source_framework": "SFIA",
+    "version": "9",
+    "active": true
+  },
+  {
+    "skill_id": "SFIA_SKILL_DAAN",
+    "skill_code": "DAAN",
+    "skill_name": "Analítica de datos",
+    "item_type": "skill",
+    "skill_cluster": "Datos y analítica",
+    "skill_family": "Desarrollo e implementación",
+    "description": "Permite la toma de decisiones basada en datos mediante la extracción, el análisis y la comunicación de información a partir de datos estructurados y no estructurados.",
+    "levels_defined": [
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "source_framework": "SFIA",
+    "version": "9",
+    "active": true
+  },
+  {
+    "skill_id": "SFIA_SKILL_DATM",
+    "skill_code": "DATM",
+    "skill_name": "Gestión de datos",
+    "item_type": "skill",
+    "skill_cluster": "Datos y analítica",
+    "skill_family": "Desarrollo e implementación",
+    "description": "Desarrollar e implementar planes, políticas y prácticas que controlen, protejan y optimicen el valor y la gobernanza de los activos de datos.",
+    "levels_defined": [
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "source_framework": "SFIA",
+    "version": "9",
+    "active": true
+  },
+  {
+    "skill_id": "SFIA_SKILL_DATS",
+    "skill_code": "DATS",
+    "skill_name": "Ciencia de datos",
+    "item_type": "skill",
+    "skill_cluster": "Datos y analítica",
+    "skill_family": "Desarrollo e implementación",
+    "description": "Aplicar matemática, estadística, minería de datos y técnicas de creación de modelos predictivos para obtener información, predecir comportamientos y generar valor a partir de los datos.",
+    "levels_defined": [
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "source_framework": "SFIA",
+    "version": "9",
+    "active": true
+  },
+  {
+    "skill_id": "SFIA_SKILL_DBAD",
+    "skill_code": "DBAD",
+    "skill_name": "Administración de bases de datos",
+    "item_type": "skill",
+    "skill_cluster": "Operaciones de datos y registros",
+    "skill_family": "Prestación y funcionamiento",
+    "description": "Instalación, configuración, monitoreo, mantenimiento de bases de datos, así como de datos almacenados, asegurando el rendimiento, la seguridad y la adaptación a las tecnologías evolutivas.",
+    "levels_defined": [
+      2,
+      3,
+      4,
+      5
+    ],
+    "source_framework": "SFIA",
+    "version": "9",
+    "active": true
+  },
+  {
+    "skill_id": "SFIA_SKILL_DBDS",
+    "skill_code": "DBDS",
+    "skill_name": "Diseño de base de datos",
+    "item_type": "skill",
+    "skill_cluster": "Datos y analítica",
+    "skill_family": "Desarrollo e implementación",
+    "description": "Especificar, diseñar y mantener mecanismos para almacenar y acceder a datos en diversos entornos y plataformas.",
+    "levels_defined": [
+      2,
+      3,
+      4,
+      5
+    ],
+    "source_framework": "SFIA",
+    "version": "9",
+    "active": true
+  },
+  {
+    "skill_id": "SFIA_SKILL_DCMA",
+    "skill_code": "DCMA",
+    "skill_name": "Gestión de instalaciones",
+    "item_type": "skill",
+    "skill_cluster": "Gestión de tecnologías",
+    "skill_family": "Prestación y funcionamiento",
+    "description": "Planificar, diseñar y gestionar los edificios, el espacio y las instalaciones que, en conjunto, conforman el parque informático de TI.",
+    "levels_defined": [
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "source_framework": "SFIA",
+    "version": "9",
+    "active": true
+  },
+  {
+    "skill_id": "SFIA_SKILL_DEMG",
+    "skill_code": "DEMG",
+    "skill_name": "Gestión de la entrega",
+    "item_type": "skill",
+    "skill_cluster": "Implementación del cambio empresarial",
+    "skill_family": "Cambio y transformación",
+    "description": "Garantizar la entrega exitosa de productos y servicios, ya sean nuevos o actualizados a través del liderazgo y la colaboración dentro de los ciclos de entrega definidos.",
+    "levels_defined": [
+      3,
+      4,
+      5,
+      6
+    ],
+    "source_framework": "SFIA",
+    "version": "9",
+    "active": true
+  },
+  {
+    "skill_id": "SFIA_SKILL_DEMM",
+    "skill_code": "DEMM",
+    "skill_name": "Gestión de la demanda",
+    "item_type": "skill",
+    "skill_cluster": "Gestión financiera y de valor",
+    "skill_family": "Estrategia y arquitectura",
+    "description": "Analizar y gestionar activamente la demanda del negocio para nuevos servicios o modificaciones a características o volúmenes de servicios existentes.",
+    "levels_defined": [
+      4,
+      5,
+      6
+    ],
+    "source_framework": "SFIA",
+    "version": "9",
+    "active": true
+  },
+  {
+    "skill_id": "SFIA_SKILL_DENG",
+    "skill_code": "DENG",
+    "skill_name": "Ingeniería de datos",
+    "item_type": "skill",
+    "skill_cluster": "Datos y analítica",
+    "skill_family": "Desarrollo e implementación",
+    "description": "Diseño, construcción, puesta en funcionamiento, seguridad y monitorización de canalizaciones de datos, almacenes y sistemas de procesamiento en tiempo real para una gestión de datos escalable y confiable.",
+    "levels_defined": [
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "source_framework": "SFIA",
+    "version": "9",
+    "active": true
+  },
+  {
+    "skill_id": "SFIA_SKILL_DEPL",
+    "skill_code": "DEPL",
+    "skill_name": "Despliegue",
+    "item_type": "skill",
+    "skill_cluster": "Gestión de tecnologías",
+    "skill_family": "Prestación y funcionamiento",
+    "description": "Transición del software del ambiente de desarrollo al ambiente productivo, gestionando los riesgos y asegurando que funcione según lo previsto.",
+    "levels_defined": [
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "source_framework": "SFIA",
+    "version": "9",
+    "active": true
+  },
+  {
+    "skill_id": "SFIA_SKILL_DESN",
+    "skill_code": "DESN",
+    "skill_name": "Diseño de sistemas",
+    "item_type": "skill",
+    "skill_cluster": "Desarrollo de sistemas",
+    "skill_family": "Desarrollo e implementación",
+    "description": "Diseña sistemas para cumplir con requisitos específicos y arquitecturas de sistemas acordadas.",
+    "levels_defined": [
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "source_framework": "SFIA",
+    "version": "9",
+    "active": true
+  },
+  {
+    "skill_id": "SFIA_SKILL_DGFS",
+    "skill_code": "DGFS",
+    "skill_name": "Análisis forense digital",
+    "item_type": "skill",
+    "skill_cluster": "Servicios de seguridad",
+    "skill_family": "Prestación y funcionamiento",
+    "description": "Recuperar e investigar material que se encuentra en los dispositivos digitales.",
+    "levels_defined": [
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "source_framework": "SFIA",
+    "version": "9",
+    "active": true
+  },
+  {
+    "skill_id": "SFIA_SKILL_DIGM",
+    "skill_code": "DIGM",
+    "skill_name": "Mercadeo digital",
+    "item_type": "skill",
+    "skill_cluster": "Marketing",
+    "skill_family": "Relaciones y compromiso",
+    "description": "Planificación y ejecución de actividades de promoción de productos, servicios y marcas a través de canales y tecnologías digitales.",
+    "levels_defined": [
+      2,
+      3,
+      4,
+      5
+    ],
+    "source_framework": "SFIA",
+    "version": "9",
+    "active": true
+  },
+  {
+    "skill_id": "SFIA_SKILL_DLMG",
+    "skill_code": "DLMG",
+    "skill_name": "Gestión de desarrollo de sistemas",
+    "item_type": "skill",
+    "skill_cluster": "Desarrollo de sistemas",
+    "skill_family": "Desarrollo e implementación",
+    "description": "Planificar, estimar y ejecutar el trabajo de desarrollo de sistemas según los objetivos de tiempo, presupuesto y calidad.",
+    "levels_defined": [
+      4,
+      5,
+      6,
+      7
+    ],
+    "source_framework": "SFIA",
+    "version": "9",
+    "active": true
+  },
+  {
+    "skill_id": "SFIA_SKILL_DTAN",
+    "skill_code": "DTAN",
+    "skill_name": "Modelado y diseño de datos",
+    "item_type": "skill",
+    "skill_cluster": "Datos y analítica",
+    "skill_family": "Desarrollo e implementación",
+    "description": "Desarrollar modelos y diagramas para representar, comunicar y gestionar los requisitos de los datos y de los activos de datos.",
+    "levels_defined": [
+      2,
+      3,
+      4,
+      5
+    ],
+    "source_framework": "SFIA",
+    "version": "9",
+    "active": true
+  },
+  {
+    "skill_id": "SFIA_SKILL_EEXP",
+    "skill_code": "EEXP",
+    "skill_name": "Experiencia de los empleados",
+    "item_type": "skill",
+    "skill_cluster": "Gestión de personas",
+    "skill_family": "Personas y habilidades",
+    "description": "Mejorar la participación y la manera de trabajar de los empleados, empoderarlos y promover su salud y bienestar.",
+    "levels_defined": [
+      4,
+      5,
+      6
+    ],
+    "source_framework": "SFIA",
+    "version": "9",
+    "active": true
+  },
+  {
+    "skill_id": "SFIA_SKILL_EMRG",
+    "skill_code": "EMRG",
+    "skill_name": "Monitoreo de la tecnología emergente",
+    "item_type": "skill",
+    "skill_cluster": "Estrategia y planificación",
+    "skill_family": "Estrategia y arquitectura",
+    "description": "Identificar y evaluar tecnologías, productos, servicios, métodos y técnicas nuevos y emergentes.",
+    "levels_defined": [
+      4,
+      5,
+      6
+    ],
+    "source_framework": "SFIA",
+    "version": "9",
+    "active": true
+  },
+  {
+    "skill_id": "SFIA_SKILL_ETDL",
+    "skill_code": "ETDL",
+    "skill_name": "Entrega de aprendizaje",
+    "item_type": "skill",
+    "skill_cluster": "Gestión de habilidades",
+    "skill_family": "Personas y habilidades",
+    "description": "Transferir conocimientos, desarrollar habilidades y cambiar comportamientos utilizando una variedad de técnicas, recursos y medios.",
+    "levels_defined": [
+      2,
+      3,
+      4,
+      5
+    ],
+    "source_framework": "SFIA",
+    "version": "9",
+    "active": true
+  },
+  {
+    "skill_id": "SFIA_SKILL_ETMG",
+    "skill_code": "ETMG",
+    "skill_name": "Gestión de aprendizaje y desarrollo",
+    "item_type": "skill",
+    "skill_cluster": "Gestión de habilidades",
+    "skill_family": "Personas y habilidades",
+    "description": "Brindar servicios de gestión, asesoría y administración para apoyar el desarrollo de conocimientos, habilidades y competencias.",
+    "levels_defined": [
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "source_framework": "SFIA",
+    "version": "9",
+    "active": true
+  },
+  {
+    "skill_id": "SFIA_SKILL_FEAS",
+    "skill_code": "FEAS",
+    "skill_name": "Evaluación de viabilidad",
+    "item_type": "skill",
+    "skill_cluster": "Análisis de cambios",
+    "skill_family": "Cambio y transformación",
+    "description": "Definir, evaluar y describir las opciones de cambio empresarial para la viabilidad financiera, técnica y del negocio, y el alineamiento estratégico.",
+    "levels_defined": [
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "source_framework": "SFIA",
+    "version": "9",
+    "active": true
+  },
+  {
+    "skill_id": "SFIA_SKILL_FIAN",
+    "skill_code": "FIAN",
+    "skill_name": "Análisis financiero",
+    "item_type": "skill",
+    "skill_cluster": "Gestión financiera y de valor",
+    "skill_family": "Estrategia y arquitectura",
+    "description": "Llevar a cabo un análisis profundo de los datos financieros para obtener información y perspectivas para apoyar la toma de decisiones",
+    "levels_defined": [
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "source_framework": "SFIA",
+    "version": "9",
+    "active": true
+  },
+  {
+    "skill_id": "SFIA_SKILL_FMIT",
+    "skill_code": "FMIT",
+    "skill_name": "Gestión financiera",
+    "item_type": "skill",
+    "skill_cluster": "Gestión financiera y de valor",
+    "skill_family": "Estrategia y arquitectura",
+    "description": "Gestionar el uso y control eficaces de los recursos financieros para apoyar las estrategias de negocio, el cumplimiento y la mitigación de riesgos.",
+    "levels_defined": [
+      4,
+      5,
+      6
+    ],
+    "source_framework": "SFIA",
+    "version": "9",
+    "active": true
+  },
+  {
+    "skill_id": "SFIA_SKILL_GOVN",
+    "skill_code": "GOVN",
+    "skill_name": "Gobernanza",
+    "item_type": "skill",
+    "skill_cluster": "Gobierno, riesgo y cumplimiento",
+    "skill_family": "Estrategia y arquitectura",
+    "description": "Definir y operar marcos para el apoyo de la toma de decisiones, gestión de riesgos, relaciones con las partes interesadas y el cumplimiento de las obligaciones organizativas y regulatorias.",
+    "levels_defined": [
+      6,
+      7
+    ],
+    "source_framework": "SFIA",
+    "version": "9",
+    "active": true
+  },
+  {
+    "skill_id": "SFIA_SKILL_GRDN",
+    "skill_code": "GRDN",
+    "skill_name": "Diseño gráfico",
+    "item_type": "skill",
+    "skill_cluster": "Gestión de contenido",
+    "skill_family": "Desarrollo e implementación",
+    "description": "Crear y aplicar conceptos visuales para comunicar ideas, mejorar la estética y mejorar la experiencia del usuario en medios digitales e impresos.",
+    "levels_defined": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "source_framework": "SFIA",
+    "version": "9",
+    "active": true
+  },
+  {
+    "skill_id": "SFIA_SKILL_HCEV",
+    "skill_code": "HCEV",
+    "skill_name": "Diseño de experiencia de usuario",
+    "item_type": "skill",
+    "skill_cluster": "Diseño centrado en el usuario",
+    "skill_family": "Desarrollo e implementación",
+    "description": "Elaborar conceptos y prototipos de diseño para las interacciones y experiencias del usuario con un producto, sistema o servicio.",
+    "levels_defined": [
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "source_framework": "SFIA",
+    "version": "9",
+    "active": true
+  },
+  {
+    "skill_id": "SFIA_SKILL_HPCC",
+    "skill_code": "HPCC",
+    "skill_name": "Computación de alto rendimiento",
+    "item_type": "skill",
+    "skill_cluster": "Ciencia computacional",
+    "skill_family": "Desarrollo e implementación",
+    "description": "Usar sistemas informáticos avanzados y técnicas de programación especiales para resolver problemas informáticos complejos.",
+    "levels_defined": [
+      4,
+      5,
+      6,
+      7
+    ],
+    "source_framework": "SFIA",
+    "version": "9",
+    "active": true
+  },
+  {
+    "skill_id": "SFIA_SKILL_HSIN",
+    "skill_code": "HSIN",
+    "skill_name": "Instalación y desinstalación de sistemas",
+    "item_type": "skill",
+    "skill_cluster": "Gestión de tecnologías",
+    "skill_family": "Prestación y funcionamiento",
+    "description": "Instalar y probar, o desmantelar y eliminar, sistemas o componentes del sistema.",
+    "levels_defined": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "source_framework": "SFIA",
+    "version": "9",
+    "active": true
+  },
+  {
+    "skill_id": "SFIA_SKILL_HWDE",
+    "skill_code": "HWDE",
+    "skill_name": "Diseño de hardware",
+    "item_type": "skill",
+    "skill_cluster": "Desarrollo de sistemas",
+    "skill_family": "Desarrollo e implementación",
+    "description": "Especificar y diseñar sistemas y componentes de hardware para cumplir con los requisitos definidos siguiendo los principios y estándares de diseño acordados.",
+    "levels_defined": [
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "source_framework": "SFIA",
+    "version": "9",
+    "active": true
+  },
+  {
+    "skill_id": "SFIA_SKILL_IAMT",
+    "skill_code": "IAMT",
+    "skill_name": "Gestión de identidad y acceso",
+    "item_type": "skill",
+    "skill_cluster": "Servicios de seguridad",
+    "skill_family": "Prestación y funcionamiento",
+    "description": "Gestiona la verificación de identidad y los permisos de acceso dentro de los sistemas y entornos organizativos.",
+    "levels_defined": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "source_framework": "SFIA",
+    "version": "9",
+    "active": true
+  },
+  {
+    "skill_id": "SFIA_SKILL_ICPM",
+    "skill_code": "ICPM",
+    "skill_name": "Publicación de contenido",
+    "item_type": "skill",
+    "skill_cluster": "Gestión de contenido",
+    "skill_family": "Desarrollo e implementación",
+    "description": "Gestionar procesos para recopilar, ensamblar y publicar contenido en diversos canales para satisfacer las necesidades de la organización y de la audiencia.",
+    "levels_defined": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "source_framework": "SFIA",
+    "version": "9",
+    "active": true
+  },
+  {
+    "skill_id": "SFIA_SKILL_IFDN",
+    "skill_code": "IFDN",
+    "skill_name": "Diseño de infraestructura",
+    "item_type": "skill",
+    "skill_cluster": "Desarrollo de sistemas",
+    "skill_family": "Desarrollo e implementación",
+    "description": "Diseñar infraestructura tecnológica para satisfacer los requisitos del negocio, garantizando escalabilidad, confiabilidad, seguridad y alineación con los objetivos estratégicos.",
+    "levels_defined": [
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "source_framework": "SFIA",
+    "version": "9",
+    "active": true
+  },
+  {
+    "skill_id": "SFIA_SKILL_INAS",
+    "skill_code": "INAS",
+    "skill_name": "Aseguramiento de la información",
+    "item_type": "skill",
+    "skill_cluster": "Seguridad y privacidad",
+    "skill_family": "Estrategia y arquitectura",
+    "description": "Proteger y gestionar los riesgos relacionados con el uso, el almacenamiento y la transmisión de datos y sistemas de información.",
+    "levels_defined": [
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "source_framework": "SFIA",
+    "version": "9",
+    "active": true
+  },
+  {
+    "skill_id": "SFIA_SKILL_INCA",
+    "skill_code": "INCA",
+    "skill_name": "Diseño y autoría de contenidos",
+    "item_type": "skill",
+    "skill_cluster": "Gestión de contenido",
+    "skill_family": "Desarrollo e implementación",
+    "description": "Planificación, diseño y creación de contenidos que satisfagan las necesidades del usuario y de la organización, incluida información textual, contenidos gráficos y elementos multimedia.",
+    "levels_defined": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "source_framework": "SFIA",
+    "version": "9",
+    "active": true
+  },
+  {
+    "skill_id": "SFIA_SKILL_INOV",
+    "skill_code": "INOV",
+    "skill_name": "Gestión de la innovación",
+    "item_type": "skill",
+    "skill_cluster": "Estrategia y planificación",
+    "skill_family": "Estrategia y arquitectura",
+    "description": "Identificar, priorizar, incubar y aprovechar las oportunidades que brindan las tecnologías de la información, de la comunicación y digitales.",
+    "levels_defined": [
+      5,
+      6,
+      7
+    ],
+    "source_framework": "SFIA",
+    "version": "9",
+    "active": true
+  },
+  {
+    "skill_id": "SFIA_SKILL_INVA",
+    "skill_code": "INVA",
+    "skill_name": "Evaluación de inversiones",
+    "item_type": "skill",
+    "skill_cluster": "Gestión financiera y de valor",
+    "skill_family": "Estrategia y arquitectura",
+    "description": "Evaluar el atractivo de posibles inversiones o proyectos.",
+    "levels_defined": [
+      4,
+      5,
+      6
+    ],
+    "source_framework": "SFIA",
+    "version": "9",
+    "active": true
+  },
+  {
+    "skill_id": "SFIA_SKILL_IRMG",
+    "skill_code": "IRMG",
+    "skill_name": "Gestión de la información",
+    "item_type": "skill",
+    "skill_cluster": "Estrategia y planificación",
+    "skill_family": "Estrategia y arquitectura",
+    "description": "Permitir la gestión y el uso eficaces de los activos de información.",
+    "levels_defined": [
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "source_framework": "SFIA",
+    "version": "9",
+    "active": true
+  },
+  {
+    "skill_id": "SFIA_SKILL_ISCO",
+    "skill_code": "ISCO",
+    "skill_name": "Coordinación de sistemas de información",
+    "item_type": "skill",
+    "skill_cluster": "Estrategia y planificación",
+    "skill_family": "Estrategia y arquitectura",
+    "description": "Coordinar estrategias de tecnología e información donde la adopción de un enfoque común beneficiaría a la organización.",
+    "levels_defined": [
+      6,
+      7
+    ],
+    "source_framework": "SFIA",
+    "version": "9",
+    "active": true
+  },
+  {
+    "skill_id": "SFIA_SKILL_ITCM",
+    "skill_code": "ITCM",
+    "skill_name": "Gestión de contratos",
+    "item_type": "skill",
+    "skill_cluster": "Gestión de los interesados",
+    "skill_family": "Relaciones y compromiso",
+    "description": "Gestionar y operar contratos formales, atendiendo las necesidades de los proveedores y los clientes en la prestación de productos y servicios.",
+    "levels_defined": [
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "source_framework": "SFIA",
+    "version": "9",
+    "active": true
+  },
+  {
+    "skill_id": "SFIA_SKILL_ITMG",
+    "skill_code": "ITMG",
+    "skill_name": "Gestión de servicios tecnológicos",
+    "item_type": "skill",
+    "skill_cluster": "Gestión de tecnologías",
+    "skill_family": "Prestación y funcionamiento",
+    "description": "Gestionar la prestación de servicios basados en la tecnología para cumplir necesidades organizacionales definidas.",
+    "levels_defined": [
+      5,
+      6,
+      7
+    ],
+    "source_framework": "SFIA",
+    "version": "9",
+    "active": true
+  },
+  {
+    "skill_id": "SFIA_SKILL_ITOP",
+    "skill_code": "ITOP",
+    "skill_name": "Operaciones de infraestructura",
+    "item_type": "skill",
+    "skill_cluster": "Gestión de tecnologías",
+    "skill_family": "Prestación y funcionamiento",
+    "description": "Aprovisionamiento, despliegue, configuración, operación y optimización de la infraestructura tecnológica en entornos físicos, virtuales y basados en la nube.",
+    "levels_defined": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "source_framework": "SFIA",
+    "version": "9",
+    "active": true
+  },
+  {
+    "skill_id": "SFIA_SKILL_ITSP",
+    "skill_code": "ITSP",
+    "skill_name": "Planificación estratégica",
+    "item_type": "skill",
+    "skill_cluster": "Estrategia y planificación",
+    "skill_family": "Estrategia y arquitectura",
+    "description": "Crear y mantener estrategias a nivel organizacional para alinear los planes, acciones y recursos de negocio generales con los objetivos de negocio de alto nivel.",
+    "levels_defined": [
+      4,
+      5,
+      6,
+      7
+    ],
+    "source_framework": "SFIA",
+    "version": "9",
+    "active": true
+  },
+  {
+    "skill_id": "SFIA_SKILL_JADN",
+    "skill_code": "JADN",
+    "skill_name": "Análisis y diseño de puestos",
+    "item_type": "skill",
+    "skill_cluster": "Planificación de cambios",
+    "skill_family": "Cambio y transformación",
+    "description": "Planificación, análisis y diseño de roles y estructuras de trabajo para alinearse con los requisitos, metas y cultura organizacionales.",
+    "levels_defined": [
+      3,
+      4,
+      5
+    ],
+    "source_framework": "SFIA",
+    "version": "9",
+    "active": true
+  },
+  {
+    "skill_id": "SFIA_SKILL_KNOW",
+    "skill_code": "KNOW",
+    "skill_name": "Gestión del conocimiento",
+    "item_type": "skill",
+    "skill_cluster": "Gestión de contenido",
+    "skill_family": "Desarrollo e implementación",
+    "description": "Capturar, desarrollar y aprovechar sistemáticamente los conocimientos vitales para crear valor y mejorar el rendimiento de la organización.",
+    "levels_defined": [
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "source_framework": "SFIA",
+    "version": "9",
+    "active": true
+  },
+  {
+    "skill_id": "SFIA_SKILL_LEDA",
+    "skill_code": "LEDA",
+    "skill_name": "Evaluación de competencias",
+    "item_type": "skill",
+    "skill_cluster": "Gestión de habilidades",
+    "skill_family": "Personas y habilidades",
+    "description": "Evaluar conocimientos, habilidades, competencias y comportamientos por cualquier medio, ya sea formal o informal, frente a marcos como SFIA.",
+    "levels_defined": [
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "source_framework": "SFIA",
+    "version": "9",
+    "active": true
+  },
+  {
+    "skill_id": "SFIA_SKILL_MEAS",
+    "skill_code": "MEAS",
+    "skill_name": "Medición",
+    "item_type": "skill",
+    "skill_cluster": "Gestión financiera y de valor",
+    "skill_family": "Estrategia y arquitectura",
+    "description": "Desarrollar y operar una capacidad de medición para respaldar las necesidades de información organizacional.",
+    "levels_defined": [
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "source_framework": "SFIA",
+    "version": "9",
+    "active": true
+  },
+  {
+    "skill_id": "SFIA_SKILL_METL",
+    "skill_code": "METL",
+    "skill_name": "Métodos y herramientas",
+    "item_type": "skill",
+    "skill_cluster": "Asesoramiento y orientación",
+    "skill_family": "Estrategia y arquitectura",
+    "description": "Lidera la adopción, gestión y optimización de métodos y herramientas, garantizando un uso efectivo y el alineamiento con los objetivos organizacionales.",
+    "levels_defined": [
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "source_framework": "SFIA",
+    "version": "9",
+    "active": true
+  },
+  {
+    "skill_id": "SFIA_SKILL_MKCM",
+    "skill_code": "MKCM",
+    "skill_name": "Gestión de campañas de mercadeo",
+    "item_type": "skill",
+    "skill_cluster": "Marketing",
+    "skill_family": "Relaciones y compromiso",
+    "description": "Ejecutar, supervisar y optimizar campañas de mercadeo en diferentes canales para captar al público objetivo y lograr los resultados deseados.",
+    "levels_defined": [
+      3,
+      4,
+      5
+    ],
+    "source_framework": "SFIA",
+    "version": "9",
+    "active": true
+  },
+  {
+    "skill_id": "SFIA_SKILL_MKTG",
+    "skill_code": "MKTG",
+    "skill_name": "Gestión de mercadeo",
+    "item_type": "skill",
+    "skill_cluster": "Marketing",
+    "skill_family": "Relaciones y compromiso",
+    "description": "Desarrollar, implementar y gestionar estrategias y planes de mercadeo para alcanzar los objetivos organizacionales e impulsar el crecimiento del negocio.",
+    "levels_defined": [
+      4,
+      5,
+      6,
+      7
+    ],
+    "source_framework": "SFIA",
+    "version": "9",
+    "active": true
+  },
+  {
+    "skill_id": "SFIA_SKILL_MLNG",
+    "skill_code": "MLNG",
+    "skill_name": "Aprendizaje automático",
+    "item_type": "skill",
+    "skill_cluster": "Datos y analítica",
+    "skill_family": "Desarrollo e implementación",
+    "description": "Desarrollar sistemas que aprendan de los datos y la experiencia, mejorando el rendimiento, la precisión y la adaptabilidad en entornos dinámicos.",
+    "levels_defined": [
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "source_framework": "SFIA",
+    "version": "9",
+    "active": true
+  },
+  {
+    "skill_id": "SFIA_SKILL_MRCH",
+    "skill_code": "MRCH",
+    "skill_name": "Estudios de mercado",
+    "item_type": "skill",
+    "skill_cluster": "Marketing",
+    "skill_family": "Relaciones y compromiso",
+    "description": "Recopilar, analizar e interpretar datos sobre mercados, clientes y competidores para fundamentar decisiones y estrategias de negocio.",
+    "levels_defined": [
+      3,
+      4,
+      5,
+      6
+    ],
+    "source_framework": "SFIA",
+    "version": "9",
+    "active": true
+  },
+  {
+    "skill_id": "SFIA_SKILL_NFTS",
+    "skill_code": "NFTS",
+    "skill_name": "Pruebas de aspectos no funcionales",
+    "item_type": "skill",
+    "skill_cluster": "Desarrollo de sistemas",
+    "skill_family": "Desarrollo e implementación",
+    "description": "Evaluar los sistemas y servicios para revisar el rendimiento, la seguridad, la escalabilidad y otras características no funcionales con respecto a los requisitos o a los estándares esperados.",
+    "levels_defined": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "source_framework": "SFIA",
+    "version": "9",
+    "active": true
+  },
+  {
+    "skill_id": "SFIA_SKILL_NTAS",
+    "skill_code": "NTAS",
+    "skill_name": "Soporte de red",
+    "item_type": "skill",
+    "skill_cluster": "Gestión de tecnologías",
+    "skill_family": "Prestación y funcionamiento",
+    "description": "Prestación de servicios de mantenimiento y soporte para redes de comunicaciones.",
+    "levels_defined": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "source_framework": "SFIA",
+    "version": "9",
+    "active": true
+  },
+  {
+    "skill_id": "SFIA_SKILL_NTDS",
+    "skill_code": "NTDS",
+    "skill_name": "Diseño de redes",
+    "item_type": "skill",
+    "skill_cluster": "Desarrollo de sistemas",
+    "skill_family": "Desarrollo e implementación",
+    "description": "Diseño de redes de comunicación para satisfacer los requerimientos del negocio, asegurando escalabilidad, confiabilidad, seguridad y alineación con los objetivos estratégicos.",
+    "levels_defined": [
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "source_framework": "SFIA",
+    "version": "9",
+    "active": true
+  },
+  {
+    "skill_id": "SFIA_SKILL_NUAN",
+    "skill_code": "NUAN",
+    "skill_name": "Análisis numérico",
+    "item_type": "skill",
+    "skill_cluster": "Ciencia computacional",
+    "skill_family": "Desarrollo e implementación",
+    "description": "Crear, analizar, implementar, probar y mejorar los algoritmos para la resolución numérica de problemas matemáticos.",
+    "levels_defined": [
+      4,
+      5,
+      6,
+      7
+    ],
+    "source_framework": "SFIA",
+    "version": "9",
+    "active": true
+  },
+  {
+    "skill_id": "SFIA_SKILL_OCDV",
+    "skill_code": "OCDV",
+    "skill_name": "Desarrollo de las capacidades organizativas",
+    "item_type": "skill",
+    "skill_cluster": "Planificación de cambios",
+    "skill_family": "Cambio y transformación",
+    "description": "Brindar liderazgo, asesoramiento y apoyo para la implementación a fin de evaluar las capacidades organizativas e identificar, priorizar e implementar mejoras.",
+    "levels_defined": [
+      5,
+      6,
+      7
+    ],
+    "source_framework": "SFIA",
+    "version": "9",
+    "active": true
+  },
+  {
+    "skill_id": "SFIA_SKILL_OCEN",
+    "skill_code": "OCEN",
+    "skill_name": "Habilitación del cambio organizacional",
+    "item_type": "skill",
+    "skill_cluster": "Planificación de cambios",
+    "skill_family": "Cambio y transformación",
+    "description": "Facilita el cambio cultural y de comportamiento al permitir que las personas y los equipos incorporen nuevas formas de trabajo y se adapten a los cambios.",
+    "levels_defined": [
+      4,
+      5,
+      6
+    ],
+    "source_framework": "SFIA",
+    "version": "9",
+    "active": true
+  },
+  {
+    "skill_id": "SFIA_SKILL_OCOP",
+    "skill_code": "OCOP",
+    "skill_name": "Operaciones cibernéticas ofensivas",
+    "item_type": "skill",
+    "skill_cluster": "Servicios de seguridad",
+    "skill_family": "Prestación y funcionamiento",
+    "description": "Planificar, ejecutar y gestionar operaciones ofensivas de ciberseguridad, incluida la selección de blancos, carpetas electrónicas objetivo y análisis posoperativos.",
+    "levels_defined": [
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "source_framework": "SFIA",
+    "version": "9",
+    "active": true
+  },
+  {
+    "skill_id": "SFIA_SKILL_OFCL",
+    "skill_code": "OFCL",
+    "skill_name": "Facilitación organizativa",
+    "item_type": "skill",
+    "skill_cluster": "Gestión de personas",
+    "skill_family": "Personas y habilidades",
+    "description": "Apoyar a los grupos de trabajo para implementar principios y prácticas para un trabajo de equipo efectivo en todas las áreas de la organización y las especialidades profesionales.",
+    "levels_defined": [
+      4,
+      5,
+      6
+    ],
+    "source_framework": "SFIA",
+    "version": "9",
+    "active": true
+  },
+  {
+    "skill_id": "SFIA_SKILL_ORDI",
+    "skill_code": "ORDI",
+    "skill_name": "Implementación y diseño de la organización",
+    "item_type": "skill",
+    "skill_cluster": "Planificación de cambios",
+    "skill_family": "Cambio y transformación",
+    "description": "Planificar, diseñar e implementar una estructura y cultura organizativa integradas.",
+    "levels_defined": [
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "source_framework": "SFIA",
+    "version": "9",
+    "active": true
+  },
+  {
+    "skill_id": "SFIA_SKILL_PBMG",
+    "skill_code": "PBMG",
+    "skill_name": "Gestión de problemas",
+    "item_type": "skill",
+    "skill_cluster": "Gestión de servicios",
+    "skill_family": "Prestación y funcionamiento",
+    "description": "Gestionar el ciclo de vida de todos los problemas que han ocurrido o que podrían producirse durante la prestación de un servicio.",
+    "levels_defined": [
+      2,
+      3,
+      4,
+      5
+    ],
+    "source_framework": "SFIA",
+    "version": "9",
+    "active": true
+  },
+  {
+    "skill_id": "SFIA_SKILL_PDSV",
+    "skill_code": "PDSV",
+    "skill_name": "Desarrollo profesional",
+    "item_type": "skill",
+    "skill_cluster": "Gestión de personas",
+    "skill_family": "Personas y habilidades",
+    "description": "Facilitar el desarrollo profesional de cada persona, de acuerdo con sus objetivos profesionales y requisitos organizacionales.",
+    "levels_defined": [
+      4,
+      5,
+      6
+    ],
+    "source_framework": "SFIA",
+    "version": "9",
+    "active": true
+  },
+  {
+    "skill_id": "SFIA_SKILL_PEDP",
+    "skill_code": "PEDP",
+    "skill_name": "Información y cumplimiento de datos",
+    "item_type": "skill",
+    "skill_cluster": "Seguridad y privacidad",
+    "skill_family": "Estrategia y arquitectura",
+    "description": "Implementar y promover el cumplimiento de las legislaciones sobre la gestión de la información y los datos.",
+    "levels_defined": [
+      4,
+      5,
+      6
+    ],
+    "source_framework": "SFIA",
+    "version": "9",
+    "active": true
+  },
+  {
+    "skill_id": "SFIA_SKILL_PEMT",
+    "skill_code": "PEMT",
+    "skill_name": "Gestión del desempeño",
+    "item_type": "skill",
+    "skill_cluster": "Gestión de personas",
+    "skill_family": "Personas y habilidades",
+    "description": "Mejorar el desempeño organizacional desarrollando el rendimiento individual y de grupos de trabajo para cumplir con los objetivos acordados con resultados mensurables.",
+    "levels_defined": [
+      4,
+      5,
+      6
+    ],
+    "source_framework": "SFIA",
+    "version": "9",
+    "active": true
+  },
+  {
+    "skill_id": "SFIA_SKILL_PENT",
+    "skill_code": "PENT",
+    "skill_name": "Pruebas de penetración",
+    "item_type": "skill",
+    "skill_cluster": "Servicios de seguridad",
+    "skill_family": "Prestación y funcionamiento",
+    "description": "Probar la efectividad de los controles de seguridad emulando las herramientas y técnicas de probables atacantes.",
+    "levels_defined": [
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "source_framework": "SFIA",
+    "version": "9",
+    "active": true
+  },
+  {
+    "skill_id": "SFIA_SKILL_PGMG",
+    "skill_code": "PGMG",
+    "skill_name": "Dirección de programas",
+    "item_type": "skill",
+    "skill_cluster": "Implementación del cambio empresarial",
+    "skill_family": "Cambio y transformación",
+    "description": "Identificar, planificar y coordinar un conjunto de proyectos y actividades relacionados en apoyo de estrategias y objetivos comerciales específicos.",
+    "levels_defined": [
+      6,
+      7
+    ],
+    "source_framework": "SFIA",
+    "version": "9",
+    "active": true
+  },
+  {
+    "skill_id": "SFIA_SKILL_POMG",
+    "skill_code": "POMG",
+    "skill_name": "Dirección de la cartera de proyectos",
+    "item_type": "skill",
+    "skill_cluster": "Implementación del cambio empresarial",
+    "skill_family": "Cambio y transformación",
+    "description": "Desarrollar y aplicar un marco de gestión para definir y prestar una cartera de programas, proyectos y/o servicios continuos.",
+    "levels_defined": [
+      5,
+      6,
+      7
+    ],
+    "source_framework": "SFIA",
+    "version": "9",
+    "active": true
+  },
+  {
+    "skill_id": "SFIA_SKILL_PORT",
+    "skill_code": "PORT",
+    "skill_name": "Configuración de producto de software",
+    "item_type": "skill",
+    "skill_cluster": "Desarrollo de sistemas",
+    "skill_family": "Desarrollo e implementación",
+    "description": "Diseñar e implementar configuraciones de productos de software en entornos o plataformas de software.",
+    "levels_defined": [
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "source_framework": "SFIA",
+    "version": "9",
+    "active": true
+  },
+  {
+    "skill_id": "SFIA_SKILL_PRMG",
+    "skill_code": "PRMG",
+    "skill_name": "Dirección de proyectos",
+    "item_type": "skill",
+    "skill_cluster": "Implementación del cambio empresarial",
+    "skill_family": "Cambio y transformación",
+    "description": "Lograr los resultados acordados del proyecto alineando las técnicas de gestión, colaboración, liderazgo y gobernanza adecuadas con los contextos específicos del proyecto y la organización.",
+    "levels_defined": [
+      4,
+      5,
+      6,
+      7
+    ],
+    "source_framework": "SFIA",
+    "version": "9",
+    "active": true
+  },
+  {
+    "skill_id": "SFIA_SKILL_PROD",
+    "skill_code": "PROD",
+    "skill_name": "Gestión de productos",
+    "item_type": "skill",
+    "skill_cluster": "Desarrollo de sistemas",
+    "skill_family": "Desarrollo e implementación",
+    "description": "Gestionar y desarrollar productos o servicios a través de su ciclo de vida completo, desde la ideación, crecimiento, madurez, deterioro hasta el retiro.",
+    "levels_defined": [
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "source_framework": "SFIA",
+    "version": "9",
+    "active": true
+  },
+  {
+    "skill_id": "SFIA_SKILL_PROF",
+    "skill_code": "PROF",
+    "skill_name": "Apoyo de cartera, programa y proyecto",
+    "item_type": "skill",
+    "skill_cluster": "Implementación del cambio empresarial",
+    "skill_family": "Cambio y transformación",
+    "description": "Brindar apoyo y orientación sobre procesos, procedimientos, herramientas y técnicas para carteras, programas y dirección de proyectos.",
+    "levels_defined": [
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "source_framework": "SFIA",
+    "version": "9",
+    "active": true
+  },
+  {
+    "skill_id": "SFIA_SKILL_PROG",
+    "skill_code": "PROG",
+    "skill_name": "Programación/Desarrollo de software",
+    "item_type": "skill",
+    "skill_cluster": "Desarrollo de sistemas",
+    "skill_family": "Desarrollo e implementación",
+    "description": "Desarrollar componentes de software para ofrecer valor a las partes interesadas.",
+    "levels_defined": [
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "source_framework": "SFIA",
+    "version": "9",
+    "active": true
+  },
+  {
+    "skill_id": "SFIA_SKILL_PRTS",
+    "skill_code": "PRTS",
+    "skill_name": "Pruebas del proceso",
+    "item_type": "skill",
+    "skill_cluster": "Desarrollo de sistemas",
+    "skill_family": "Desarrollo e implementación",
+    "description": "Evaluar los flujos del procesos documentados y no documentados relacionados con un producto, sistema o servicio frente a las necesidades del negocio a través de la investigación y las pruebas.",
+    "levels_defined": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "source_framework": "SFIA",
+    "version": "9",
+    "active": true
+  },
+  {
+    "skill_id": "SFIA_SKILL_QUAS",
+    "skill_code": "QUAS",
+    "skill_name": "Aseguramiento de la calidad",
+    "item_type": "skill",
+    "skill_cluster": "Gobierno, riesgo y cumplimiento",
+    "skill_family": "Estrategia y arquitectura",
+    "description": "Asegurar, a través de la evaluación y la revisión continua y periódica, que se estén cumpliendo los objetivos de calidad de la organización.",
+    "levels_defined": [
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "source_framework": "SFIA",
+    "version": "9",
+    "active": true
+  },
+  {
+    "skill_id": "SFIA_SKILL_QUMG",
+    "skill_code": "QUMG",
+    "skill_name": "Gestión de la calidad",
+    "item_type": "skill",
+    "skill_cluster": "Gobierno, riesgo y cumplimiento",
+    "skill_family": "Estrategia y arquitectura",
+    "description": "Definir y operar un marco de gestión de procesos y prácticas de trabajo para cumplir con los objetivos de calidad de la organización.",
+    "levels_defined": [
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "source_framework": "SFIA",
+    "version": "9",
+    "active": true
+  },
+  {
+    "skill_id": "SFIA_SKILL_RELM",
+    "skill_code": "RELM",
+    "skill_name": "Gestión de liberaciones",
+    "item_type": "skill",
+    "skill_cluster": "Gestión de tecnologías",
+    "skill_family": "Prestación y funcionamiento",
+    "description": "Gestionar la puesta en producción de servicios nuevos y actualizados, garantizando la alineación con los objetivos de negocio y los estándares de cumplimiento.",
+    "levels_defined": [
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "source_framework": "SFIA",
+    "version": "9",
+    "active": true
+  },
+  {
+    "skill_id": "SFIA_SKILL_REQM",
+    "skill_code": "REQM",
+    "skill_name": "Gestión y definición de requerimientos",
+    "item_type": "skill",
+    "skill_cluster": "Análisis de cambios",
+    "skill_family": "Cambio y transformación",
+    "description": "Gestión de los requerimientos durante todo el ciclo de vida operativo y de entrega.",
+    "levels_defined": [
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "source_framework": "SFIA",
+    "version": "9",
+    "active": true
+  },
+  {
+    "skill_id": "SFIA_SKILL_RESC",
+    "skill_code": "RESC",
+    "skill_name": "Administración de recursos",
+    "item_type": "skill",
+    "skill_cluster": "Gestión de personas",
+    "skill_family": "Personas y habilidades",
+    "description": "Adquirir, implementar e incorporar recursos.",
+    "levels_defined": [
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "source_framework": "SFIA",
+    "version": "9",
+    "active": true
+  },
+  {
+    "skill_id": "SFIA_SKILL_RESD",
+    "skill_code": "RESD",
+    "skill_name": "Desarrollo de sistemas de tiempo real/embebidos",
+    "item_type": "skill",
+    "skill_cluster": "Desarrollo de sistemas",
+    "skill_family": "Desarrollo e implementación",
+    "description": "Diseñar y desarrollar software confiable en tiempo real, por lo general dentro de sistemas incrustados.",
+    "levels_defined": [
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "source_framework": "SFIA",
+    "version": "9",
+    "active": true
+  },
+  {
+    "skill_id": "SFIA_SKILL_RFEN",
+    "skill_code": "RFEN",
+    "skill_name": "Ingeniería de radiofrecuencia",
+    "item_type": "skill",
+    "skill_cluster": "Desarrollo de sistemas",
+    "skill_family": "Desarrollo e implementación",
+    "description": "Diseñar, instalar y mantener dispositivos y software que utilizan radiofrecuencia.",
+    "levels_defined": [
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "source_framework": "SFIA",
+    "version": "9",
+    "active": true
+  },
+  {
+    "skill_id": "SFIA_SKILL_RLMT",
+    "skill_code": "RLMT",
+    "skill_name": "Gestión de las relaciones con las partes interesadas",
+    "item_type": "skill",
+    "skill_cluster": "Gestión de los interesados",
+    "skill_family": "Relaciones y compromiso",
+    "description": "Analizar, gestionar e influir sistemáticamente en las relaciones con las partes interesadas para lograr resultados mutuamente beneficiosos mediante un compromiso estructurado.",
+    "levels_defined": [
+      4,
+      5,
+      6,
+      7
+    ],
+    "source_framework": "SFIA",
+    "version": "9",
+    "active": true
+  },
+  {
+    "skill_id": "SFIA_SKILL_RMGT",
+    "skill_code": "RMGT",
+    "skill_name": "Gestión de registros",
+    "item_type": "skill",
+    "skill_cluster": "Operaciones de datos y registros",
+    "skill_family": "Prestación y funcionamiento",
+    "description": "Planificación, implementación y gestión del ciclo de vida completo de los registros de la organización.",
+    "levels_defined": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "source_framework": "SFIA",
+    "version": "9",
+    "active": true
+  },
+  {
+    "skill_id": "SFIA_SKILL_RSCH",
+    "skill_code": "RSCH",
+    "skill_name": "Investigación formal",
+    "item_type": "skill",
+    "skill_cluster": "Estrategia y planificación",
+    "skill_family": "Estrategia y arquitectura",
+    "description": "Crea sistemáticamente nuevo conocimiento mediante la recopilación de datos, innovación, experimentación, evaluación y difusión.",
+    "levels_defined": [
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "source_framework": "SFIA",
+    "version": "9",
+    "active": true
+  },
+  {
+    "skill_id": "SFIA_SKILL_SALE",
+    "skill_code": "SALE",
+    "skill_name": "Venta",
+    "item_type": "skill",
+    "skill_cluster": "Gestión de ventas y ofertas",
+    "skill_family": "Relaciones y compromiso",
+    "description": "Encontrar clientes potenciales y trabajar con ellos para identificar necesidades, influir en decisiones de adquisiciones y mejorar las oportunidades comerciales futuras.",
+    "levels_defined": [
+      3,
+      4,
+      5,
+      6
+    ],
+    "source_framework": "SFIA",
+    "version": "9",
+    "active": true
+  },
+  {
+    "skill_id": "SFIA_SKILL_SCAD",
+    "skill_code": "SCAD",
+    "skill_name": "Operaciones de seguridad",
+    "item_type": "skill",
+    "skill_cluster": "Servicios de seguridad",
+    "skill_family": "Prestación y funcionamiento",
+    "description": "Gestiona y administra las medidas de seguridad, utilizando herramientas e inteligencia para proteger los activos, garantizando el cumplimiento y la integridad operativa.",
+    "levels_defined": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "source_framework": "SFIA",
+    "version": "9",
+    "active": true
+  },
+  {
+    "skill_id": "SFIA_SKILL_SCMG",
+    "skill_code": "SCMG",
+    "skill_name": "Gestión del catálogo de servicios",
+    "item_type": "skill",
+    "skill_cluster": "Gestión de servicios",
+    "skill_family": "Prestación y funcionamiento",
+    "description": "Brindar una fuente de información coherente sobre los servicios y productos disponibles para clientes y usuarios.",
+    "levels_defined": [
+      2,
+      3,
+      4,
+      5
+    ],
+    "source_framework": "SFIA",
+    "version": "9",
+    "active": true
+  },
+  {
+    "skill_id": "SFIA_SKILL_SCMO",
+    "skill_code": "SCMO",
+    "skill_name": "Modelado científico",
+    "item_type": "skill",
+    "skill_cluster": "Ciencia computacional",
+    "skill_family": "Desarrollo e implementación",
+    "description": "Aplicar la simulación informática y otras formas de computación para resolver problemas del mundo real en disciplinas científicas.",
+    "levels_defined": [
+      4,
+      5,
+      6,
+      7
+    ],
+    "source_framework": "SFIA",
+    "version": "9",
+    "active": true
+  },
+  {
+    "skill_id": "SFIA_SKILL_SCTY",
+    "skill_code": "SCTY",
+    "skill_name": "Seguridad de la información",
+    "item_type": "skill",
+    "skill_cluster": "Seguridad y privacidad",
+    "skill_family": "Estrategia y arquitectura",
+    "description": "Definir y operar un marco de controles de seguridad y estrategias de gestión de seguridad.",
+    "levels_defined": [
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "source_framework": "SFIA",
+    "version": "9",
+    "active": true
+  },
+  {
+    "skill_id": "SFIA_SKILL_SEAC",
+    "skill_code": "SEAC",
+    "skill_name": "Aceptación del servicio",
+    "item_type": "skill",
+    "skill_cluster": "Gestión de servicios",
+    "skill_family": "Prestación y funcionamiento",
+    "description": "Gestionar el proceso para obtener la confirmación formal de que se han cumplido los criterios de aceptación del servicio.",
+    "levels_defined": [
+      3,
+      4,
+      5,
+      6
+    ],
+    "source_framework": "SFIA",
+    "version": "9",
+    "active": true
+  },
+  {
+    "skill_id": "SFIA_SKILL_SFAS",
+    "skill_code": "SFAS",
+    "skill_name": "Evaluación de la seguridad",
+    "item_type": "skill",
+    "skill_cluster": "Desarrollo de sistemas",
+    "skill_family": "Desarrollo e implementación",
+    "description": "Evaluar sistemas de software y hardware relacionados con la seguridad para determinar el cumplimiento de los estándares y los niveles requeridos de integridad de seguridad.",
+    "levels_defined": [
+      4,
+      5,
+      6
+    ],
+    "source_framework": "SFIA",
+    "version": "9",
+    "active": true
+  },
+  {
+    "skill_id": "SFIA_SKILL_SFEN",
+    "skill_code": "SFEN",
+    "skill_name": "Ingeniería de seguridad",
+    "item_type": "skill",
+    "skill_cluster": "Desarrollo de sistemas",
+    "skill_family": "Desarrollo e implementación",
+    "description": "Aplicar métodos adecuados para garantizar la seguridad durante todas las fases del ciclo de vida de los desarrollos de sistemas relacionados con la seguridad.",
+    "levels_defined": [
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "source_framework": "SFIA",
+    "version": "9",
+    "active": true
+  },
+  {
+    "skill_id": "SFIA_SKILL_SINT",
+    "skill_code": "SINT",
+    "skill_name": "Construcción e integración de sistemas",
+    "item_type": "skill",
+    "skill_cluster": "Desarrollo de sistemas",
+    "skill_family": "Desarrollo e implementación",
+    "description": "Planear, implementar y controlar las actividades para integrar los elementos, subsistemas e interfaces del sistema para crear sistemas, productos o servicios operacionales.",
+    "levels_defined": [
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "source_framework": "SFIA",
+    "version": "9",
+    "active": true
+  },
+  {
+    "skill_id": "SFIA_SKILL_SLEN",
+    "skill_code": "SLEN",
+    "skill_name": "Ingeniería del ciclo de vida de sistemas y software",
+    "item_type": "skill",
+    "skill_cluster": "Desarrollo de sistemas",
+    "skill_family": "Desarrollo e implementación",
+    "description": "Establecer y desplegar un ambiente para el desarrollo, operación segura y mejora continua de productos y servicios de sistemas y software.",
+    "levels_defined": [
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "source_framework": "SFIA",
+    "version": "9",
+    "active": true
+  },
+  {
+    "skill_id": "SFIA_SKILL_SLMO",
+    "skill_code": "SLMO",
+    "skill_name": "Gestión de nivel de servicio",
+    "item_type": "skill",
+    "skill_cluster": "Gestión de servicios",
+    "skill_family": "Prestación y funcionamiento",
+    "description": "Acordar objetivos para los niveles de servicio y evaluar, supervisar y gestionar la prestación de servicios en relación con los objetivos.",
+    "levels_defined": [
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "source_framework": "SFIA",
+    "version": "9",
+    "active": true
+  },
+  {
+    "skill_id": "SFIA_SKILL_SORC",
+    "skill_code": "SORC",
+    "skill_name": "Adquisición",
+    "item_type": "skill",
+    "skill_cluster": "Gestión de los interesados",
+    "skill_family": "Relaciones y compromiso",
+    "description": "Gestionar la adquisición o el encargo de productos y servicios, o brindar asesoramiento sobre ellos.",
+    "levels_defined": [
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "source_framework": "SFIA",
+    "version": "9",
+    "active": true
+  },
+  {
+    "skill_id": "SFIA_SKILL_SSUP",
+    "skill_code": "SSUP",
+    "skill_name": "Soporte de ventas",
+    "item_type": "skill",
+    "skill_cluster": "Gestión de ventas y ofertas",
+    "skill_family": "Relaciones y compromiso",
+    "description": "Brindar asesoramiento y apoyo al personal de ventas, a los clientes y a los socios de ventas.",
+    "levels_defined": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "source_framework": "SFIA",
+    "version": "9",
+    "active": true
+  },
+  {
+    "skill_id": "SFIA_SKILL_STMG",
+    "skill_code": "STMG",
+    "skill_name": "Gestión de almacenamiento",
+    "item_type": "skill",
+    "skill_cluster": "Gestión de tecnologías",
+    "skill_family": "Prestación y funcionamiento",
+    "description": "Aprovisionamiento, configuración y optimización de soluciones de almacenamiento locales y basadas en la nube, garantizando la disponibilidad de datos, la seguridad y la alineación con los objetivos de negocio.",
+    "levels_defined": [
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "source_framework": "SFIA",
+    "version": "9",
+    "active": true
+  },
+  {
+    "skill_id": "SFIA_SKILL_STPL",
+    "skill_code": "STPL",
+    "skill_name": "Arquitectura empresarial y de negocios",
+    "item_type": "skill",
+    "skill_cluster": "Estrategia y planificación",
+    "skill_family": "Estrategia y arquitectura",
+    "description": "Alinear la estrategia tecnológica de la organización con su misión, estrategia y procesos comerciales, y documentarlo mediante modelos arquitectónicos.",
+    "levels_defined": [
+      5,
+      6,
+      7
+    ],
+    "source_framework": "SFIA",
+    "version": "9",
+    "active": true
+  },
+  {
+    "skill_id": "SFIA_SKILL_SUBF",
+    "skill_code": "SUBF",
+    "skill_name": "Formación de materias",
+    "item_type": "skill",
+    "skill_cluster": "Gestión de habilidades",
+    "skill_family": "Personas y habilidades",
+    "description": "Especificar, diseñar y desarrollar planes de estudios dentro de un entorno educativo estructurado y sistemático.",
+    "levels_defined": [
+      4,
+      5,
+      6,
+      7
+    ],
+    "source_framework": "SFIA",
+    "version": "9",
+    "active": true
+  },
+  {
+    "skill_id": "SFIA_SKILL_SUPP",
+    "skill_code": "SUPP",
+    "skill_name": "Gestión de proveedores",
+    "item_type": "skill",
+    "skill_cluster": "Gestión de los interesados",
+    "skill_family": "Relaciones y compromiso",
+    "description": "Alinear los objetivos y las actividades de los proveedores de una organización con las estrategias y los planes de abastecimiento, el equilibrio de los costos, la eficiencia y la calidad del servicio.",
+    "levels_defined": [
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "source_framework": "SFIA",
+    "version": "9",
+    "active": true
+  },
+  {
+    "skill_id": "SFIA_SKILL_SUST",
+    "skill_code": "SUST",
+    "skill_name": "Sostenibilidad",
+    "item_type": "skill",
+    "skill_cluster": "Estrategia y planificación",
+    "skill_family": "Estrategia y arquitectura",
+    "description": "Asesorar y liderar iniciativas de sostenibilidad para reducir el impacto ambiental y garantizar el cumplimiento de los estándares y reglamentaciones pertinentes.",
+    "levels_defined": [
+      4,
+      5,
+      6
+    ],
+    "source_framework": "SFIA",
+    "version": "9",
+    "active": true
+  },
+  {
+    "skill_id": "SFIA_SKILL_SWDN",
+    "skill_code": "SWDN",
+    "skill_name": "Diseño de software",
+    "item_type": "skill",
+    "skill_cluster": "Desarrollo de sistemas",
+    "skill_family": "Desarrollo e implementación",
+    "description": "Estructurar y diseñar software para cumplir con los requisitos especificados, asegurando la adhesión a los estándares y principios establecidos.",
+    "levels_defined": [
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "source_framework": "SFIA",
+    "version": "9",
+    "active": true
+  },
+  {
+    "skill_id": "SFIA_SKILL_SYSP",
+    "skill_code": "SYSP",
+    "skill_name": "Administración del software de sistema",
+    "item_type": "skill",
+    "skill_cluster": "Gestión de tecnologías",
+    "skill_family": "Prestación y funcionamiento",
+    "description": "Instalación, gestión y mantenimiento de sistemas operativos, gestión de datos, ofimática y software utilitario en diversos entornos de infraestructura.",
+    "levels_defined": [
+      2,
+      3,
+      4,
+      5
+    ],
+    "source_framework": "SFIA",
+    "version": "9",
+    "active": true
+  },
+  {
+    "skill_id": "SFIA_SKILL_TEAC",
+    "skill_code": "TEAC",
+    "skill_name": "Enseñanza",
+    "item_type": "skill",
+    "skill_cluster": "Gestión de habilidades",
+    "skill_family": "Personas y habilidades",
+    "description": "Entregar y valorar planes de estudios en un entorno educativo estructurado y sistemático.",
+    "levels_defined": [
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "source_framework": "SFIA",
+    "version": "9",
+    "active": true
+  },
+  {
+    "skill_id": "SFIA_SKILL_TECH",
+    "skill_code": "TECH",
+    "skill_name": "Asesoramiento especializado",
+    "item_type": "skill",
+    "skill_cluster": "Asesoramiento y orientación",
+    "skill_family": "Estrategia y arquitectura",
+    "description": "Proporcionar asesoramiento y orientación autorizados y profesionales en un área especializada.",
+    "levels_defined": [
+      4,
+      5,
+      6
+    ],
+    "source_framework": "SFIA",
+    "version": "9",
+    "active": true
+  },
+  {
+    "skill_id": "SFIA_SKILL_TEST",
+    "skill_code": "TEST",
+    "skill_name": "Pruebas funcionales",
+    "item_type": "skill",
+    "skill_cluster": "Desarrollo de sistemas",
+    "skill_family": "Desarrollo e implementación",
+    "description": "Evaluar los requisitos y características funcionales específicas o no especificadas de los productos, sistemas y servicios mediante investigación y pruebas.",
+    "levels_defined": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "source_framework": "SFIA",
+    "version": "9",
+    "active": true
+  },
+  {
+    "skill_id": "SFIA_SKILL_THIN",
+    "skill_code": "THIN",
+    "skill_name": "Inteligencia de amenazas",
+    "item_type": "skill",
+    "skill_cluster": "Seguridad y privacidad",
+    "skill_family": "Estrategia y arquitectura",
+    "description": "Desarrollar y compartir conocimientos prácticos sobre las amenazas a la seguridad actuales y potenciales para contribuir al éxito o la integridad de una organización.",
+    "levels_defined": [
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "source_framework": "SFIA",
+    "version": "9",
+    "active": true
+  },
+  {
+    "skill_id": "SFIA_SKILL_TMCR",
+    "skill_code": "TMCR",
+    "skill_name": "Desarrollo y diseño de aprendizaje",
+    "item_type": "skill",
+    "skill_cluster": "Gestión de habilidades",
+    "skill_family": "Personas y habilidades",
+    "description": "Diseñar y desarrollar recursos para transferir conocimientos, desarrollar habilidades y cambiar comportamientos.",
+    "levels_defined": [
+      2,
+      3,
+      4,
+      5
+    ],
+    "source_framework": "SFIA",
+    "version": "9",
+    "active": true
+  },
+  {
+    "skill_id": "SFIA_SKILL_UNAN",
+    "skill_code": "UNAN",
+    "skill_name": "Análisis de experiencia de usuario",
+    "item_type": "skill",
+    "skill_cluster": "Diseño centrado en el usuario",
+    "skill_family": "Desarrollo e implementación",
+    "description": "Comprender el contexto del uso de sistemas, productos y servicios y especificar los requisitos de experiencia del usuario y los objetivos de diseño.",
+    "levels_defined": [
+      2,
+      3,
+      4,
+      5
+    ],
+    "source_framework": "SFIA",
+    "version": "9",
+    "active": true
+  },
+  {
+    "skill_id": "SFIA_SKILL_URCH",
+    "skill_code": "URCH",
+    "skill_name": "Investigación de usuarios",
+    "item_type": "skill",
+    "skill_cluster": "Diseño centrado en el usuario",
+    "skill_family": "Desarrollo e implementación",
+    "description": "Identificar comportamientos, necesidades y motivaciones de los usuarios utilizando métodos de investigación observacional.",
+    "levels_defined": [
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "source_framework": "SFIA",
+    "version": "9",
+    "active": true
+  },
+  {
+    "skill_id": "SFIA_SKILL_USEV",
+    "skill_code": "USEV",
+    "skill_name": "Evaluación de experiencia de usuario",
+    "item_type": "skill",
+    "skill_cluster": "Diseño centrado en el usuario",
+    "skill_family": "Desarrollo e implementación",
+    "description": "Validar sistemas, productos o servicios en relación con los objetivos, métricas y metas de la experiencia de usuario.",
+    "levels_defined": [
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "source_framework": "SFIA",
+    "version": "9",
+    "active": true
+  },
+  {
+    "skill_id": "SFIA_SKILL_USUP",
+    "skill_code": "USUP",
+    "skill_name": "Gestión de incidentes",
+    "item_type": "skill",
+    "skill_cluster": "Gestión de servicios",
+    "skill_family": "Prestación y funcionamiento",
+    "description": "Coordinar las respuestas a una amplia variedad de incidentes para minimizar los impactos negativos y restablecer rápidamente los servicios.",
+    "levels_defined": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "source_framework": "SFIA",
+    "version": "9",
+    "active": true
+  },
+  {
+    "skill_id": "SFIA_SKILL_VISL",
+    "skill_code": "VISL",
+    "skill_name": "Visualización de datos",
+    "item_type": "skill",
+    "skill_cluster": "Datos y analítica",
+    "skill_family": "Desarrollo e implementación",
+    "description": "Facilitar la comprensión de datos al mostrar conceptos, ideas y hechos mediante representaciones gráficas.",
+    "levels_defined": [
+      2,
+      3,
+      4,
+      5
+    ],
+    "source_framework": "SFIA",
+    "version": "9",
+    "active": true
+  },
+  {
+    "skill_id": "SFIA_SKILL_VUAS",
+    "skill_code": "VUAS",
+    "skill_name": "Evaluación de vulnerabilidades",
+    "item_type": "skill",
+    "skill_cluster": "Servicios de seguridad",
+    "skill_family": "Prestación y funcionamiento",
+    "description": "Identificar y clasificar las vulnerabilidades de seguridad en redes, sistemas y aplicaciones, y mitigar o eliminar su impacto.",
+    "levels_defined": [
+      2,
+      3,
+      4,
+      5
+    ],
+    "source_framework": "SFIA",
+    "version": "9",
+    "active": true
+  },
+  {
+    "skill_id": "SFIA_SKILL_VURE",
+    "skill_code": "VURE",
+    "skill_name": "Investigación de vulnerabilidades",
+    "item_type": "skill",
+    "skill_cluster": "Seguridad y privacidad",
+    "skill_family": "Estrategia y arquitectura",
+    "description": "Realizar una investigación aplicada para descubrir, evaluar y mitigar vulnerabilidades y debilidades de seguridad nuevas o desconocidas.",
+    "levels_defined": [
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "source_framework": "SFIA",
+    "version": "9",
+    "active": true
+  },
+  {
+    "skill_id": "SFIA_SKILL_WFPL",
+    "skill_code": "WFPL",
+    "skill_name": "Planificación de la fuerza laboral",
+    "item_type": "skill",
+    "skill_cluster": "Gestión de personas",
+    "skill_family": "Personas y habilidades",
+    "description": "Proyectar estratégicamente la demanda de personas y habilidades y planificar proactivamente la oferta de mano de obra para satisfacer las necesidades organizacionales.",
+    "levels_defined": [
+      4,
+      5,
+      6
+    ],
+    "source_framework": "SFIA",
+    "version": "9",
+    "active": true
+  }
+]

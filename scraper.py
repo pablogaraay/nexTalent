@@ -86,14 +86,14 @@ def extract_offers(linkedin_api):
         print(f"Se han mostrado {i} ofertas para {keyword}\n")
         
         if i % 50 == 0:
-          db.upsert_bulk_offers_raw(Config.SCRAPED_COLL, offers_array)
+          db.upsert_bulk_offers(Config.SCRAPED_COLL, offers_array, "scraped")
           offers_array = []
 
         time.sleep(random.uniform(0,1))
       time.sleep(random.uniform(1,2))
     
   if offers_array:
-    db.upsert_bulk_offers_raw(Config.SCRAPED_COLL, offers_array)
+    db.upsert_bulk_offers(Config.SCRAPED_COLL, offers_array, "scraped")
     print("Se han insertado/actualizado todas las ofertas")
   db.close_connection()
 

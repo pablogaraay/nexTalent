@@ -230,55 +230,63 @@ class LLMProcessor:
       llm_offer = llm_results[i] if i < len(llm_results) else {}
       merged.append({**offer, **llm_offer})
     return merged
+
+  def process_batch(self, batch):
+    prepared_batch = self.prepare_batch(batch)
+    system_prompt, user_prompt = self.build_prompts(prepared_batch)
+    llm_output = self.call_model(system_prompt, user_prompt)
+
+    if llm_output:
+      merged_offers = self.merge_results(batch, llm_output)
+      self.db.upsert_bulk_offers(Config.LLM_RAW_COLL, merged_offers, "llm")
+      return len(merged_offers)
+
+    print("No se ha podido procesar el lote. Se guarda el marcador de error.")
+    error_offers = []
+    for offer in batch:
+      error_offer = {
+        **offer,
+        "llm_error": True,
+        "hard_skills_raw": [],
+        "soft_skills_raw": [],
+        "tools_raw": [],
+        "seniority_raw": "",
+        "work_modality_raw": "",
+        "employment_type_raw": "",
+        "role_raw": ""
+      }
+      error_offers.append(error_offer)
+    self.db.upsert_bulk_offers(Config.LLM_RAW_COLL, error_offers, "llm")
+    return len(error_offers)
   
   def process_all_batches(self, batch_size=Config.BATCH_SIZE):
-    try:
-        offers_processed = self.db.db[Config.LLM_RAW_COLL].count_documents({})
-    except Exception as e:
-        print(f"Error al contar documentos: {e}")
-        offers_processed = 0
-    
-    skip = offers_processed
+    print(
+      f"\nProcesamiento incremental activado. "
+      f"Solo se procesaran ofertas nuevas de '{Config.CLEANED_COLL}' "
+      f"que no existan en '{Config.LLM_RAW_COLL}'.\n"
+    )
 
-    if skip > 0:
-        print(f"\nReanudando el proceso. Se han encontrado {skip} ofertas ya procesadas en '{Config.LLM_RAW_COLL}'.")
-        print(f"Empezando lectura en origen a partir de la oferta {skip + 1}...\n")
+    source_cursor = self.db.load_unprocessed_offers(Config.CLEANED_COLL, Config.LLM_RAW_COLL)
+    batch = []
+    total_new = 0
+    total_persisted = 0
+
+    for offer in source_cursor:
+      batch.append(offer)
+      total_new += 1
+      if len(batch) >= batch_size:
+        total_persisted += self.process_batch(batch)
+        batch = []
+        time.sleep(15)
+
+    if batch:
+      total_persisted += self.process_batch(batch)
+
+    if total_new == 0:
+      print(f"No hay nuevas ofertas en '{Config.CLEANED_COLL}' pendientes de LLM.")
     else:
-        print(f"\nNo hay ofertas previas en '{Config.LLM_RAW_COLL}'. Empezando desde 0.\n")
-
-    while True:
-      batch = self.db.load_offers_batch(Config.CLEANED_COLL, batch_size, skip)
-      if not batch:
-        print("No hay más ofertas para procesar.")
-        break
-      
-      prepared_batch = self.prepare_batch(batch)
-      system_prompt, user_prompt = self.build_prompts(prepared_batch)
-      llm_ouput = self.call_model(system_prompt, user_prompt)
-
-      if llm_ouput:
-        merged_offers = self.merge_results(batch, llm_ouput)
-        self.db.upsert_bulk_offers_llm(Config.LLM_RAW_COLL, merged_offers)
-      else:
-        print(f"Lote en skip {skip} no se ha podido procesar. Se guarda el marcador del error")
-        error_offers = []
-        for offer in batch:
-          error_offer = {
-            **offer,
-            "llm_error": True,
-            "hard_skills_raw": [],
-            "soft_skills_raw": [],
-            "tools_raw": [],
-            "seniority_raw": "",
-            "work_modality_raw": "",
-            "employment_type_raw": "",
-            "role_raw": ""
-          }
-          error_offers.append(error_offer)
-        
-        self.db.upsert_bulk_offers_llm(Config.LLM_RAW_COLL, error_offers)
-      skip += batch_size
-      time.sleep(15)
+      print(f"Ofertas nuevas procesadas: {total_new}")
+      print(f"Ofertas guardadas en '{Config.LLM_RAW_COLL}': {total_persisted}")
   
 if __name__ == "__main__":
   processor = LLMProcessor()

@@ -63,7 +63,7 @@ class DataWrangler:
     print("Se guardan los datos estructurados en la coleccion offers_structured")
     db = MongoManager()
     offers_array = df_structured.to_dict(orient="records")
-    db.upsert_bulk_offers_structured(Config.STRUCTURED_COLL, offers_array)
+    db.upsert_bulk_offers(Config.STRUCTURED_COLL, offers_array, "structured")
     db.close_connection()
 
   def is_non_empty_text(self, series):
@@ -111,7 +111,7 @@ class DataWrangler:
     print("Se guardan los datos limpios en la coleccion offers_cleaned")
     db = MongoManager()
     offers_array = df_cleaned.to_dict(orient="records")
-    db.upsert_bulk_offers_cleaned(Config.CLEANED_COLL, offers_array)
+    db.upsert_bulk_offers(Config.CLEANED_COLL, offers_array, "cleaned")
     db.close_connection()
 
 if __name__ == "__main__":
