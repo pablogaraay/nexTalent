@@ -194,20 +194,6 @@ nexTalent/
   nexTalent.sfia_skills_taxonomy.json
 ```
 
-## Consideraciones operativas
-
-- No subir `.env` al repositorio.
-- Para producción, guardar secretos en el gestor de secretos del proveedor.
-- Asegurar persistencia de MongoDB y `data/chroma`.
-- Verificar disponibilidad de Ollama y del modelo de embeddings en el entorno de ejecución.
-
-## Troubleshooting rápido
-
-- `No module named config`: ejecutar scripts desde la raíz del repo.
-- Error de cuota/tokens Groq: reducir carga por request o esperar reset de cuota.
-- Sin resultados en búsqueda: comprobar que `offers_mapped` y colección `offers` en Chroma estén indexadas.
-- Error al subir CV: la API web solo acepta archivos `.pdf`.
-
 ## Licencia
 
 Este proyecto se distribuye bajo la licencia incluida en `LICENSE`.
