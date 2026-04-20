@@ -53,27 +53,11 @@ export default function Navbar() {
             })}
           </div>
 
-          <div className="hidden md:flex items-center gap-2">
-            <Link
-              to="/search"
-              className="px-4 py-2 rounded-lg text-sm no-underline"
-              style={{ color: "var(--charcoal-warm)", backgroundColor: "var(--warm-sand)" }}
-            >
-              Buscar Empleo
-            </Link>
-            <Link
-              to="/skills"
-              className="px-4 py-2 rounded-lg text-sm no-underline"
-              style={{ color: "var(--ivory)", backgroundColor: "var(--terracotta)" }}
-            >
-              Ver Skills
-            </Link>
-          </div>
-
           <button
             className="md:hidden p-2 rounded-lg"
             style={{ color: "var(--charcoal-warm)" }}
             onClick={() => setMobileOpen(!mobileOpen)}
+            aria-label={mobileOpen ? "Cerrar menú" : "Abrir menú"}
           >
             {mobileOpen ? <X size={22} /> : <Menu size={22} />}
           </button>
@@ -99,14 +83,6 @@ export default function Navbar() {
                 </Link>
               );
             })}
-            <div className="flex gap-2 mt-3 px-3">
-              <Link to="/search" onClick={() => setMobileOpen(false)} className="flex-1 text-center px-4 py-2 rounded-lg text-sm no-underline" style={{ color: "var(--charcoal-warm)", backgroundColor: "var(--warm-sand)" }}>
-                Buscar
-              </Link>
-              <Link to="/skills" onClick={() => setMobileOpen(false)} className="flex-1 text-center px-4 py-2 rounded-lg text-sm no-underline" style={{ color: "var(--ivory)", backgroundColor: "var(--terracotta)" }}>
-                Skills
-              </Link>
-            </div>
           </div>
         )}
       </div>
