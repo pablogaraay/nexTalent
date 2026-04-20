@@ -20,7 +20,7 @@ nexTalent es una plataforma de análisis de ofertas de empleo que combina proces
 - Mapeo de roles y skills contra taxonomías (WEF jobs + SFIA skills) usando embeddings.
 - Indexación vectorial en ChromaDB para retrieval semántico.
 - Orquestación multiagente con LangGraph para ejecutar casos de uso.
-- Exposición por CLI y por web (React + API puente Node/Express).
+- Exposición por CLI y por web (React + API FastAPI).
 
 ## Stack tecnológico
 
@@ -31,7 +31,7 @@ nexTalent es una plataforma de análisis de ofertas de empleo que combina proces
 - Base de datos documental: MongoDB
 - Base vectorial: ChromaDB
 - Frontend: React + Vite
-- API web: Node.js + Express
+- API web: FastAPI
 
 ## Requisitos previos
 
@@ -84,6 +84,42 @@ GROQ_API_KEY=<tu_groq_api_key>
 Variables opcionales usadas por la web:
 - `API_PORT` (por defecto `8787`)
 - `VITE_API_URL` (si quieres apuntar el frontend a una API externa)
+- `VITE_PROXY_TARGET` (target del proxy de Vite; útil en Docker)
+
+Variables opcionales del planificador autónomo:
+- `AUTONOMOUS_AGENT_VERBOSE` (`true/false`, imprime decisión del planner en logs)
+
+## Quickstart con Docker (Fase 1)
+
+1. Copia la plantilla de entorno:
+
+```bash
+cp .env.example .env
+```
+
+2. Levanta el stack:
+
+```bash
+docker compose up --build
+```
+
+3. Descarga el modelo de embeddings dentro de Ollama (una sola vez):
+
+```bash
+docker compose exec ollama ollama pull mxbai-embed-large:latest
+```
+
+4. Sigue los logs de la API:
+
+```bash
+docker compose logs -f api
+```
+
+Servicios en local:
+- Frontend: `http://localhost:5173`
+- API: `http://localhost:8787`
+- MongoDB: `localhost:27017`
+- Ollama: `localhost:11434`
 
 ## Pipeline de datos recomendado (primera ejecución)
 
@@ -129,13 +165,13 @@ Insights de mercado:
 python3 multiagent_cli.py --use-case market_insights --top-n 10
 ```
 
-Atajo para insights:
+## Ejecución web
+
+Arranque de API FastAPI (desde raíz):
 
 ```bash
-python3 insights_cli.py --top-n 10
+python3 api.py
 ```
-
-## Ejecución web
 
 Desde la carpeta `web`:
 
@@ -145,7 +181,7 @@ npm run dev
 
 Servicios por defecto:
 - Frontend: `http://localhost:5173`
-- API puente: `http://localhost:8787`
+- API: `http://localhost:8787`
 
 ## Endpoints web disponibles
 
@@ -185,8 +221,8 @@ nexTalent/
   scraper.py
   dataWrangler.py
   llm_processor.py
+  api.py
   multiagent_cli.py
-  insights_cli.py
   multiagent/
   rag/
   web/

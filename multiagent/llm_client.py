@@ -13,6 +13,16 @@ except ModuleNotFoundError:
         sys.path.insert(0, str(BASE_DIR))
     from config import Config
 
+try:
+    import schemas
+except ModuleNotFoundError:
+    import sys
+    from pathlib import Path
+    BASE_DIR = Path(__file__).resolve().parent.parent
+    if str(BASE_DIR) not in sys.path:
+        sys.path.insert(0, str(BASE_DIR))
+    import schemas
+
 def _require_llm(client):
     if not client:
         raise RuntimeError("No hay cliente LLM disponible. Revisa GROQ_API_KEY en el entorno.")
@@ -55,27 +65,7 @@ class LLMClientService:
 
     def call_reranker(self, prompt_json: dict, top_n: int) -> List[Dict[str, Any]]:
         _require_llm(self.llm_client)
-        schema = {
-            "type": "object",
-            "properties": {
-                "ranked": {
-                    "type": "array",
-                    "maxItems": int(top_n),
-                    "items": {
-                        "type": "object",
-                        "properties": {
-                            "offer_id": {"type": "string"},
-                            "score": {"type": "number", "minimum": 0, "maximum": 1},
-                            "matched_skills": {"type": "array", "items": {"type": "string"}}
-                        },
-                        "required": ["offer_id", "score", "matched_skills"],
-                        "additionalProperties": False
-                    }
-                }
-            },
-            "required": ["ranked"],
-            "additionalProperties": False
-        }
+        schema = schemas.build_reranker_schema(int(top_n))
 
         try:
             response = self.llm_client.chat.completions.create(
@@ -111,3 +101,128 @@ class LLMClientService:
         except Exception as exc:
             print(f"Reranking error (json_object): {exc}")
             return []
+
+    def call_autonomous_strategy_tool(self, system_prompt: str, user_prompt: str) -> Dict[str, Any]:
+        _require_llm(self.llm_client)
+
+        tools = [
+            {
+                "type": "function",
+                "function": {
+                    "name": "run_llm_rerank",
+                    "description": "Usa retrieval semántico y reranking con LLM para priorizar ofertas con mejor ajuste global.",
+                    "parameters": {
+                        "type": "object",
+                        "properties": {
+                            "confidence": {"type": "number", "minimum": 0, "maximum": 1},
+                            "reasons": {
+                                "type": "array",
+                                "items": {"type": "string"},
+                                "maxItems": 5
+                            },
+                            "use_location_priority": {"type": "boolean"},
+                            "use_seniority_priority": {"type": "boolean"},
+                            "top_k_hint": {"type": "integer", "minimum": 5, "maximum": 200}
+                        },
+                        "required": [
+                            "confidence",
+                            "reasons",
+                            "use_location_priority",
+                            "use_seniority_priority",
+                            "top_k_hint"
+                        ],
+                        "additionalProperties": False
+                    }
+                }
+            },
+            {
+                "type": "function",
+                "function": {
+                    "name": "run_vector_only",
+                    "description": "Usa solo recuperación vectorial sin reranking LLM cuando la información del perfil es parcial o ambigua.",
+                    "parameters": {
+                        "type": "object",
+                        "properties": {
+                            "confidence": {"type": "number", "minimum": 0, "maximum": 1},
+                            "reasons": {
+                                "type": "array",
+                                "items": {"type": "string"},
+                                "maxItems": 5
+                            },
+                            "use_location_priority": {"type": "boolean"},
+                            "use_seniority_priority": {"type": "boolean"},
+                            "top_k_hint": {"type": "integer", "minimum": 5, "maximum": 200}
+                        },
+                        "required": [
+                            "confidence",
+                            "reasons",
+                            "use_location_priority",
+                            "use_seniority_priority",
+                            "top_k_hint"
+                        ],
+                        "additionalProperties": False
+                    }
+                }
+            },
+            {
+                "type": "function",
+                "function": {
+                    "name": "run_no_match",
+                    "description": "No devuelve ofertas cuando no hay suficiente información útil para recomendar con calidad.",
+                    "parameters": {
+                        "type": "object",
+                        "properties": {
+                            "confidence": {"type": "number", "minimum": 0, "maximum": 1},
+                            "reasons": {
+                                "type": "array",
+                                "items": {"type": "string"},
+                                "maxItems": 5
+                            },
+                            "use_location_priority": {"type": "boolean"},
+                            "use_seniority_priority": {"type": "boolean"},
+                            "top_k_hint": {"type": "integer", "minimum": 5, "maximum": 200}
+                        },
+                        "required": [
+                            "confidence",
+                            "reasons",
+                            "use_location_priority",
+                            "use_seniority_priority",
+                            "top_k_hint"
+                        ],
+                        "additionalProperties": False
+                    }
+                }
+            }
+        ]
+
+        try:
+            response = self.llm_client.chat.completions.create(
+                model=Config.PROFILE_LLM_MODEL,
+                messages=[
+                    {"role": "system", "content": system_prompt},
+                    {"role": "user", "content": user_prompt}
+                ],
+                temperature=0.0,
+                tools=tools,
+                tool_choice="auto"
+            )
+
+            msg = response.choices[0].message
+            tool_calls = getattr(msg, "tool_calls", None) or []
+            if tool_calls:
+                first_call = tool_calls[0]
+                function_name = (first_call.function.name or "").strip()
+                raw_args = first_call.function.arguments or "{}"
+                parsed_args = json.loads(raw_args)
+                return {
+                    "tool_name": function_name,
+                    "arguments": parsed_args
+                }
+
+            # Fallback de compatibilidad si el proveedor no devuelve tool_calls.
+            content = msg.content or "{}"
+            payload = parse_first_json_object(content)
+            return {"tool_name": "", "arguments": payload}
+        except Exception as exc:
+            print(f"Autonomous strategy tool-calling error: {exc}")
+            return {}

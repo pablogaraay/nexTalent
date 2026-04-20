@@ -3,6 +3,14 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+
+def _env_bool(name, default=False):
+  value = os.getenv(name)
+  if value is None:
+    return default
+  return str(value).strip().lower() in {"1", "true", "yes", "on"}
+
+
 class Config:
   #Scraper config
   KEYWORDS = ["Deloitte", "Accenture", "KPMG", "EY", "Capgemini", "PwC", "Indra", "NTT Data", "BCG", "Kyndryl"]
@@ -32,3 +40,6 @@ class Config:
   RERANK_CANDIDATES = 15
   VECTOR_FALLBACK_MIN_SCORE = 0.60
   LLM_MIN_MATCH_SCORE = 0.20
+
+  # Autonomous agent planner
+  AUTONOMOUS_AGENT_VERBOSE = _env_bool("AUTONOMOUS_AGENT_VERBOSE", True)

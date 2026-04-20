@@ -13,7 +13,6 @@ class MongoManager:
   def verify_connection(self):
     try:
       self.client.admin.command('ping')
-      print("Ping exitoso")
     except Exception as e:
       print(f"Servidor no disponible: {e}")
 
@@ -98,5 +97,4 @@ class MongoManager:
 
   def close_connection(self):
     self.client.close()
-    print("Conexion cerrada")
       
