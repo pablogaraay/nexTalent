@@ -21,6 +21,9 @@ class GraphState(TypedDict, total=False):
   use_case: str
 
 
+_COMPILED_GRAPH = None
+
+
 def build_multiagent_graph():
   service = UseCaseService()
   graph = StateGraph(GraphState)
@@ -196,8 +199,15 @@ def build_multiagent_graph():
   return graph.compile()
 
 
+def get_multiagent_graph():
+  global _COMPILED_GRAPH
+  if _COMPILED_GRAPH is None:
+    _COMPILED_GRAPH = build_multiagent_graph()
+  return _COMPILED_GRAPH
+
+
 def run_multiagent_flow(params: Dict[str, Any]) -> Dict[str, Any]:
-  app = build_multiagent_graph()
+  app = get_multiagent_graph()
   state = app.invoke({"params": params})
   use_case = str(state.get("use_case", params.get("use_case", "search")) or "search").strip().lower()
   return {
