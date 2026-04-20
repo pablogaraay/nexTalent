@@ -87,11 +87,11 @@ async def search(
 def insights(
   topN: int = Query(default=10)
 ):
-  safe_top_n = max(1, min(int(topN), 50))
+  safe_top_n = max(1, min(int(topN), 100))
   try:
     payload = run_multiagent_flow(
       params={
-        "use_case": "market_insights",
+        "use_case": "insights",
         "top_n": safe_top_n
       }
     )
@@ -109,4 +109,3 @@ def insights(
 if __name__ == "__main__":
   port = int(os.getenv("API_PORT", "8787"))
   uvicorn.run("api:app", host="0.0.0.0", port=port, reload=False)
-

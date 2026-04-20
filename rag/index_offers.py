@@ -4,30 +4,13 @@ Each offer is embedded using Ollama (mxbai-embed-large) combining
 role, skills, seniority, and company into a single searchable document.
 """
 
-from pathlib import Path
-import sys
-
-BASE_DIR = Path(__file__).resolve().parent.parent
-if str(BASE_DIR) not in sys.path:
-  sys.path.insert(0, str(BASE_DIR))
-
-import ollama
-from chromadb import PersistentClient
 from config import Config
-from dbConn import MongoManager
+from infra.embeddings import embed_text
+from repositories.offer_repository import OfferRepository
+from repositories.vector_store import VectorStore
 
-CHROMA_PATH = BASE_DIR / "data/chroma"
-EMBED_MODEL = Config.EMBED_MODEL
 COLLECTION_NAME = Config.OFFERS_CHROMA_COLLECTION
 BATCH_SIZE = 100
-
-
-def embed_text(text):
-  res = ollama.embed(
-    model=EMBED_MODEL,
-    input=text
-  )
-  return res['embeddings'][0]
 
 
 def build_offer_document(offer):
@@ -83,18 +66,14 @@ def sanitize_id(url):
 
 
 def main():
-  db = MongoManager()
-  try:
-    offers = db.load_offers(Config.MAPPED_COLL) or []
-  finally:
-    db.close_connection()
+  offers = OfferRepository().load_mapped_offers() or []
 
   if not offers:
     print(f"No hay ofertas en la coleccion '{Config.MAPPED_COLL}'. Nada que indexar.")
     return
 
-  chroma = PersistentClient(path=str(CHROMA_PATH))
-  collection = chroma.get_or_create_collection(
+  vector_store = VectorStore()
+  collection = vector_store.get_or_create_collection(
     name=COLLECTION_NAME,
     metadata={"hnsw:space": "cosine"}
   )
@@ -127,7 +106,7 @@ def main():
   if ids:
     collection.upsert(ids=ids, documents=docs, metadatas=metas, embeddings=embs)
 
-  print(f"\nChroma path: {CHROMA_PATH}")
+  print(f"\nChroma path: {vector_store.chroma_path}")
   print(f"Collection: '{COLLECTION_NAME}'")
   print(f"Total offers indexed: {collection.count()}")
   print(f"Offers skipped (no url or empty doc): {skipped}")

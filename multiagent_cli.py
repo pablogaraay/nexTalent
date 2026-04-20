@@ -14,7 +14,7 @@ def build_parser() -> argparse.ArgumentParser:
   parser.add_argument(
     "--use-case",
     default="search",
-    choices=["search", "market_insights", "insights"],
+    choices=["search", "insights"],
     help="Caso de uso a ejecutar"
   )
   parser.add_argument("--profile-text", default="", help="Texto de perfil / prompt manual")
@@ -25,8 +25,6 @@ def build_parser() -> argparse.ArgumentParser:
 
 def build_params(args: argparse.Namespace) -> Dict[str, Any]:
   use_case = (args.use_case or "search").strip().lower()
-  if use_case == "insights":
-    use_case = "market_insights"
   return {
     "use_case": use_case,
     "profile_text": args.profile_text,

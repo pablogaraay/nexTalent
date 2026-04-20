@@ -129,15 +129,22 @@ Ejecutar en este orden:
 python3 scraper.py
 python3 dataWrangler.py
 python3 llm_processor.py
-python3 rag/index_taxonomy.py
-python3 rag/map_offers.py
-python3 rag/index_offers.py
+python3 -m rag.index_taxonomy
+python3 -m rag.map_offers
+python3 -m rag.index_offers
 ```
 
 Notas:
 - El flujo es incremental por `url` en Mongo.
 - `llm_processor.py` procesa ofertas de `offers_cleaned` no presentes en `offers_llm_raw`.
 - `map_offers.py` procesa ofertas de `offers_llm_raw` no presentes en `offers_mapped`.
+- El script manual de recuperación semántica se movió a `tests/manual/test_retrieval.py`.
+
+Prueba manual de retrieval:
+
+```bash
+python3 -m tests.manual.test_retrieval
+```
 
 ## Ejecución por CLI
 
@@ -162,7 +169,7 @@ python3 multiagent_cli.py --cv-file /ruta/a/mi_cv.pdf
 Insights de mercado:
 
 ```bash
-python3 multiagent_cli.py --use-case market_insights --top-n 10
+python3 multiagent_cli.py --use-case insights --top-n 10
 ```
 
 ## Ejecución web

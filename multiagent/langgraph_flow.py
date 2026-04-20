@@ -1,17 +1,12 @@
 from __future__ import annotations
+
 from typing import Any, Dict, List, TypedDict
+
 from langgraph.graph import END, StateGraph
 
-try:
-  from config import Config
-except ModuleNotFoundError:
-  import sys
-  from pathlib import Path
-  BASE_DIR = Path(__file__).resolve().parent.parent
-  if str(BASE_DIR) not in sys.path:
-    sys.path.insert(0, str(BASE_DIR))
-  from config import Config
-from .services import UseCaseService
+from config import Config
+
+from .use_case_service import UseCaseService
 
 
 class GraphState(TypedDict, total=False):
@@ -35,14 +30,12 @@ def build_multiagent_graph():
       offers = service.load_offers_for_analysis()
       params = state.get("params", {}) or {}
       use_case = str(params.get("use_case", "search") or "search").strip().lower()
-      if use_case == "insights":
-        use_case = "market_insights"
       if not offers:
         return {
           **state,
           "offers": [],
           "use_case": use_case,
-          "error": f"No hay ofertas disponibles en la coleccion '{Config.MAPPED_COLL}'."
+          "error": f"No hay ofertas disponibles en la coleccion '{Config.MAPPED_COLL}'.",
         }
       return {**state, "offers": offers, "use_case": use_case}
     except Exception as exc:
@@ -52,8 +45,8 @@ def build_multiagent_graph():
     if state.get("error"):
       return "end"
     use_case = str(state.get("use_case", "search") or "search").strip().lower()
-    if use_case == "market_insights":
-      return "market_insights"
+    if use_case == "insights":
+      return "insights"
     return "search"
 
   def parse_profile_node(state: GraphState) -> GraphState:
@@ -63,17 +56,17 @@ def build_multiagent_graph():
     try:
       profile = service.parse_profile(
         profile_text=params.get("profile_text", "") or "",
-        cv_file=params.get("cv_file", "") or ""
+        cv_file=params.get("cv_file", "") or "",
       )
       return {
         **state,
         "profile": profile,
-        "profile_enrichment_attempted": False
+        "profile_enrichment_attempted": False,
       }
     except Exception as exc:
       return {
         **state,
-        "error": f"Error parseando perfil con LLM: {exc}"
+        "error": f"Error parseando perfil con LLM: {exc}",
       }
 
   def assess_profile_signal_node(state: GraphState) -> GraphState:
@@ -85,7 +78,7 @@ def build_multiagent_graph():
     except Exception as exc:
       return {
         **state,
-        "error": f"Error evaluando perfil: {exc}"
+        "error": f"Error evaluando perfil: {exc}",
       }
 
   def route_after_profile_assessment(state: GraphState) -> str:
@@ -106,34 +99,14 @@ def build_multiagent_graph():
       return {
         **state,
         "profile": enriched,
-        "profile_enrichment_attempted": True
+        "profile_enrichment_attempted": True,
       }
     except Exception as exc:
-      # No bloquea la búsqueda: seguimos con perfil original tras marcar intento.
       if getattr(Config, "AUTONOMOUS_AGENT_VERBOSE", False):
         print(f"Profile enrichment fallback to original profile: {exc}")
       return {
         **state,
-        "profile_enrichment_attempted": True
-      }
-
-  def search_node(state: GraphState) -> GraphState:
-    if state.get("error"):
-      return state
-    try:
-      params = state.get("params", {}) or {}
-      top_n = int(params.get("top_n", 10) or 10)
-      result = service.use_case_search(
-        state.get("offers", []),
-        state.get("profile", {}),
-        top_n=top_n,
-        plan=state.get("plan", {})
-      )
-      return {**state, "result": result}
-    except Exception as exc:
-      return {
-        **state,
-        "error": f"Error en ranking LLM: {exc}"
+        "profile_enrichment_attempted": True,
       }
 
   def autonomous_planner_node(state: GraphState) -> GraphState:
@@ -152,21 +125,40 @@ def build_multiagent_graph():
         print(f"Autonomous planner internal error, using fallback plan: {exc}")
       return {
         **state,
-        "plan": {"strategy": "llm_rerank", "source": "planner_error_fallback"}
+        "plan": {"strategy": "llm_rerank", "source": "planner_error_fallback"},
       }
 
-  def market_insights_node(state: GraphState) -> GraphState:
+  def search_node(state: GraphState) -> GraphState:
     if state.get("error"):
       return state
     try:
       params = state.get("params", {}) or {}
       top_n = int(params.get("top_n", 10) or 10)
-      result = service.use_case_market_insights(state.get("offers", []), top_n=top_n)
+      result = service.use_case_search(
+        state.get("offers", []),
+        state.get("profile", {}),
+        top_n=top_n,
+        plan=state.get("plan", {}),
+      )
       return {**state, "result": result}
     except Exception as exc:
       return {
         **state,
-        "error": f"Error generando insights de mercado: {exc}"
+        "error": f"Error en ranking LLM: {exc}",
+      }
+
+  def insights_node(state: GraphState) -> GraphState:
+    if state.get("error"):
+      return state
+    try:
+      params = state.get("params", {}) or {}
+      top_n = int(params.get("top_n", 10) or 10)
+      result = service.use_case_insights(state.get("offers", []), top_n=top_n)
+      return {**state, "result": result}
+    except Exception as exc:
+      return {
+        **state,
+        "error": f"Error generando insights de mercado: {exc}",
       }
 
   graph.add_node("load_data", load_data_node)
@@ -175,7 +167,7 @@ def build_multiagent_graph():
   graph.add_node("enrich_profile", enrich_profile_node)
   graph.add_node("autonomous_planner", autonomous_planner_node)
   graph.add_node("search", search_node)
-  graph.add_node("market_insights", market_insights_node)
+  graph.add_node("insights", insights_node)
 
   graph.set_entry_point("load_data")
   graph.add_conditional_edges(
@@ -183,9 +175,9 @@ def build_multiagent_graph():
     route_after_load,
     {
       "search": "parse_profile",
-      "market_insights": "market_insights",
-      "end": END
-    }
+      "insights": "insights",
+      "end": END,
+    },
   )
   graph.add_edge("parse_profile", "assess_profile_signal")
   graph.add_conditional_edges(
@@ -193,13 +185,13 @@ def build_multiagent_graph():
     route_after_profile_assessment,
     {
       "autonomous_planner": "autonomous_planner",
-      "enrich_profile": "enrich_profile"
-    }
+      "enrich_profile": "enrich_profile",
+    },
   )
   graph.add_edge("enrich_profile", "assess_profile_signal")
   graph.add_edge("autonomous_planner", "search")
   graph.add_edge("search", END)
-  graph.add_edge("market_insights", END)
+  graph.add_edge("insights", END)
 
   return graph.compile()
 
@@ -211,5 +203,5 @@ def run_multiagent_flow(params: Dict[str, Any]) -> Dict[str, Any]:
   return {
     "use_case": use_case,
     "error": state.get("error"),
-    "result": state.get("result", {})
+    "result": state.get("result", {}),
   }

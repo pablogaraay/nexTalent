@@ -1,39 +1,25 @@
 import json
 from pathlib import Path
-import sys
-
-BASE_DIR = Path(__file__).resolve().parent.parent
-if str(BASE_DIR) not in sys.path:
-  sys.path.insert(0, str(BASE_DIR))
 
 from config import Config
-from chromadb import PersistentClient
-import ollama
+from infra.embeddings import embed_text
+from repositories.vector_store import VectorStore
 
-CHROMA_PATH = BASE_DIR / "data/chroma"
-EMBED_MODEL = Config.EMBED_MODEL
-
+BASE_DIR = Path(__file__).resolve().parent.parent
 JOBS_FILE = BASE_DIR / "nexTalent.wef_jobs_taxonomy.json"
 SKILLS_FILE = BASE_DIR / "nexTalent.sfia_skills_taxonomy.json"
 JOBS_COLLECTION = Config.JOBS_CHROMA_COLLECTION
 SKILLS_COLLECTION = Config.SKILLS_CHROMA_COLLECTION
 
-def embed_text(text):
-  res = ollama.embed(
-    model=EMBED_MODEL,
-    input=text
-  )
-  return res['embeddings'][0]
-
-def load_json(file_path):
-  with open(file_path, "r", encoding="utf-8") as file:
+def load_json(file_path: Path):
+  with file_path.open("r", encoding="utf-8") as file:
     data = json.load(file)
-    if not isinstance(data, list):
-      raise ValueError(
-        f"Formato no soportado en {file_path}. "
-        "Se espera una lista JSON plana (taxonomía actual)."
-      )
-    return data
+  if not isinstance(data, list):
+    raise ValueError(
+      f"Formato no soportado en {file_path}. "
+      "Se espera una lista JSON plana (taxonomía actual)."
+    )
+  return data
   
 def main():
   if not JOBS_FILE.exists():
@@ -41,12 +27,12 @@ def main():
   if not SKILLS_FILE.exists():
     raise FileNotFoundError(f"No se encuentra el fichero: {SKILLS_FILE}")
 
-  client = PersistentClient(path=str(CHROMA_PATH))
-  jobs_coll = client.get_or_create_collection(
+  vector_store = VectorStore()
+  jobs_coll = vector_store.get_or_create_collection(
     name=JOBS_COLLECTION,
     metadata={"hnsw:space": "cosine"}
   )
-  skills_coll = client.get_or_create_collection(
+  skills_coll = vector_store.get_or_create_collection(
     name=SKILLS_COLLECTION,
     metadata={"hnsw:space": "cosine"}
   )
@@ -89,7 +75,7 @@ def main():
   jobs_coll.upsert(ids=jobs_ids, documents=jobs_docs, metadatas=jobs_meta, embeddings=jobs_embs)
   skills_coll.upsert(ids=skills_ids, documents=skills_docs, metadatas=skills_meta, embeddings=skills_embs)
 
-  print(f"Chroma path: {CHROMA_PATH}")
+  print(f"Chroma path: {vector_store.chroma_path}")
   print(f"Indexed jobs: {len(jobs_ids)}")
   print(f"Indexed skills: {len(skills_ids)}")
   print(f"Collection '{JOBS_COLLECTION}' count: {jobs_coll.count()}")
