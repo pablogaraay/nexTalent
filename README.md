@@ -77,17 +77,21 @@ ollama pull mxbai-embed-large:latest
 Crear un archivo `.env` en la raíz del proyecto:
 
 ```env
-MONGO_URI=<tu_mongo_uri>
+# Con Docker Compose:
+MONGO_URI=mongodb://mongo:27017/nexTalent
+
+# Sin Docker (Mongo en local):
+# MONGO_URI=mongodb://localhost:27017/nexTalent
 GROQ_API_KEY=<tu_groq_api_key>
 ```
 
 Variables opcionales usadas por la web:
 - `API_PORT` (por defecto `8787`)
-- `VITE_API_URL` (si quieres apuntar el frontend a una API externa)
-- `VITE_PROXY_TARGET` (target del proxy de Vite; útil en Docker)
+- `VITE_API_URL` (si quieres que el frontend apunte a una API externa)
 
 Variables opcionales del planificador autónomo:
 - `AUTONOMOUS_AGENT_VERBOSE` (`true/false`, imprime decisión del planner en logs)
+- `PIPELINE_INTERVAL_HOURS` (intervalo del servicio `pipeline` en Docker, por defecto `12`)
 
 ## Quickstart con Docker (Fase 1)
 
@@ -100,7 +104,7 @@ cp .env.example .env
 2. Levanta el stack:
 
 ```bash
-docker compose up --build
+docker compose up --build -d
 ```
 
 3. Descarga el modelo de embeddings dentro de Ollama (una sola vez):
@@ -115,15 +119,51 @@ docker compose exec ollama ollama pull mxbai-embed-large:latest
 docker compose logs -f api
 ```
 
+5. (Recomendado en primera ejecución) carga/actualiza las ofertas base:
+
+```bash
+docker compose exec api python scraper.py
+docker compose exec api python dataWrangler.py
+```
+
+6. Revisa también el servicio automático de pipeline:
+
+```bash
+docker compose logs -f pipeline
+```
+
 Servicios en local:
 - Frontend: `http://localhost:5173`
 - API: `http://localhost:8787`
 - MongoDB: `localhost:27017`
 - Ollama: `localhost:11434`
 
-## Pipeline de datos recomendado (primera ejecución)
+Nota:
+- En Docker, el frontend se sirve en modo estático con Nginx.
+- El proxy `/api` se resuelve internamente hacia el servicio `api`.
+- El servicio `pipeline` ejecuta en bucle: `llm_processor -> rag.index_taxonomy -> rag.map_offers`.
+- El servicio `pipeline` no ejecuta scraping ni wrangling; esos pasos se lanzan manualmente (o con otro scheduler).
 
-Ejecutar en este orden:
+## Pipeline de datos
+
+### Opción A: Automático con Docker (`pipeline`)
+
+`docker-compose` incluye un servicio `pipeline` que ejecuta de forma periódica:
+
+1. `llm_processor.py`
+2. `rag.index_taxonomy`
+3. `rag.map_offers`
+
+Control útil:
+
+```bash
+docker compose logs -f pipeline
+docker compose restart pipeline
+```
+
+### Opción B: Manual (sin Docker)
+
+Para una ejecución completa manual, lanzar:
 
 ```bash
 python3 scraper.py
