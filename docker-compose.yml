@@ -55,24 +55,6 @@ services:
       timeout: 5s
       retries: 8
 
-  pipeline:
-    build:
-      context: .
-      dockerfile: Dockerfile.pipeline
-    restart: unless-stopped
-    depends_on:
-      mongo:
-        condition: service_healthy
-      ollama:
-        condition: service_healthy
-    environment:
-      MONGO_URI: ${MONGO_URI:-mongodb://mongo:27017/nexTalent}
-      GROQ_API_KEY: ${GROQ_API_KEY:-}
-      OLLAMA_HOST: http://ollama:11434
-      PIPELINE_INTERVAL_HOURS: ${PIPELINE_INTERVAL_HOURS:-12}
-    volumes:
-      - chroma_data:/app/data/chroma
-
   web:
     build:
       context: .
