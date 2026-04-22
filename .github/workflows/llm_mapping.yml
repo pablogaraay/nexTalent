@@ -58,7 +58,7 @@ jobs:
           GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
         run: |
           echo "Iniciando llm_processor..."
-          python llm_processor
+          python llm_processor.py
           echo "llm_processor finalizado."
 
       - name: Index taxonomy (siempre)
