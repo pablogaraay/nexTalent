@@ -1,9 +1,13 @@
-name: Run LinkedIn Scraper & Prepare Data
+name: Ingesta y Data Wrangling
 
 on:
   schedule:
-    - cron: "0 5 13,28 * *"
+    - cron: "0 1 */15 * *"
   workflow_dispatch: {}
+
+concurrency:
+  group: ingesta-data-wrangling
+  cancel-in-progress: false
 
 jobs:
   run:
@@ -21,9 +25,9 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Run scraper & Prepare Data
+      - name: Run scraper y data wrangler
         env:
           MONGO_URI: ${{ secrets.MONGO_URI }}
         run: |
           python scraper.py
-          python dataWrangler.py
+          python data_wrangler.py

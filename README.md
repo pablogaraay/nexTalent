@@ -91,7 +91,6 @@ Variables opcionales usadas por la web:
 
 Variables opcionales del planificador autónomo:
 - `AUTONOMOUS_AGENT_VERBOSE` (`true/false`, imprime decisión del planner en logs)
-- `PIPELINE_INTERVAL_HOURS` (intervalo del servicio `pipeline` en Docker, por defecto `12`)
 
 ## Quickstart con Docker (Fase 1)
 
@@ -123,13 +122,7 @@ docker compose logs -f api
 
 ```bash
 docker compose exec api python scraper.py
-docker compose exec api python dataWrangler.py
-```
-
-6. Revisa también el servicio automático de pipeline:
-
-```bash
-docker compose logs -f pipeline
+docker compose exec api python data_wrangler.py
 ```
 
 Servicios en local:
@@ -141,33 +134,25 @@ Servicios en local:
 Nota:
 - En Docker, el frontend se sirve en modo estático con Nginx.
 - El proxy `/api` se resuelve internamente hacia el servicio `api`.
-- El servicio `pipeline` ejecuta en bucle: `llm_processor -> rag.index_taxonomy -> rag.map_offers`.
-- El servicio `pipeline` no ejecuta scraping ni wrangling; esos pasos se lanzan manualmente (o con otro scheduler).
 
 ## Pipeline de datos
 
-### Opción A: Automático con Docker (`pipeline`)
+### Opción A: Automático con GitHub Actions
 
-`docker-compose` incluye un servicio `pipeline` que ejecuta de forma periódica:
+El procesamiento periódico está separado en dos workflows:
 
-1. `llm_processor.py`
-2. `rag.index_taxonomy`
-3. `rag.map_offers`
+1. `Ingesta y Data Wrangling` (`scraper.py -> data_wrangler.py`)
+2. `LLM + Taxonomy + Mapping` (`llm_processor.py -> rag/index_taxonomy.py -> rag/map_offers.py`)
 
-Control útil:
+En el segundo workflow, `llm_processor.py` puede fallar (por cuota/tokens) y aun así se ejecutan indexado y mapping sobre lo ya procesado.
 
-```bash
-docker compose logs -f pipeline
-docker compose restart pipeline
-```
-
-### Opción B: Manual (sin Docker)
+### Opción B: Manual (sin scheduler)
 
 Para una ejecución completa manual, lanzar:
 
 ```bash
 python3 scraper.py
-python3 dataWrangler.py
+python3 data_wrangler.py
 python3 llm_processor.py
 python3 -m rag.index_taxonomy
 python3 -m rag.map_offers
@@ -264,9 +249,9 @@ ChromaDB (`data/chroma`):
 ```text
 nexTalent/
   config.py
-  dbConn.py
+  db_conn.py
   scraper.py
-  dataWrangler.py
+  data_wrangler.py
   llm_processor.py
   api.py
   multiagent_cli.py
