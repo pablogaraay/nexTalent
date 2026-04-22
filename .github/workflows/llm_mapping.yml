@@ -63,11 +63,11 @@ jobs:
         env:
           MONGO_URI: ${{ secrets.MONGO_URI }}
         run: |
-          python rag/index_taxonomy.py
+          python -m rag.index_taxonomy
 
       - name: Map offers (siempre)
         if: ${{ always() }}
         env:
           MONGO_URI: ${{ secrets.MONGO_URI }}
         run: |
-          python rag/map_offers.py
+          python -m rag.map_offers
