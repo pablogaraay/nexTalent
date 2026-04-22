@@ -5,8 +5,13 @@ from typing import Any, Dict, List, TypedDict
 from langgraph.graph import END, StateGraph
 
 from config import Config
+from repositories.offer_repository import OfferRepository
 
-from .use_case_service import UseCaseService
+from .llm_client import LLMClientService
+from .services.insights_service import InsightsService
+from .services.planner_service import PlannerService
+from .services.profile_service import ProfileService
+from .services.search_service import SearchService
 
 
 class GraphState(TypedDict, total=False):
@@ -25,12 +30,17 @@ _COMPILED_GRAPH = None
 
 
 def build_multiagent_graph():
-  service = UseCaseService()
+  llm_client_service = LLMClientService()
+  offer_repository = OfferRepository()
+  profile_service = ProfileService(llm_client_service)
+  planner_service = PlannerService(llm_client_service)
+  search_service = SearchService(llm_client_service)
+  insights_service = InsightsService()
   graph = StateGraph(GraphState)
 
   def load_data_node(state: GraphState) -> GraphState:
     try:
-      offers = service.load_offers_for_analysis()
+      offers = offer_repository.load_mapped_offers() or []
       params = state.get("params", {}) or {}
       use_case = str(params.get("use_case", "search") or "search").strip().lower()
       if not offers:
@@ -57,7 +67,7 @@ def build_multiagent_graph():
       return state
     params = state.get("params", {}) or {}
     try:
-      profile = service.parse_profile(
+      profile = profile_service.parse_profile(
         profile_text=params.get("profile_text", "") or "",
         cv_file=params.get("cv_file", "") or "",
       )
@@ -76,7 +86,7 @@ def build_multiagent_graph():
     if state.get("error"):
       return state
     try:
-      signal = service.assess_profile_signal(state.get("profile", {}) or {})
+      signal = profile_service.assess_profile_signal(state.get("profile", {}) or {})
       return {**state, "profile_signal": signal}
     except Exception as exc:
       return {
@@ -98,7 +108,7 @@ def build_multiagent_graph():
     if state.get("error"):
       return state
     try:
-      enriched = service.enrich_profile(state.get("profile", {}) or {})
+      enriched = profile_service.enrich_profile(state.get("profile", {}) or {})
       return {
         **state,
         "profile": enriched,
@@ -116,7 +126,7 @@ def build_multiagent_graph():
     if state.get("error"):
       return state
     try:
-      plan = service.decide_search_plan(state.get("profile", {}) or {})
+      plan = planner_service.decide_search_plan(state.get("profile", {}) or {})
       if getattr(Config, "AUTONOMOUS_AGENT_VERBOSE", False):
         print(
           f"Planificador autónomo | estrategia={plan.get('strategy')} "
@@ -137,11 +147,13 @@ def build_multiagent_graph():
     try:
       params = state.get("params", {}) or {}
       top_n = int(params.get("top_n", 10) or 10)
-      result = service.use_case_search(
+      result = search_service.use_case_search(
         state.get("offers", []),
         state.get("profile", {}),
         top_n=top_n,
         plan=state.get("plan", {}),
+        default_plan=planner_service.default_search_plan(),
+        coerce_plan=planner_service.coerce_search_plan,
       )
       return {**state, "result": result}
     except Exception as exc:
@@ -156,7 +168,7 @@ def build_multiagent_graph():
     try:
       params = state.get("params", {}) or {}
       top_n = int(params.get("top_n", 10) or 10)
-      result = service.use_case_insights(state.get("offers", []), top_n=top_n)
+      result = insights_service.use_case_insights(state.get("offers", []), top_n=top_n)
       return {**state, "result": result}
     except Exception as exc:
       return {

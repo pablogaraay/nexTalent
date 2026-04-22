@@ -2,6 +2,7 @@ from config import Config
 from infra.embeddings import embed_text
 from repositories.offer_repository import OfferRepository
 from repositories.vector_store import VectorStore
+from utils.text import unique_keep_order
 
 ROLE_LIMIT = 0.60
 SKILL_LIMIT = 0.60
@@ -29,16 +30,6 @@ def best_match(collection, text, limit):
     return {"status": "mapped", "top1": top1}
   return {"status": "unmapped", "top1": top1}
 
-def unique_texts(items):
-  out, seen = [], set()
-  for item in items or []:
-    text = str(item).strip()
-    key = text.lower()
-    if text and key not in seen:
-      seen.add(key)
-      out.append(text)
-  return out
-
 def main():
   offer_repository = OfferRepository()
   source_offers = offer_repository.load_unprocessed_offers(Config.LLM_RAW_COLL, Config.MAPPED_COLL)
@@ -58,10 +49,10 @@ def main():
     role_map = best_match(jobs_col, role_raw, ROLE_LIMIT)
 
     skill_inputs = []
-    skill_inputs.extend(unique_texts(offer.get("hard_skills_raw", [])))
-    skill_inputs.extend(unique_texts(offer.get("soft_skills_raw", [])))
-    skill_inputs.extend(unique_texts(offer.get("tools_raw", [])))
-    skill_inputs = unique_texts(skill_inputs)
+    skill_inputs.extend(unique_keep_order([str(x) for x in (offer.get("hard_skills_raw", []) or [])]))
+    skill_inputs.extend(unique_keep_order([str(x) for x in (offer.get("soft_skills_raw", []) or [])]))
+    skill_inputs.extend(unique_keep_order([str(x) for x in (offer.get("tools_raw", []) or [])]))
+    skill_inputs = unique_keep_order(skill_inputs)
 
     skills_mapped = []
     for skill in skill_inputs:

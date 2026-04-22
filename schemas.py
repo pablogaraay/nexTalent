@@ -1,7 +1,6 @@
 from typing import Iterable, List
 
-
-def build_offer_extraction_schema():
+def build_extraction_schema():
   return {
     "type": "object",
     "properties": {
@@ -44,12 +43,6 @@ def build_offer_extraction_schema():
     "additionalProperties": False
   }
 
-
-def build_extraction_schema():
-  """Backward-compatible alias for llm_processor."""
-  return build_offer_extraction_schema()
-
-
 def build_profile_parse_schema(seniority_levels: Iterable[str]):
   levels: List[str] = list(seniority_levels or [])
   return {
@@ -78,7 +71,6 @@ def build_profile_parse_schema(seniority_levels: Iterable[str]):
     ],
     "additionalProperties": False
   }
-
 
 def build_profile_enrichment_schema(seniority_levels: Iterable[str]):
   levels: List[str] = list(seniority_levels or [])
@@ -116,7 +108,6 @@ def build_profile_enrichment_schema(seniority_levels: Iterable[str]):
     ],
     "additionalProperties": False
   }
-
 
 def build_reranker_schema(top_n: int):
   safe_top_n = max(1, int(top_n))

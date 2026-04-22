@@ -1,7 +1,5 @@
 from __future__ import annotations
-
 from typing import Any, Dict, Iterable, List
-
 from config import Config
 from repositories.vector_store import VectorStore
 from utils.text import (
@@ -10,9 +8,8 @@ from utils.text import (
   offer_location_string,
   unique_keep_order,
 )
-
 from ..llm_client import LLMClientService
-
+from .planner_service import PlannerService
 
 class SearchService:
   def __init__(
@@ -43,6 +40,30 @@ class SearchService:
       "region": offer.get("region", ""),
       "country": offer.get("country", ""),
       "skills": self.offer_skills(offer),
+    }
+
+  @staticmethod
+  def _vector_min_score() -> float:
+    return float(getattr(Config, "VECTOR_FALLBACK_MIN_SCORE", 0.60))
+
+  def _build_result_entry(
+    self,
+    offer: Dict[str, Any],
+    match_score: float,
+    matched_skills: List[str] | None,
+    why_match: str,
+  ) -> Dict[str, Any]:
+    return {
+      "url": offer.get("url", ""),
+      "title": offer.get("title", ""),
+      "company": offer.get("company", ""),
+      "role_raw": offer.get("role_raw", ""),
+      "location": offer_location_string(offer),
+      "job_mapping": offer.get("job_mapping", {}),
+      "match_score": round(float(match_score), 4),
+      "matched_skills": unique_keep_order([str(s) for s in (matched_skills or [])]),
+      "why_match": why_match,
+      "vector_score": round(float(offer.get("vector_score", 0.0)), 4),
     }
 
   def _build_search_query(
@@ -156,24 +177,20 @@ class SearchService:
   ) -> List[Dict[str, Any]]:
     out: List[Dict[str, Any]] = []
     profile_skills = {normalize_text(str(s)) for s in (profile.get("skills") or [])}
-    min_vector_score = float(getattr(Config, "VECTOR_FALLBACK_MIN_SCORE", 0.6))
+    min_vector_score = self._vector_min_score()
     strong_candidates = [offer for offer in top_candidates if float(offer.get("vector_score", 0.0)) >= min_vector_score]
 
     for offer in strong_candidates[:top_n]:
       offer_skills = [str(x) for x in self.offer_skills(offer)]
       matched = [s for s in offer_skills if normalize_text(s) in profile_skills]
-      out.append({
-        "url": offer.get("url", ""),
-        "title": offer.get("title", ""),
-        "company": offer.get("company", ""),
-        "role_raw": offer.get("role_raw", ""),
-        "location": offer_location_string(offer),
-        "job_mapping": offer.get("job_mapping", {}),
-        "match_score": round(float(offer.get("vector_score", 0.0)), 4),
-        "matched_skills": unique_keep_order(matched),
-        "why_match": "Coincidencia semántica por embeddings",
-        "vector_score": round(float(offer.get("vector_score", 0.0)), 4),
-      })
+      out.append(
+        self._build_result_entry(
+          offer=offer,
+          match_score=float(offer.get("vector_score", 0.0)),
+          matched_skills=matched,
+          why_match="Coincidencia semántica por embeddings",
+        )
+      )
     return out
 
   def _rerank_final_with_llm(self, profile: Dict[str, Any], finalists: List[Dict[str, Any]], top_n: int) -> List[Dict[str, Any]]:
@@ -229,14 +246,7 @@ class SearchService:
     if not offers:
       return {"profile": profile, "total_candidates": 0, "results": [], "agent": {}}
 
-    active_plan = default_plan or {
-      "strategy": "llm_rerank",
-      "confidence": 0.5,
-      "reasons": ["default_plan"],
-      "use_location_priority": True,
-      "use_seniority_priority": True,
-      "top_k_hint": int(getattr(Config, "RETRIEVAL_TOP_K", 50)),
-    }
+    active_plan = default_plan or PlannerService.default_search_plan()
 
     if isinstance(plan, dict) and plan and callable(coerce_plan):
       active_plan = {
@@ -335,38 +345,30 @@ class SearchService:
 
         offer = candidates_for_rerank[idx]
         matched = unique_keep_order([str(s) for s in (item.get("matched_skills") or [])])
-        results.append({
-          "url": offer.get("url", ""),
-          "title": offer.get("title", ""),
-          "company": offer.get("company", ""),
-          "role_raw": offer.get("role_raw", ""),
-          "location": offer_location_string(offer),
-          "job_mapping": offer.get("job_mapping", {}),
-          "match_score": round(float(item.get("score", 0)), 4),
-          "matched_skills": matched,
-          "why_match": f"Reranked by LLM. Vector Sim: {round(offer.get('vector_score', 0), 4)}",
-          "vector_score": round(offer.get("vector_score", 0), 4),
-        })
+        results.append(
+          self._build_result_entry(
+            offer=offer,
+            match_score=float(item.get("score", 0)),
+            matched_skills=matched,
+            why_match=f"Reranked by LLM. Vector Sim: {round(offer.get('vector_score', 0), 4)}",
+          )
+        )
 
     if not results:
-      min_vector_score = float(getattr(Config, "VECTOR_FALLBACK_MIN_SCORE", 0.8))
+      min_vector_score = self._vector_min_score()
       strong_candidates = [
         offer for offer in candidates_for_rerank
         if float(offer.get("vector_score", 0.0)) >= min_vector_score
       ]
       for offer in strong_candidates[:top_n]:
-        results.append({
-          "url": offer.get("url", ""),
-          "title": offer.get("title", ""),
-          "company": offer.get("company", ""),
-          "role_raw": offer.get("role_raw", ""),
-          "location": offer_location_string(offer),
-          "job_mapping": offer.get("job_mapping", {}),
-          "match_score": round(offer.get("vector_score", 0), 4),
-          "matched_skills": [],
-          "why_match": f"Vector Fallback Sim: {round(offer.get('vector_score', 0), 4)}",
-          "vector_score": round(offer.get("vector_score", 0), 4),
-        })
+        results.append(
+          self._build_result_entry(
+            offer=offer,
+            match_score=float(offer.get("vector_score", 0.0)),
+            matched_skills=[],
+            why_match=f"Vector Fallback Sim: {round(offer.get('vector_score', 0), 4)}",
+          )
+        )
 
     return {
       "profile": profile,

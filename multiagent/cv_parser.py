@@ -1,4 +1,3 @@
-import json
 from pathlib import Path
 
 def read_cv_file(cv_file: str) -> str:
