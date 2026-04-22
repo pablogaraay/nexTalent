@@ -3,10 +3,9 @@ from __future__ import annotations
 import json
 from typing import Any, Dict, List
 
-from groq import Groq
-
 from config import Config
 from infra.embeddings import embed_text as shared_embed_text
+from infra.groq_client import get_groq_client
 import schemas
 
 
@@ -51,7 +50,7 @@ def _strategy_tool_parameters() -> Dict[str, Any]:
 
 class LLMClientService:
   def __init__(self):
-    self.llm_client = Groq(api_key=Config.GROQ_API_KEY) if Config.GROQ_API_KEY else None
+    self.llm_client = get_groq_client()
 
   def embed_text(self, text: str) -> List[float]:
     return shared_embed_text(text)

@@ -1,9 +1,10 @@
-from dbConn import MongoManager
+from db_conn import MongoManager
 from config import Config
 import schemas
 import json
-from groq import Groq, RateLimitError
+from groq import RateLimitError
 import time
+from infra.groq_client import get_groq_client
 
 class LLMProcessor:
   
@@ -11,7 +12,13 @@ class LLMProcessor:
     self.db = MongoManager()
     self.provider = provider
     self.model = model
-    self.client = Groq(api_key=Config.GROQ_API_KEY)
+    self.client = get_groq_client()
+    if not self.client:
+      raise RuntimeError("No hay cliente LLM disponible. Revisa GROQ_API_KEY en el entorno.")
+
+  def close(self):
+    if self.db:
+      self.db.close_connection()
 
   def prepare_batch(self,batch):
     fields_required = []
@@ -290,4 +297,7 @@ class LLMProcessor:
   
 if __name__ == "__main__":
   processor = LLMProcessor()
-  processor.process_all_batches(batch_size=Config.BATCH_SIZE)
+  try:
+    processor.process_all_batches(batch_size=Config.BATCH_SIZE)
+  finally:
+    processor.close()
