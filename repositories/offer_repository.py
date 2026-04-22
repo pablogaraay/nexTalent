@@ -1,10 +1,7 @@
 from __future__ import annotations
-
 from typing import Dict, List, Any
-
 from config import Config
 from db_conn import MongoManager
-
 
 class OfferRepository:
   def __init__(self, db: MongoManager | None = None):
