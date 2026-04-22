@@ -1,14 +1,18 @@
-from dbConn import MongoManager
+from db_conn import MongoManager
 from config import Config
 import pandas as pd
 
 class DataWrangler:
+  def __init__(self):
+    self.db = MongoManager()
+
+  def close(self):
+    if self.db:
+      self.db.close_connection()
 
   def get_df(self):
-    db = MongoManager()
-    offers = db.load_offers(Config.SCRAPED_COLL)
+    offers = self.db.load_offers(Config.SCRAPED_COLL)
     df = pd.DataFrame(offers)
-    db.close_connection()
     return df
 
   def check_empty_values(self, df):
@@ -61,10 +65,8 @@ class DataWrangler:
 
   def save_structured_data(self, df_structured):
     print("Se guardan los datos estructurados en la coleccion offers_structured")
-    db = MongoManager()
     offers_array = df_structured.to_dict(orient="records")
-    db.upsert_bulk_offers(Config.STRUCTURED_COLL, offers_array, "structured")
-    db.close_connection()
+    self.db.upsert_bulk_offers(Config.STRUCTURED_COLL, offers_array, "structured")
 
   def is_non_empty_text(self, series):
     return series.notna() & (series.astype(str).str.strip() != "") & (series.astype(str).str.strip() != '""')
@@ -109,19 +111,20 @@ class DataWrangler:
   
   def save_cleaned_data(self, df_cleaned):
     print("Se guardan los datos limpios en la coleccion offers_cleaned")
-    db = MongoManager()
     offers_array = df_cleaned.to_dict(orient="records")
-    db.upsert_bulk_offers(Config.CLEANED_COLL, offers_array, "cleaned")
-    db.close_connection()
+    self.db.upsert_bulk_offers(Config.CLEANED_COLL, offers_array, "cleaned")
 
 if __name__ == "__main__":
   dw = DataWrangler()
-  df = dw.get_df()
-  dw.check_empty_values(df)
-  df_structured = dw.structure_data(df)
-  dw.save_structured_data(df_structured)
-  df_valid, df_invalid = dw.filter_valid_offers(df_structured)
-  print(df_invalid.head(10))
-  df_company_cleaned = dw.filter_company_by_kw(df_valid)
-  df_cleaned = dw.clean_description(df_company_cleaned)
-  dw.save_cleaned_data(df_cleaned)
+  try:
+    df = dw.get_df()
+    dw.check_empty_values(df)
+    df_structured = dw.structure_data(df)
+    dw.save_structured_data(df_structured)
+    df_valid, df_invalid = dw.filter_valid_offers(df_structured)
+    print(df_invalid.head(10))
+    df_company_cleaned = dw.filter_company_by_kw(df_valid)
+    df_cleaned = dw.clean_description(df_company_cleaned)
+    dw.save_cleaned_data(df_cleaned)
+  finally:
+    dw.close()

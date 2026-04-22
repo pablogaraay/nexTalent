@@ -4,17 +4,24 @@ from datetime import datetime, timezone
 from config import Config
 
 class MongoManager:
+  _connection_checked = False
+  _indexes_created = False
+
   def __init__(self):
     self.client = MongoClient(Config.MONGO_URI, server_api=ServerApi(version='1'))
     self.db = self.client[Config.DB_NAME]
-    self.verify_connection()
-    self.create_indexes()
+    if not MongoManager._connection_checked:
+      self.verify_connection()
+      MongoManager._connection_checked = True
+    if not MongoManager._indexes_created:
+      self.create_indexes()
+      MongoManager._indexes_created = True
 
   def verify_connection(self):
     try:
       self.client.admin.command('ping')
     except Exception as e:
-      print(f"Servidor no disponible: {e}")
+      raise RuntimeError(f"Servidor no disponible: {e}") from e
 
   def upsert_bulk_offers(self, coll: str, offers_array: list, stage_prefix: str):
     if not offers_array:
@@ -67,13 +74,6 @@ class MongoManager:
       return offers
     except Exception as e:
       print(f"Error al cargar las ofertas: {e}")
-
-  def load_offers_batch(self, coll, batch_size, skip=0):
-    try:
-      batch_offers = list(self.db[coll].find().sort("_id", 1).limit(batch_size).skip(skip))
-      return batch_offers
-    except Exception as e:
-      print(f"Error al cargar el lote de ofertas: {e}")
 
   def load_unprocessed_offers(self, source_coll, processed_coll):
     try:

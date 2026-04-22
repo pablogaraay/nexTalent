@@ -2,7 +2,7 @@ import requests, re, time, random
 from bs4 import BeautifulSoup
 from urllib.parse import urlparse
 from config import Config
-from dbConn import MongoManager
+from db_conn import MongoManager
 
 def normalize_url(offer_link):
   parsed = urlparse(offer_link)
