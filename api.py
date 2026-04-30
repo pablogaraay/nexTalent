@@ -108,5 +108,5 @@ def insights(
 
 
 if __name__ == "__main__":
-  port = int(os.getenv("API_PORT", "8787"))
+  port = int(os.getenv("PORT", os.getenv("API_PORT", "8787")))
   uvicorn.run("api:app", host="0.0.0.0", port=port, reload=False)
