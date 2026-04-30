@@ -11,6 +11,11 @@ def _env_bool(name, default=False):
   return str(value).strip().lower() in {"1", "true", "yes", "on"}
 
 
+def _env_list(name):
+  value = os.getenv(name, "")
+  return [item.strip() for item in value.split(",") if item.strip()]
+
+
 class Config:
   #Scraper config
   KEYWORDS = ["Deloitte", "Accenture", "KPMG", "EY", "Capgemini", "PwC", "Indra", "NTT Data", "BCG", "Kyndryl"]
@@ -44,8 +49,9 @@ class Config:
   # Autonomous agent planner
   AUTONOMOUS_AGENT_VERBOSE = _env_bool("AUTONOMOUS_AGENT_VERBOSE", True)
 
-  # CORS (fixed allowlist for local frontend)
+  # CORS (local by default, extensible for deployed frontend domains)
   CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
     "http://127.0.0.1:5173",
+    *_env_list("CORS_ALLOWED_ORIGINS_EXTRA"),
   ]
