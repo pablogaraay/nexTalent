@@ -61,6 +61,8 @@ services:
       dockerfile: Dockerfile.web
       args:
         VITE_API_URL: ${VITE_API_URL:-http://localhost:8787}
+    environment:
+      VITE_API_URL: ${VITE_API_URL:-http://localhost:8787}
     restart: unless-stopped
     depends_on:
       api:
