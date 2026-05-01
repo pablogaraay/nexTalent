@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import logging
 import os
 import tempfile
 from datetime import datetime, timezone
@@ -14,6 +15,7 @@ from config import Config
 from multiagent import run_multiagent_flow
 
 
+logger = logging.getLogger(__name__)
 app = FastAPI(title="nexTalent API", version="1.0.0")
 
 app.add_middleware(
@@ -69,6 +71,7 @@ async def search(
     )
     return JSONResponse(status_code=200, content=payload)
   except Exception as exc:
+    logger.exception("Error ejecutando /api/search")
     return JSONResponse(
       status_code=500,
       content={
@@ -98,6 +101,7 @@ def insights(
     )
     return JSONResponse(status_code=200, content=payload)
   except Exception as exc:
+    logger.exception("Error ejecutando /api/insights")
     return JSONResponse(
       status_code=500,
       content={
