@@ -1,14 +1,10 @@
 from __future__ import annotations
-
 import json
 from typing import Any, Dict, List
-
 import schemas
 from utils.text import is_unknown_value, unique_keep_order
-
 from ..cv_parser import read_cv_file
 from ..llm_client import LLMClientService
-
 
 SENIORITY_RAW_LEVELS = [
   "practicas",
@@ -102,7 +98,6 @@ class ProfileService:
       "raw_text": combined,
       "source": {
         "profile_text_present": bool(profile_text.strip()),
-        "cv_file": cv_file or "",
         "cv_loaded": bool(cv_text.strip()),
         "parse_method": "llm",
       },
