@@ -11,7 +11,7 @@ class DataWrangler:
       self.db.close_connection()
 
   def get_df(self):
-    offers = self.db.load_offers(Config.SCRAPED_COLL)
+    offers = self.db.load_offers(Config.SCRAPED_COLL, active_only=True)
     df = pd.DataFrame(offers)
     return df
 

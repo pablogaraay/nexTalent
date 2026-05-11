@@ -40,8 +40,15 @@ class MongoManager:
         UpdateOne(
           {"url": offer_without_id.get("url")},
           {
-            "$set": {**offer_without_id, f"last_{stage_prefix}": datetime.now(timezone.utc)},
-            "$setOnInsert": set_on_insert
+            "$set": {
+              **offer_without_id,
+              "is_active": True,
+              "activity_status": "active",
+              "missing_count": 0,
+              f"last_{stage_prefix}": datetime.now(timezone.utc),
+            },
+            "$setOnInsert": set_on_insert,
+            "$unset": {"inactive_at": "", "inactive_reason": "", "last_missing_at": ""}
           },
           upsert=True
         )
@@ -52,6 +59,51 @@ class MongoManager:
       print(f"Se han actualizado {res.modified_count} ofertas en la coleccion {coll}")
     except Exception as e:
       print(f"Error al insertar las ofertas: {e}")
+
+  def sync_active_urls(self, active_urls: list[str], collections: list[str]):
+    active_urls = sorted({str(url or "").strip() for url in active_urls if str(url or "").strip()})
+    min_urls = int(getattr(Config, "SCRAPER_ACTIVITY_SYNC_MIN_URLS", 1) or 1)
+
+    if len(active_urls) < min_urls:
+      print(
+        "No se sincroniza actividad: "
+        f"solo se han detectado {len(active_urls)} URLs activas "
+        f"(minimo configurado: {min_urls})."
+      )
+      return
+
+    now = datetime.now(timezone.utc)
+    for coll in collections:
+      active_res = self.db[coll].update_many(
+        {"url": {"$in": active_urls}},
+        {
+          "$set": {
+            "is_active": True,
+            "activity_status": "active",
+            "missing_count": 0,
+            "last_seen_active_source": now,
+          },
+          "$unset": {"inactive_at": "", "inactive_reason": "", "last_missing_at": ""}
+        }
+      )
+      inactive_res = self.db[coll].update_many(
+        {"url": {"$nin": active_urls}},
+        {
+          "$set": {
+            "is_active": False,
+            "activity_status": "inactive",
+            "inactive_at": now,
+            "inactive_reason": "not_seen_in_latest_scrape",
+            "last_missing_at": now,
+          },
+          "$inc": {"missing_count": 1}
+        }
+      )
+      print(
+        f"Actividad sincronizada en {coll}: "
+        f"{active_res.modified_count} reactivadas/actualizadas, "
+        f"{inactive_res.modified_count} marcadas como inactivas."
+      )
 
   def create_indexes(self):
     try:
@@ -68,9 +120,10 @@ class MongoManager:
     except Exception as e:
       print(f"Error al crear el indice: {e}")
 
-  def load_offers(self, coll):
+  def load_offers(self, coll, active_only=False):
     try:
-      offers = list(self.db[coll].find())
+      query = {"is_active": {"$ne": False}} if active_only else {}
+      offers = list(self.db[coll].find(query))
       return offers
     except Exception as e:
       print(f"Error al cargar las ofertas: {e}")
@@ -78,6 +131,7 @@ class MongoManager:
   def load_unprocessed_offers(self, source_coll, processed_coll):
     try:
       pipeline = [
+        {"$match": {"is_active": {"$ne": False}}},
         {
           "$lookup": {
             "from": processed_coll,

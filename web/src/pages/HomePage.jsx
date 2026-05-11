@@ -11,8 +11,8 @@ const features = [
   },
   {
     icon: BarChart3,
-    title: "Skills Demandadas",
-    description: "Identifica las competencias y jobs más buscados por las empresas con datos reales.",
+    title: "Tendencias del Mercado",
+    description: "Identifica las habilidades y perfiles más buscados por las empresas con datos reales.",
     path: "/skills",
     color: "var(--terracotta)"
   }
@@ -155,20 +155,19 @@ export default function HomePage() {
 
       <section style={{ backgroundColor: "var(--parchment)" }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {[
-              { value: "619", label: "Ofertas analizadas" },
-              { value: "10", label: "Top resultados" },
-              { value: "2", label: "Casos de uso activos" },
-              { value: "24/7", label: "Datos disponibles" }
-            ].map((stat, i) => (
-              <div key={stat.label} data-testid={`stat-${i}`} className="text-center">
-                <div className="font-serif mb-1" style={{ fontSize: "clamp(2rem, 3vw, 2.5rem)", fontWeight: 500, color: "var(--terracotta)", lineHeight: 1.1 }}>
-                  {stat.value}
-                </div>
-                <div className="font-sans text-sm" style={{ color: "var(--stone-gray)" }}>
-                  {stat.label}
-                </div>
+              { title: "Recomendaciones explicables", text: "Entiende qué habilidades y señales conectan tu perfil con cada oferta." },
+              { title: "Lectura del mercado", text: "Explora qué perfiles y competencias concentran más demanda en las ofertas analizadas." },
+              { title: "Decisiones con contexto", text: "Filtra por empresa, ubicación y nivel para interpretar mejor cada segmento." }
+            ].map((item, i) => (
+              <div key={item.title} data-testid={`home-proof-${i}`} className="p-5 rounded-2xl" style={{ backgroundColor: "var(--ivory)", border: "1px solid var(--border-cream)" }}>
+                <h3 className="font-serif mb-2" style={{ fontSize: "1.25rem", fontWeight: 500, color: "var(--near-black)" }}>
+                  {item.title}
+                </h3>
+                <p className="font-sans text-sm" style={{ color: "var(--olive-gray)", lineHeight: 1.6 }}>
+                  {item.text}
+                </p>
               </div>
             ))}
           </div>

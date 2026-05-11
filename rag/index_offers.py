@@ -67,12 +67,16 @@ def sanitize_id(url):
 
 def main():
   offers = OfferRepository().load_mapped_offers() or []
+  vector_store = VectorStore()
+  vector_store.delete_collection_if_exists(COLLECTION_NAME)
 
   if not offers:
-    print(f"No hay ofertas en la coleccion '{Config.MAPPED_COLL}'. Nada que indexar.")
+    print(
+      f"No hay ofertas activas en la coleccion '{Config.MAPPED_COLL}'. "
+      f"Se ha eliminado la coleccion vectorial '{COLLECTION_NAME}' para evitar resultados obsoletos."
+    )
     return
 
-  vector_store = VectorStore()
   collection = vector_store.get_or_create_collection(
     name=COLLECTION_NAME,
     metadata={"hnsw:space": "cosine"}

@@ -29,7 +29,7 @@ export default function Footer() {
                 Buscar Empleo
               </Link>
               <Link to="/skills" className="text-sm no-underline hover:underline" style={{ color: "var(--stone-gray)" }}>
-                Skills y Jobs Demandados
+                Tendencias del mercado
               </Link>
             </div>
           </div>

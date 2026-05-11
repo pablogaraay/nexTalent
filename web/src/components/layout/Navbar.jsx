@@ -4,7 +4,7 @@ import { Link, useLocation } from "react-router-dom";
 
 const navLinks = [
   { path: "/search", label: "Buscar Empleo", icon: Search },
-  { path: "/skills", label: "Skills", icon: BarChart3 }
+  { path: "/skills", label: "Mercado", icon: BarChart3 }
 ];
 
 export default function Navbar() {

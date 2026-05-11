@@ -21,6 +21,7 @@ class Config:
   KEYWORDS = ["Deloitte", "Accenture", "KPMG", "EY", "Capgemini", "PwC", "Indra", "NTT Data", "BCG", "Kyndryl"]
   LINKEDIN_API = "https://www.linkedin.com/jobs-guest/jobs/api/seeMoreJobPostings/search"
   LOCATION = "Spain"
+  SCRAPER_ACTIVITY_SYNC_MIN_URLS = 50
 
   #DB Config
   MONGO_URI = os.getenv("MONGO_URI")
@@ -41,6 +42,9 @@ class Config:
   OFFERS_CHROMA_COLLECTION = "offers"
   JOBS_CHROMA_COLLECTION = "wef_jobs"
   SKILLS_CHROMA_COLLECTION = "sfia_skills"
+  CHROMA_HOST = os.getenv("CHROMA_HOST", "").strip()
+  CHROMA_PORT = int(os.getenv("CHROMA_PORT", "8000") or "8000")
+  CHROMA_SSL = _env_bool("CHROMA_SSL", False)
   RETRIEVAL_TOP_K = 50
   RERANK_CANDIDATES = 15
   VECTOR_FALLBACK_MIN_SCORE = 0.60

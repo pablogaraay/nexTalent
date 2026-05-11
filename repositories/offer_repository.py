@@ -17,11 +17,11 @@ class OfferRepository:
     except Exception:
       pass
 
-  def load_offers(self, collection: str) -> List[Dict[str, Any]]:
-    return self.db.load_offers(collection) or []
+  def load_offers(self, collection: str, active_only: bool = False) -> List[Dict[str, Any]]:
+    return self.db.load_offers(collection, active_only=active_only) or []
 
   def load_mapped_offers(self) -> List[Dict[str, Any]]:
-    return self.load_offers(Config.MAPPED_COLL)
+    return self.load_offers(Config.MAPPED_COLL, active_only=True)
 
   def load_unprocessed_offers(self, source_coll: str, processed_coll: str) -> List[Dict[str, Any]]:
     return list(self.db.load_unprocessed_offers(source_coll, processed_coll) or [])

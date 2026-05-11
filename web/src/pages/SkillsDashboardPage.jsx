@@ -120,26 +120,74 @@ export default function SkillsDashboardPage() {
       detail: `${summary.total_offers || 0} en la base total`,
     },
     {
-      label: "Job mapping",
+      label: "Perfiles clasificados",
       value: `${formatPct(summary.job_mapping_coverage_pct)}%`,
-      detail: `${summary.offers_with_job_mapping || 0} ofertas`,
+      detail: `${summary.offers_with_job_mapping || 0} ofertas con perfil identificado`,
     },
     {
-      label: "Skills SFIA",
+      label: "Habilidades detectadas",
       value: `${formatPct(summary.skills_sfia_coverage_pct)}%`,
-      detail: `${summary.offers_with_skills_sfia || 0} ofertas`,
+      detail: `${summary.offers_with_skills_sfia || 0} ofertas con habilidades identificadas`,
     },
     {
-      label: "Top Skill",
+      label: "Habilidad principal",
       value: topSkill?.skill_name || "Sin datos",
       detail: topSkill ? `${topSkill.demand} ofertas` : "",
     },
     {
-      label: "Top Job",
+      label: "Perfil principal",
       value: topJob?.job_title || "Sin datos",
       detail: topJob ? `${topJob.demand} ofertas` : "",
     },
   ];
+
+  const marketReading = useMemo(() => {
+    if (!chartRows.length) {
+      return [];
+    }
+
+    const totalFiltered = Number(summary.filtered_offers || 0);
+    const leader = chartRows[0];
+    const leaderLabel = leader?.[labelField] || "Sin datos";
+    const leaderDemand = Number(leader?.demand || 0);
+    const leaderShare = Number(leader?.share_total_offers_pct || 0);
+    const top3Demand = chartRows.slice(0, 3).reduce((total, row) => total + Number(row.demand || 0), 0);
+    const top3Share = totalFiltered > 0 ? (top3Demand / totalFiltered) * 100 : 0;
+    const lowDemandThreshold = leaderDemand > 0 ? leaderDemand * 0.25 : 0;
+    const lowDemandCount = chartRows.filter((row) => {
+      const demand = Number(row.demand || 0);
+      return demand > 0 && demand <= lowDemandThreshold;
+    }).length;
+    const coveragePct = viewMode === "skills"
+      ? Number(summary.skills_sfia_coverage_pct || 0)
+      : Number(summary.job_mapping_coverage_pct || 0);
+    const itemSingular = viewMode === "skills" ? "habilidad" : "perfil";
+    const itemPlural = viewMode === "skills" ? "habilidades" : "perfiles";
+    const concentrationLabel = top3Share >= 50 ? "Alta" : top3Share >= 30 ? "Media" : "Distribuida";
+
+    return [
+      {
+        label: "Líder del ranking",
+        value: leaderLabel,
+        detail: `${leaderDemand} ofertas | ${formatPct(leaderShare)}% del segmento filtrado.`,
+      },
+      {
+        label: "Concentración",
+        value: concentrationLabel,
+        detail: `El top 3 concentra ${formatPct(top3Share)}% de las ofertas filtradas.`,
+      },
+      {
+        label: "Cola de demanda",
+        value: `${lowDemandCount} ${itemPlural}`,
+        detail: `Resultados con menos del 25% de la demanda del ${itemSingular} líder.`,
+      },
+      {
+        label: "Consistencia de datos",
+        value: `${formatPct(coveragePct)}%`,
+        detail: "Porcentaje de ofertas con información suficiente para interpretar este segmento.",
+      },
+    ];
+  }, [chartRows, labelField, summary, viewMode]);
 
   const commonToolbox = {
     show: true,
@@ -148,7 +196,6 @@ export default function SkillsDashboardPage() {
     feature: {
       restore: {},
       saveAsImage: { name: "insights-nextalent" },
-      dataView: { readOnly: true },
     },
     iconStyle: { borderColor: "#5e5d59" },
     emphasis: { iconStyle: { borderColor: "#c96442" } },
@@ -432,7 +479,7 @@ export default function SkillsDashboardPage() {
 
         <div className="mb-10">
           <h1 className="font-serif mb-3" style={{ fontSize: "clamp(2rem, 4vw, 3.25rem)", fontWeight: 500, lineHeight: 1.2, color: "var(--near-black)" }}>
-            Skills y Jobs más demandados
+            Habilidades y Perfiles más demandados
           </h1>
           <p className="font-sans text-lg" style={{ color: "var(--olive-gray)", lineHeight: 1.6 }}>
             Análisis de {summary.filtered_offers || 0} ofertas dentro de una base de {summary.total_offers || 0}. Filtra, compara y descubre patrones.
@@ -583,8 +630,8 @@ export default function SkillsDashboardPage() {
                       <p className="font-sans text-xs mb-2" style={{ color: "var(--stone-gray)", fontWeight: 600 }}>Vista</p>
                       <div className="flex flex-wrap gap-2">
                         {[
-                          { key: "skills", label: "Skills", icon: BarChart3 },
-                          { key: "jobs", label: "Jobs", icon: Briefcase },
+                          { key: "skills", label: "Habilidades", icon: BarChart3 },
+                          { key: "jobs", label: "Perfiles", icon: Briefcase },
                         ].map((item) => {
                           const Icon = item.icon;
                           const active = viewMode === item.key;
@@ -734,7 +781,7 @@ export default function SkillsDashboardPage() {
         <div className="rounded-2xl p-6 mb-8" style={{ backgroundColor: "var(--ivory)", border: "1px solid var(--border-cream)", boxShadow: "rgba(0,0,0,0.05) 0px 4px 24px" }}>
           <div className="flex items-center justify-between mb-3">
             <h2 className="font-serif" style={{ fontSize: "1.85rem", fontWeight: 500, color: "var(--near-black)" }}>
-              {viewMode === "skills" ? "Skills" : "Jobs"} - {metricLabel}
+              {viewMode === "skills" ? "Habilidades" : "Perfiles"} - {metricLabel}
             </h2>
             <span className="font-sans text-xs" style={{ color: "var(--stone-gray)", fontWeight: 500 }}>
               {chartRows.length} resultados
@@ -756,61 +803,39 @@ export default function SkillsDashboardPage() {
           )}
         </div>
 
-        <div className="rounded-2xl overflow-hidden" style={{ backgroundColor: "var(--ivory)", border: "1px solid var(--border-cream)" }}>
-          <div className="p-5 border-b" style={{ borderColor: "var(--border-cream)" }}>
-            <h3 className="font-serif" style={{ fontSize: "1.3rem", fontWeight: 500, color: "var(--near-black)" }}>
-              {viewMode === "skills" ? "Detalle de Skills" : "Detalle de Jobs"}
+        <div className="rounded-2xl p-6" style={{ backgroundColor: "var(--ivory)", border: "1px solid var(--border-cream)" }}>
+          <div className="mb-5">
+            <h3 className="font-serif" style={{ fontSize: "1.45rem", fontWeight: 500, color: "var(--near-black)" }}>
+              Lectura del mercado
             </h3>
+            <p className="font-sans text-sm mt-1" style={{ color: "var(--stone-gray)", lineHeight: 1.5 }}>
+              Interpretación automática del segmento que estás visualizando.
+            </p>
           </div>
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead>
-                <tr style={{ borderBottom: "1px solid var(--border-cream)" }}>
-                  {(viewMode === "skills"
-                    ? ["#", "Skill", "Demanda", "%"]
-                    : ["#", "Job", "Familia", "Demanda", "%"]
-                  ).map((head) => (
-                    <th key={head} className="text-left px-4 py-2.5 text-xs font-sans" style={{ color: "var(--stone-gray)", fontWeight: 500 }}>
-                      {head}
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {chartRows.map((row, index) => (
-                  <tr key={row[idField] || `${row[labelField]}-${index}`} style={{ borderBottom: "1px solid var(--border-cream)" }}>
-                    <td className="px-4 py-2.5 text-xs font-sans" style={{ color: "var(--stone-gray)" }}>{index + 1}</td>
-                    <td className="px-4 py-2.5">
-                      <span className="font-sans text-sm" style={{ color: "var(--near-black)", fontWeight: 500 }}>
-                        {row[labelField]}
-                      </span>
-                      {viewMode === "skills" && (
-                        <span className="block text-xs font-sans" style={{ color: "var(--stone-gray)" }}>{row.skill_id}</span>
-                      )}
-                    </td>
-                    {viewMode === "jobs" && (
-                      <td className="px-4 py-2.5">
-                        <span className="px-2 py-0.5 rounded-md text-xs font-sans" style={{ backgroundColor: "var(--warm-sand)", color: "var(--charcoal-warm)" }}>
-                          {row.job_family}
-                        </span>
-                      </td>
-                    )}
-                    <td className="px-4 py-2.5 text-sm font-sans" style={{ color: "var(--olive-gray)" }}>{row.demand}</td>
-                    <td className="px-4 py-2.5 text-sm font-sans" style={{ color: "var(--terracotta)", fontWeight: 500 }}>
-                      {formatPct(row.share_total_offers_pct)}%
-                    </td>
-                  </tr>
-                ))}
-                {!chartRows.length && (
-                  <tr>
-                    <td colSpan={viewMode === "skills" ? 4 : 5} className="px-4 py-4 text-sm font-sans" style={{ color: "var(--stone-gray)" }}>
-                      Sin resultados para los filtros actuales.
-                    </td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
-          </div>
+
+          {marketReading.length ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
+              {marketReading.map((item) => (
+                <div key={item.label} className="p-4 rounded-xl" style={{ backgroundColor: "var(--parchment)", border: "1px solid var(--border-cream)" }}>
+                  <div className="font-sans text-[11px] uppercase tracking-wide mb-2" style={{ color: "var(--stone-gray)", fontWeight: 700 }}>
+                    {item.label}
+                  </div>
+                  <div className="font-serif" style={{ color: "var(--near-black)", fontWeight: 500, fontSize: "1.25rem", lineHeight: 1.25 }}>
+                    {item.value}
+                  </div>
+                  <p className="font-sans text-xs mt-3" style={{ color: "var(--olive-gray)", lineHeight: 1.5 }}>
+                    {item.detail}
+                  </p>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="rounded-xl p-5" style={{ backgroundColor: "var(--parchment)", border: "1px dashed var(--border-cream)" }}>
+              <p className="font-sans text-sm" style={{ color: "var(--stone-gray)" }}>
+                No hay datos suficientes para generar una lectura del mercado con los filtros actuales.
+              </p>
+            </div>
+          )}
         </div>
 
       </div>

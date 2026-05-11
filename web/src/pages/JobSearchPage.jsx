@@ -66,7 +66,7 @@ export default function JobSearchPage() {
         title: offer.title || "Sin título",
         company: offer.company || "Empresa desconocida",
         location: offer.location || "",
-        role_raw: offer.role_raw || "",
+        role: offer.role_raw || "",
         url: offer.url || "",
         matched_skills: offer.matched_skills || [],
         rank: i + 1
@@ -249,7 +249,7 @@ export default function JobSearchPage() {
             </h3>
             <div className="flex flex-wrap gap-4 text-sm font-sans" style={{ color: "var(--olive-gray)" }}>
               {results.profile.role && <div><span style={{ color: "var(--stone-gray)" }}>Rol:</span> <strong style={{ color: "var(--near-black)" }}>{results.profile.role}</strong></div>}
-              {results.profile.seniority_raw && results.profile.seniority_raw !== "unknown" && <div><span style={{ color: "var(--stone-gray)" }}>Seniority:</span> <strong style={{ color: "var(--near-black)" }}>{results.profile.seniority_raw}</strong></div>}
+              {results.profile.seniority_raw && results.profile.seniority_raw !== "unknown" && <div><span style={{ color: "var(--stone-gray)" }}>Nivel:</span> <strong style={{ color: "var(--near-black)" }}>{results.profile.seniority_raw}</strong></div>}
               {results.profile.location_query && <div><span style={{ color: "var(--stone-gray)" }}>Ubicación:</span> <strong style={{ color: "var(--near-black)" }}>{results.profile.location_query}</strong></div>}
             </div>
             {results.profile.skills?.length > 0 && (
@@ -274,13 +274,10 @@ export default function JobSearchPage() {
 
         {results && !compareMode && (
           <div data-testid="search-results">
-            <div className="flex items-center justify-between mb-6">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-6">
               <h2 className="font-serif" style={{ fontSize: "1.6rem", fontWeight: 500, color: "var(--near-black)" }}>
                 {results.offers.length} ofertas encontradas
               </h2>
-              <span className="font-sans text-xs px-3 py-1 rounded-full" style={{ backgroundColor: "var(--warm-sand)", color: "var(--charcoal-warm)" }}>
-                De {results.total} candidatas analizadas
-              </span>
             </div>
             <div className="grid gap-4">
               {results.offers.map((offer, i) => (
@@ -311,9 +308,9 @@ export default function JobSearchPage() {
                                 <MapPin size={14} /> {offer.location}
                               </span>
                             )}
-                            {offer.role_raw && (
+                            {offer.role && (
                               <span className="flex items-center gap-1 text-sm font-sans" style={{ color: "var(--olive-gray)" }}>
-                                <Briefcase size={14} /> {offer.role_raw}
+                                <Briefcase size={14} /> {offer.role}
                               </span>
                             )}
                           </div>
@@ -389,7 +386,7 @@ export default function JobSearchPage() {
                     <p className="font-sans text-sm mb-4" style={{ color: "var(--olive-gray)" }}>{offer.company}</p>
                     {[
                       { label: "Ubicación", value: offer.location || "N/A" },
-                      { label: "Rol", value: offer.role_raw || "N/A" }
+                      { label: "Perfil", value: offer.role || "N/A" }
                     ].map(row => (
                       <div key={row.label} className="flex justify-between py-2 border-t" style={{ borderColor: "var(--border-cream)" }}>
                         <span className="text-xs font-sans" style={{ color: "var(--stone-gray)" }}>{row.label}</span>
@@ -398,7 +395,7 @@ export default function JobSearchPage() {
                     ))}
                     {offer.matched_skills.length > 0 && (
                       <div className="mt-3">
-                        <span className="text-xs font-sans" style={{ color: "var(--stone-gray)" }}>Skills Coincidentes</span>
+                        <span className="text-xs font-sans" style={{ color: "var(--stone-gray)" }}>Habilidades coincidentes</span>
                         <div className="flex flex-wrap gap-1 mt-1">
                           {offer.matched_skills.map(s => (
                             <span key={s} className="px-2 py-0.5 rounded-md text-xs font-sans" style={{ backgroundColor: "rgba(201,100,66,0.08)", color: "var(--terracotta)" }}>{s}</span>

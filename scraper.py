@@ -44,6 +44,7 @@ def get_description(offer_link):
 def extract_offers(linkedin_api):
   db = MongoManager()
   offers_array = []
+  active_urls = set()
   for keyword in Config.KEYWORDS:
     i = 0
     while True:
@@ -71,6 +72,8 @@ def extract_offers(linkedin_api):
         link = a_link["href"] if a_link and a_link.has_attr("href") else ""
         url_parsed = normalize_url(link)
         description = get_description(url_parsed) if url_parsed else ""
+        if url_parsed:
+          active_urls.add(url_parsed)
 
         offer = {
           "title": title,
@@ -95,6 +98,16 @@ def extract_offers(linkedin_api):
   if offers_array:
     db.upsert_bulk_offers(Config.SCRAPED_COLL, offers_array, "scraped")
     print("Se han insertado/actualizado todas las ofertas")
+  db.sync_active_urls(
+    list(active_urls),
+    [
+      Config.SCRAPED_COLL,
+      Config.STRUCTURED_COLL,
+      Config.CLEANED_COLL,
+      Config.LLM_RAW_COLL,
+      Config.MAPPED_COLL,
+    ],
+  )
   db.close_connection()
 
 if __name__ == "__main__":

@@ -89,6 +89,12 @@ Variables opcionales usadas por la web:
 - `API_PORT` (por defecto `8787`)
 - `VITE_API_URL` (si quieres que el frontend apunte a una API externa)
 
+Variables opcionales de Chroma:
+- `CHROMA_HOST` vacío usa Chroma local persistente en `data/chroma`
+- `CHROMA_HOST=<host>` usa un servidor Chroma remoto
+- `CHROMA_PORT` por defecto `8000`
+- `CHROMA_SSL` (`true/false`, por defecto `false`)
+
 Variables opcionales del planificador autónomo:
 - `AUTONOMOUS_AGENT_VERBOSE` (`true/false`, imprime decisión del planner en logs)
 
@@ -145,6 +151,41 @@ El procesamiento periódico está separado en dos workflows:
 2. `LLM + Taxonomy + Mapping` (`llm_processor.py -> rag/index_taxonomy.py -> rag/map_offers.py`)
 
 En el segundo workflow, `llm_processor.py` puede fallar (por cuota/tokens) y aun así se ejecutan indexado y mapping sobre lo ya procesado.
+GitHub Actions actualiza MongoDB. La base vectorial de ofertas en Chroma es un indice derivado por entorno: en local se mantiene con `data/chroma` y en cloud debe reindexarse desde GCP/VM ejecutando `python3 -m rag.index_offers` contra el Chroma correspondiente.
+
+### Reindexado de ofertas en Chroma
+
+`rag.index_offers` debe ejecutarse despues de que cambie `offers_mapped` o el estado `is_active` de las ofertas. GitHub Actions no reindexa el Chroma persistente de ningun entorno; cada entorno reconstruye su indice desde Mongo.
+
+En local con Docker Compose:
+
+```bash
+./scripts/reindex_offers_local.sh
+```
+
+Equivale a:
+
+```bash
+docker compose exec api python -m rag.index_offers
+```
+
+En cloud, la opcion recomendada es un Cloud Run Job o un cron en la VM que ejecute:
+
+```bash
+python3 -m rag.index_offers
+```
+
+Variables necesarias para reindexar el Chroma de GCP:
+
+```env
+MONGO_URI=<mongo-remoto>
+OLLAMA_HOST=http://<ip-vm>:11434
+CHROMA_HOST=<ip-vm>
+CHROMA_PORT=8000
+CHROMA_SSL=false
+```
+
+Si el mapping de GitHub se ejecuta a las `05:00 UTC`, programa el reindexado de Chroma con margen, por ejemplo a las `07:00 UTC` cada dos dias. Si necesitas sincronizacion exacta con el fin del workflow, usa un Cloud Run Job disparado explicitamente al terminar el workflow o un self-hosted runner dentro de GCP.
 
 ### Opción B: Manual (sin scheduler)
 
