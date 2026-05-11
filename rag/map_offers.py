@@ -1,3 +1,4 @@
+import argparse
 from config import Config
 from infra.embeddings import embed_text
 from repositories.offer_repository import OfferRepository
@@ -5,8 +6,9 @@ from repositories.vector_store import VectorStore
 from utils.text import unique_keep_order
 
 ROLE_LIMIT = 0.60
-SKILL_LIMIT = 0.60
+SKILL_LIMIT = 0.70
 UPSERT_BATCH_SIZE = 50
+
 
 def best_match(collection, text, limit):
   text = (text or "").strip()
@@ -30,9 +32,29 @@ def best_match(collection, text, limit):
     return {"status": "mapped", "top1": top1}
   return {"status": "unmapped", "top1": top1}
 
+
+def parse_args():
+  parser = argparse.ArgumentParser(description="Map LLM-extracted offers to WEF/SFIA taxonomies.")
+  parser.add_argument(
+    "--refresh-all",
+    action="store_true",
+    help="Remapea todas las ofertas de offers_llm_raw, aunque ya existan en offers_mapped.",
+  )
+  return parser.parse_args()
+
+
 def main():
+  args = parse_args()
   offer_repository = OfferRepository()
-  source_offers = offer_repository.load_unprocessed_offers(Config.LLM_RAW_COLL, Config.MAPPED_COLL)
+  if args.refresh_all:
+    source_offers = offer_repository.load_offers(Config.LLM_RAW_COLL, active_only=False)
+    print(f"Remapeo completo activado: se procesaran todas las ofertas de {Config.LLM_RAW_COLL}.")
+  else:
+    source_offers = offer_repository.load_unprocessed_offers(Config.LLM_RAW_COLL, Config.MAPPED_COLL)
+    print(
+      f"Mapping incremental activado: solo se procesaran ofertas de {Config.LLM_RAW_COLL} "
+      f"que no existan en {Config.MAPPED_COLL}."
+    )
 
   vector_store = VectorStore()
   jobs_col = vector_store.get_collection(Config.JOBS_CHROMA_COLLECTION)
@@ -66,7 +88,7 @@ def main():
           "raw": skill
         })
 
-    doc = {**offer}
+    doc = {**offer, "job_mapping": {}, "skills_sfia": []}
 
     if role_map["status"] == "mapped" and role_map["top1"]:
       doc["job_mapping"] = {
@@ -90,10 +112,14 @@ def main():
     persisted += len(mapped_offers_batch)
 
   if total == 0:
-    print(f"No hay nuevas ofertas en {Config.LLM_RAW_COLL} pendientes de mapping.")
+    if args.refresh_all:
+      print(f"No hay ofertas en {Config.LLM_RAW_COLL} para remapear.")
+    else:
+      print(f"No hay nuevas ofertas en {Config.LLM_RAW_COLL} pendientes de mapping.")
   else:
-    print(f"Processed new offers: {total}")
+    print(f"Processed offers: {total}")
     print(f"Persisted in {Config.MAPPED_COLL}: {persisted}")
+
 
 if __name__ == "__main__":
   main()

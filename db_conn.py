@@ -3,6 +3,7 @@ from pymongo.server_api import ServerApi
 from datetime import datetime, timezone
 from config import Config
 
+
 class MongoManager:
   _connection_checked = False
   _indexes_created = False
@@ -27,7 +28,7 @@ class MongoManager:
     if not offers_array:
       print(f"No hay ofertas para insertar en la coleccion {coll}")
       return
-      
+
     ops = []
     for offer in offers_array:
       source_id = offer.get("_id")
@@ -35,21 +36,26 @@ class MongoManager:
       set_on_insert = {f"first_{stage_prefix}": datetime.now(timezone.utc)}
       if source_id is not None:
         set_on_insert["_id"] = source_id
-        
+
+      is_active = bool(offer_without_id.get("is_active", True))
+      set_fields = {
+        **offer_without_id,
+        "is_active": is_active,
+        "activity_status": offer_without_id.get("activity_status") or ("active" if is_active else "inactive"),
+        "missing_count": int(offer_without_id.get("missing_count", 0) or 0),
+        f"last_{stage_prefix}": datetime.now(timezone.utc),
+      }
+      update_doc = {
+        "$set": set_fields,
+        "$setOnInsert": set_on_insert,
+      }
+      if is_active:
+        update_doc["$unset"] = {"inactive_at": "", "inactive_reason": "", "last_missing_at": ""}
+
       ops.append(
         UpdateOne(
           {"url": offer_without_id.get("url")},
-          {
-            "$set": {
-              **offer_without_id,
-              "is_active": True,
-              "activity_status": "active",
-              "missing_count": 0,
-              f"last_{stage_prefix}": datetime.now(timezone.utc),
-            },
-            "$setOnInsert": set_on_insert,
-            "$unset": {"inactive_at": "", "inactive_reason": "", "last_missing_at": ""}
-          },
+          update_doc,
           upsert=True
         )
       )
@@ -151,4 +157,3 @@ class MongoManager:
 
   def close_connection(self):
     self.client.close()
-      
