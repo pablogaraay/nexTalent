@@ -7,17 +7,12 @@ import {
   ChevronDown,
   ChevronUp,
   RefreshCw,
-  Search as SearchIcon,
   SlidersHorizontal,
 } from "lucide-react";
 import { insightsAPI } from "@/lib/api";
 
 function formatPct(value) {
   return Number(value || 0).toFixed(1);
-}
-
-function includesText(value, query) {
-  return (value || "").toLowerCase().includes((query || "").trim().toLowerCase());
 }
 
 export default function SkillsDashboardPage() {
@@ -30,22 +25,37 @@ export default function SkillsDashboardPage() {
   const [chartType, setChartType] = useState("bars");
   const [metricMode, setMetricMode] = useState("absolute");
   const [topN, setTopN] = useState(30);
-  const [query, setQuery] = useState("");
-  const [minDemand, setMinDemand] = useState(0);
   const [activeFilter, setActiveFilter] = useState(null);
-  const [selectedFamilies, setSelectedFamilies] = useState([]);
+  const [selectedCompany, setSelectedCompany] = useState("");
+  const [selectedCity, setSelectedCity] = useState("");
+  const [selectedRegion, setSelectedRegion] = useState("");
+  const [selectedSeniority, setSelectedSeniority] = useState("");
 
   const fetchData = () => {
     setLoading(true);
     setError("");
     insightsAPI
-      .get(topN)
+      .get({
+        topN,
+        company: selectedCompany,
+        city: selectedCity,
+        region: selectedRegion,
+        seniority: selectedSeniority,
+      })
       .then(({ data: resp }) => {
+        if (resp?.error) {
+          throw new Error(resp.error);
+        }
         const result = resp.result || resp;
         setData(result);
       })
       .catch((err) => {
-        setError(err.response?.data?.detail || err.response?.data?.error || "Error cargando insights del mercado.");
+        setError(
+          err.response?.data?.detail ||
+          err.response?.data?.error ||
+          err.message ||
+          "Error cargando insights del mercado."
+        );
       })
       .finally(() => {
         setLoading(false);
@@ -55,12 +65,14 @@ export default function SkillsDashboardPage() {
   useEffect(() => {
     fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [topN]);
+  }, [topN, selectedCompany, selectedCity, selectedRegion, selectedSeniority]);
 
   const safeData = data || {};
   const topSkills = safeData.top_skills || [];
   const topJobs = safeData.top_jobs || [];
   const summary = safeData.summary || {};
+  const availableFilters = safeData.available_filters || {};
+  const appliedFilters = safeData.applied_filters || {};
 
   const metricField = metricMode === "share" ? "share_total_offers_pct" : "demand";
   const metricLabel = metricMode === "share" ? "% del total" : "Demanda";
@@ -69,20 +81,10 @@ export default function SkillsDashboardPage() {
   const baseRows = viewMode === "skills" ? topSkills : topJobs;
   const idField = viewMode === "skills" ? "skill_id" : "job_id";
   const labelField = viewMode === "skills" ? "skill_name" : "job_title";
-
-  const familyCounts = useMemo(() => {
-    const counts = {};
-    for (const row of topJobs) {
-      const family = (row.job_family || "Sin familia").trim();
-      counts[family] = (counts[family] || 0) + 1;
-    }
-    return Object.entries(counts)
-      .sort((a, b) => b[1] - a[1])
-      .map(([family, count]) => ({ family, count }));
-  }, [topJobs]);
-
-  const maxDemandBase = Math.max(...baseRows.map((row) => Number(row.demand || 0)), 1);
-  const minDemandSafe = Math.min(Number(minDemand || 0), maxDemandBase);
+  const companyOptions = availableFilters.companies || [];
+  const cityOptions = availableFilters.cities || [];
+  const regionOptions = availableFilters.regions || [];
+  const seniorityOptions = availableFilters.seniorities || [];
 
   const filteredRows = useMemo(() => {
     let rows = [...baseRows];
@@ -91,24 +93,9 @@ export default function SkillsDashboardPage() {
       rows = rows.filter((row) => String(row[idField]) === String(activeFilter.id));
     }
 
-    if (query.trim()) {
-      rows = rows.filter((row) => {
-        const haystack =
-          viewMode === "skills"
-            ? `${row.skill_name || ""} ${row.skill_id || ""}`
-            : `${row.job_title || ""} ${row.job_family || ""} ${row.job_id || ""}`;
-        return includesText(haystack, query);
-      });
-    }
-
-    if (viewMode === "jobs" && selectedFamilies.length) {
-      rows = rows.filter((row) => selectedFamilies.includes(row.job_family || "Sin familia"));
-    }
-
-    rows = rows.filter((row) => Number(row.demand || 0) >= minDemandSafe);
     rows.sort((a, b) => Number(b.demand || 0) - Number(a.demand || 0));
     return rows;
-  }, [activeFilter, baseRows, idField, minDemandSafe, query, selectedFamilies, viewMode]);
+  }, [activeFilter, baseRows, idField, viewMode]);
 
   const chartRows = filteredRows.slice(0, topN);
 
@@ -119,12 +106,18 @@ export default function SkillsDashboardPage() {
 
   const topSkill = topSkills[0] || null;
   const topJob = topJobs[0] || null;
+  const selectedFilterCount = [
+    selectedCompany,
+    selectedCity,
+    selectedRegion,
+    selectedSeniority,
+  ].filter(Boolean).length;
 
   const kpis = [
     {
-      label: "Ofertas analizadas",
-      value: summary.total_offers || 0,
-      detail: "Base total",
+      label: "Ofertas filtradas",
+      value: summary.filtered_offers || 0,
+      detail: `${summary.total_offers || 0} en la base total`,
     },
     {
       label: "Job mapping",
@@ -395,17 +388,12 @@ export default function SkillsDashboardPage() {
     },
   };
 
-  const toggleFamily = (family) => {
-    setSelectedFamilies((prev) =>
-      prev.includes(family) ? prev.filter((item) => item !== family) : [...prev, family]
-    );
-  };
-
   const resetFilters = () => {
-    setQuery("");
-    setSelectedFamilies([]);
+    setSelectedCompany("");
+    setSelectedCity("");
+    setSelectedRegion("");
+    setSelectedSeniority("");
     setActiveFilter(null);
-    setMinDemand(0);
   };
 
   if (loading) {
@@ -447,7 +435,7 @@ export default function SkillsDashboardPage() {
             Skills y Jobs más demandados
           </h1>
           <p className="font-sans text-lg" style={{ color: "var(--olive-gray)", lineHeight: 1.6 }}>
-            Análisis de {summary.total_offers || 0} ofertas reales del mercado. Filtra, compara y descubre patrones.
+            Análisis de {summary.filtered_offers || 0} ofertas dentro de una base de {summary.total_offers || 0}. Filtra, compara y descubre patrones.
           </p>
         </div>
 
@@ -468,181 +456,242 @@ export default function SkillsDashboardPage() {
         </div>
 
         <div className="rounded-2xl mb-8" style={{ backgroundColor: "var(--ivory)", border: "1px solid var(--border-cream)" }}>
-          <div className="px-5 py-4 border-b flex items-center justify-between" style={{ borderColor: "var(--border-cream)" }}>
-            <button className="flex items-center gap-2" onClick={() => setFiltersOpen((prev) => !prev)}>
-              <SlidersHorizontal size={16} style={{ color: "var(--stone-gray)" }} />
-              <span className="font-sans text-sm" style={{ color: "var(--charcoal-warm)", fontWeight: 600 }}>Filtros</span>
-              {filtersOpen ? <ChevronUp size={16} style={{ color: "var(--stone-gray)" }} /> : <ChevronDown size={16} style={{ color: "var(--stone-gray)" }} />}
-            </button>
+          <div className="px-5 py-4 border-b flex items-start justify-between gap-4" style={{ borderColor: "var(--border-cream)" }}>
+            <div>
+              <button className="flex items-center gap-2" onClick={() => setFiltersOpen((prev) => !prev)}>
+                <SlidersHorizontal size={16} style={{ color: "var(--stone-gray)" }} />
+                <span className="font-sans text-sm" style={{ color: "var(--charcoal-warm)", fontWeight: 600 }}>
+                  Explorar el mercado
+                </span>
+                {filtersOpen ? <ChevronUp size={16} style={{ color: "var(--stone-gray)" }} /> : <ChevronDown size={16} style={{ color: "var(--stone-gray)" }} />}
+              </button>
+              <p className="mt-2 font-sans text-xs sm:text-sm" style={{ color: "var(--stone-gray)", lineHeight: 1.5 }}>
+                Primero elige qué parte del mercado quieres analizar y después decide cómo visualizar los resultados.
+              </p>
+            </div>
 
-            <div className="flex items-center gap-2">
-              <div className="flex items-center gap-2 px-3 py-2 rounded-lg" style={{ backgroundColor: "var(--warm-sand)" }}>
-                <SearchIcon size={14} style={{ color: "var(--stone-gray)" }} />
-                <input
-                  value={query}
-                  onChange={(e) => setQuery(e.target.value)}
-                  placeholder={viewMode === "skills" ? "Buscar skill..." : "Buscar job o familia..."}
-                  className="bg-transparent outline-none text-sm font-sans"
-                  style={{ color: "var(--charcoal-warm)", width: "220px" }}
-                />
-              </div>
-
-              <select
-                value={topN}
-                onChange={(e) => setTopN(Number(e.target.value))}
-                className="rounded-lg px-3 py-2 text-sm font-sans"
-                style={{ backgroundColor: "var(--warm-sand)", color: "var(--charcoal-warm)", border: "none" }}
-              >
-                {[10, 20, 30, 50, 75, 100].map((n) => (
-                  <option key={n} value={n}>Top {n}</option>
-                ))}
-              </select>
-
+            <div className="flex items-center gap-2 shrink-0">
               <button
                 onClick={fetchData}
-                className="p-2 rounded-lg"
-                style={{ backgroundColor: "var(--warm-sand)", color: "var(--charcoal-warm)" }}
-                title="Actualizar"
+                className="px-3 py-2 rounded-lg text-sm font-sans flex items-center gap-2"
+                style={{ backgroundColor: "var(--warm-sand)", color: "var(--charcoal-warm)", fontWeight: 500 }}
+                title="Actualizar datos"
               >
-                <RefreshCw size={16} />
+                <RefreshCw size={14} />
+                Actualizar
               </button>
             </div>
           </div>
 
           {filtersOpen && (
             <div className="p-5">
-              <div className="grid grid-cols-1 md:grid-cols-4 gap-5">
-                <div>
-                  <p className="font-sans text-[11px] uppercase tracking-wide mb-2" style={{ color: "var(--stone-gray)", fontWeight: 600 }}>Vista</p>
-                  <div className="flex flex-wrap gap-2">
-                    {[
-                      { key: "skills", label: "Skills", icon: BarChart3 },
-                      { key: "jobs", label: "Jobs", icon: Briefcase },
-                    ].map((item) => {
-                      const Icon = item.icon;
-                      const active = viewMode === item.key;
-                      return (
-                        <button
-                          key={item.key}
-                          onClick={() => {
-                            setViewMode(item.key);
-                            setActiveFilter(null);
-                          }}
-                          className="px-3 py-2 rounded-lg text-sm font-sans flex items-center gap-1.5"
-                          style={{
-                            backgroundColor: active ? "var(--near-black)" : "var(--warm-sand)",
-                            color: active ? "var(--ivory)" : "var(--charcoal-warm)",
-                            fontWeight: 500,
-                          }}
+              <div className="grid grid-cols-1 xl:grid-cols-12 gap-4">
+                <div className="xl:col-span-6 rounded-2xl p-4" style={{ backgroundColor: "var(--parchment)", border: "1px solid var(--border-cream)" }}>
+                  <div className="mb-4">
+                    <p className="font-sans text-[11px] uppercase tracking-wide mb-1" style={{ color: "var(--terracotta)", fontWeight: 700 }}>
+                      1. Filtrar mercado
+                    </p>
+                    <p className="font-sans text-sm" style={{ color: "var(--stone-gray)", lineHeight: 1.5 }}>
+                      Estos filtros cambian la base de ofertas sobre la que calculamos los insights.
+                    </p>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <label className="block">
+                      <span className="font-sans text-xs mb-1.5 block" style={{ color: "var(--stone-gray)", fontWeight: 600 }}>Empresa</span>
+                      <select
+                        value={selectedCompany}
+                        onChange={(e) => setSelectedCompany(e.target.value)}
+                        className="w-full rounded-lg px-3 py-2 text-sm font-sans"
+                        style={{ backgroundColor: "var(--ivory)", color: "var(--charcoal-warm)", border: "1px solid var(--border-cream)" }}
+                      >
+                        <option value="">Todas las empresas</option>
+                        {companyOptions.map((item) => (
+                          <option key={item.value} value={item.value}>
+                            {item.value} ({item.count})
+                          </option>
+                        ))}
+                      </select>
+                    </label>
+
+                    <label className="block">
+                      <span className="font-sans text-xs mb-1.5 block" style={{ color: "var(--stone-gray)", fontWeight: 600 }}>Ciudad</span>
+                      <select
+                        value={selectedCity}
+                        onChange={(e) => setSelectedCity(e.target.value)}
+                        className="w-full rounded-lg px-3 py-2 text-sm font-sans"
+                        style={{ backgroundColor: "var(--ivory)", color: "var(--charcoal-warm)", border: "1px solid var(--border-cream)" }}
+                      >
+                        <option value="">Todas las ciudades</option>
+                        {cityOptions.map((item) => (
+                          <option key={item.value} value={item.value}>
+                            {item.value} ({item.count})
+                          </option>
+                        ))}
+                      </select>
+                    </label>
+
+                    <label className="block">
+                      <span className="font-sans text-xs mb-1.5 block" style={{ color: "var(--stone-gray)", fontWeight: 600 }}>Región</span>
+                      <select
+                        value={selectedRegion}
+                        onChange={(e) => setSelectedRegion(e.target.value)}
+                        className="w-full rounded-lg px-3 py-2 text-sm font-sans"
+                        style={{ backgroundColor: "var(--ivory)", color: "var(--charcoal-warm)", border: "1px solid var(--border-cream)" }}
+                      >
+                        <option value="">Todas las regiones</option>
+                        {regionOptions.map((item) => (
+                          <option key={item.value} value={item.value}>
+                            {item.value} ({item.count})
+                          </option>
+                        ))}
+                      </select>
+                    </label>
+
+                    <label className="block">
+                      <span className="font-sans text-xs mb-1.5 block" style={{ color: "var(--stone-gray)", fontWeight: 600 }}>Seniority</span>
+                      <select
+                        value={selectedSeniority}
+                        onChange={(e) => setSelectedSeniority(e.target.value)}
+                        className="w-full rounded-lg px-3 py-2 text-sm font-sans"
+                        style={{ backgroundColor: "var(--ivory)", color: "var(--charcoal-warm)", border: "1px solid var(--border-cream)" }}
+                      >
+                        <option value="">Todos los niveles</option>
+                        {seniorityOptions.map((item) => (
+                          <option key={item.value} value={item.value}>
+                            {item.value} ({item.count})
+                          </option>
+                        ))}
+                      </select>
+                    </label>
+
+                  </div>
+                </div>
+
+                <div className="xl:col-span-6 rounded-2xl p-4" style={{ backgroundColor: "var(--parchment)", border: "1px solid var(--border-cream)" }}>
+                  <div className="mb-4">
+                    <p className="font-sans text-[11px] uppercase tracking-wide mb-1" style={{ color: "var(--terracotta)", fontWeight: 700 }}>
+                      2. Ver resultados
+                    </p>
+                    <p className="font-sans text-sm" style={{ color: "var(--stone-gray)", lineHeight: 1.5 }}>
+                      Estos controles no cambian la base de datos; solo la forma de explorarla.
+                    </p>
+                  </div>
+
+                  <div className="space-y-4">
+                    <div>
+                      <p className="font-sans text-xs mb-2" style={{ color: "var(--stone-gray)", fontWeight: 600 }}>Vista</p>
+                      <div className="flex flex-wrap gap-2">
+                        {[
+                          { key: "skills", label: "Skills", icon: BarChart3 },
+                          { key: "jobs", label: "Jobs", icon: Briefcase },
+                        ].map((item) => {
+                          const Icon = item.icon;
+                          const active = viewMode === item.key;
+                          return (
+                            <button
+                              key={item.key}
+                              onClick={() => {
+                                setViewMode(item.key);
+                                setActiveFilter(null);
+                              }}
+                              className="px-3 py-2 rounded-lg text-sm font-sans flex items-center gap-1.5"
+                              style={{
+                                backgroundColor: active ? "var(--near-black)" : "var(--ivory)",
+                                color: active ? "var(--ivory)" : "var(--charcoal-warm)",
+                                border: active ? "1px solid var(--near-black)" : "1px solid var(--border-cream)",
+                                fontWeight: 500,
+                              }}
+                            >
+                              <Icon size={14} />
+                              {item.label}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+
+                    <div>
+                      <p className="font-sans text-xs mb-2" style={{ color: "var(--stone-gray)", fontWeight: 600 }}>Tipo de gráfico</p>
+                      <div className="flex flex-wrap gap-2">
+                        {[
+                          { key: "bars", label: "Barras" },
+                          { key: "horizontal", label: "Horizontal" },
+                          { key: "line", label: "Línea" },
+                          { key: "treemap", label: "Treemap" },
+                          { key: "donut", label: "Donut" },
+                        ].map((item) => (
+                          <button
+                            key={item.key}
+                            onClick={() => setChartType(item.key)}
+                            className="px-3 py-2 rounded-lg text-sm font-sans"
+                            style={{
+                              backgroundColor: chartType === item.key ? "var(--near-black)" : "var(--ivory)",
+                              color: chartType === item.key ? "var(--ivory)" : "var(--charcoal-warm)",
+                              border: chartType === item.key ? "1px solid var(--near-black)" : "1px solid var(--border-cream)",
+                              fontWeight: 500,
+                            }}
+                          >
+                            {item.label}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      <div>
+                        <p className="font-sans text-xs mb-2" style={{ color: "var(--stone-gray)", fontWeight: 600 }}>Métrica</p>
+                        <div className="flex gap-2">
+                          {[
+                            { key: "absolute", label: "Absoluto" },
+                            { key: "share", label: "%" },
+                          ].map((item) => (
+                            <button
+                              key={item.key}
+                              onClick={() => setMetricMode(item.key)}
+                              className="px-3 py-2 rounded-lg text-sm font-sans"
+                              style={{
+                                backgroundColor: metricMode === item.key ? "var(--near-black)" : "var(--ivory)",
+                                color: metricMode === item.key ? "var(--ivory)" : "var(--charcoal-warm)",
+                                border: metricMode === item.key ? "1px solid var(--near-black)" : "1px solid var(--border-cream)",
+                                fontWeight: 500,
+                              }}
+                            >
+                              {item.label}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+
+                      <label className="block">
+                        <span className="font-sans text-xs mb-2 block" style={{ color: "var(--stone-gray)", fontWeight: 600 }}>Número de resultados</span>
+                        <select
+                          value={topN}
+                          onChange={(e) => setTopN(Number(e.target.value))}
+                          className="w-full rounded-lg px-3 py-2 text-sm font-sans"
+                          style={{ backgroundColor: "var(--ivory)", color: "var(--charcoal-warm)", border: "1px solid var(--border-cream)" }}
                         >
-                          <Icon size={14} />
-                          {item.label}
-                        </button>
-                      );
-                    })}
+                          {[10, 20, 30, 50, 75, 100].map((n) => (
+                            <option key={n} value={n}>Top {n}</option>
+                          ))}
+                        </select>
+                      </label>
+                    </div>
                   </div>
                 </div>
 
-                <div>
-                  <p className="font-sans text-[11px] uppercase tracking-wide mb-2" style={{ color: "var(--stone-gray)", fontWeight: 600 }}>Gráfico</p>
-                  <div className="flex flex-wrap gap-2">
-                    {[
-                      { key: "bars", label: "Barras" },
-                      { key: "horizontal", label: "Horizontal" },
-                      { key: "line", label: "Línea" },
-                      { key: "treemap", label: "Treemap" },
-                      { key: "donut", label: "Donut" },
-                    ].map((item) => (
-                      <button
-                        key={item.key}
-                        onClick={() => setChartType(item.key)}
-                        className="px-3 py-2 rounded-lg text-sm font-sans"
-                        style={{
-                          backgroundColor: chartType === item.key ? "var(--near-black)" : "var(--warm-sand)",
-                          color: chartType === item.key ? "var(--ivory)" : "var(--charcoal-warm)",
-                          fontWeight: 500,
-                        }}
-                      >
-                        {item.label}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                <div>
-                  <p className="font-sans text-[11px] uppercase tracking-wide mb-2" style={{ color: "var(--stone-gray)", fontWeight: 600 }}>Métrica</p>
-                  <div className="flex gap-2">
-                    {[
-                      { key: "absolute", label: "Absoluto" },
-                      { key: "share", label: "%" },
-                    ].map((item) => (
-                      <button
-                        key={item.key}
-                        onClick={() => setMetricMode(item.key)}
-                        className="px-3 py-2 rounded-lg text-sm font-sans"
-                        style={{
-                          backgroundColor: metricMode === item.key ? "var(--near-black)" : "var(--warm-sand)",
-                          color: metricMode === item.key ? "var(--ivory)" : "var(--charcoal-warm)",
-                          fontWeight: 500,
-                        }}
-                      >
-                        {item.label}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                <div>
-                  <div className="flex items-center justify-between mb-2">
-                    <p className="font-sans text-[11px] uppercase tracking-wide" style={{ color: "var(--stone-gray)", fontWeight: 600 }}>Demanda mínima</p>
-                    <span className="font-sans text-xs" style={{ color: "var(--terracotta)", fontWeight: 600 }}>
-                      {minDemandSafe}+
-                    </span>
-                  </div>
-                  <input
-                    type="range"
-                    min={0}
-                    max={maxDemandBase}
-                    value={minDemandSafe}
-                    onChange={(e) => setMinDemand(Number(e.target.value))}
-                    className="w-full"
-                    style={{ accentColor: "#c96442" }}
-                  />
-                </div>
               </div>
-
-              {viewMode === "jobs" && familyCounts.length > 0 && (
-                <div className="mt-5">
-                  <p className="font-sans text-[11px] uppercase tracking-wide mb-2" style={{ color: "var(--stone-gray)", fontWeight: 600 }}>
-                    Familias profesionales
-                  </p>
-                  <div className="flex flex-wrap gap-2">
-                    {familyCounts.map(({ family, count }) => {
-                      const active = selectedFamilies.includes(family);
-                      return (
-                        <button
-                          key={family}
-                          onClick={() => toggleFamily(family)}
-                          className="px-3 py-1.5 rounded-full text-xs font-sans"
-                          style={{
-                            backgroundColor: active ? "var(--near-black)" : "var(--warm-sand)",
-                            color: active ? "var(--ivory)" : "var(--charcoal-warm)",
-                            fontWeight: 500,
-                          }}
-                        >
-                          {family} <span style={{ opacity: 0.75 }}>({count})</span>
-                        </button>
-                      );
-                    })}
-                  </div>
-                </div>
-              )}
 
               <div className="mt-4 flex items-center justify-between">
                 <span className="font-sans text-xs" style={{ color: "var(--stone-gray)" }}>
-                  {filteredRows.length} coincidencias tras filtros
+                  {summary.filtered_offers || 0} ofertas tras segmentación
                 </span>
                 <div className="flex items-center gap-3">
+                  {selectedFilterCount > 0 && (
+                    <span className="text-xs font-sans px-3 py-1 rounded-full" style={{ backgroundColor: "var(--warm-sand)", color: "var(--charcoal-warm)" }}>
+                      {selectedFilterCount} filtros de detalle activos
+                    </span>
+                  )}
                   {activeFilter && (
                     <span className="text-xs font-sans px-3 py-1 rounded-full" style={{ backgroundColor: "var(--warm-sand)", color: "var(--charcoal-warm)" }}>
                       Selección: {activeFilter.label}
@@ -656,6 +705,31 @@ export default function SkillsDashboardPage() {
             </div>
           )}
         </div>
+
+        {selectedFilterCount > 0 && (
+          <div className="flex flex-wrap gap-2 mb-8">
+            {appliedFilters.company && (
+              <span className="px-3 py-1.5 rounded-full text-xs font-sans" style={{ backgroundColor: "var(--warm-sand)", color: "var(--charcoal-warm)" }}>
+                Empresa: {appliedFilters.company}
+              </span>
+            )}
+            {appliedFilters.city && (
+              <span className="px-3 py-1.5 rounded-full text-xs font-sans" style={{ backgroundColor: "var(--warm-sand)", color: "var(--charcoal-warm)" }}>
+                Ciudad: {appliedFilters.city}
+              </span>
+            )}
+            {appliedFilters.region && (
+              <span className="px-3 py-1.5 rounded-full text-xs font-sans" style={{ backgroundColor: "var(--warm-sand)", color: "var(--charcoal-warm)" }}>
+                Región: {appliedFilters.region}
+              </span>
+            )}
+            {appliedFilters.seniority && (
+              <span className="px-3 py-1.5 rounded-full text-xs font-sans" style={{ backgroundColor: "var(--warm-sand)", color: "var(--charcoal-warm)" }}>
+                Seniority: {appliedFilters.seniority}
+              </span>
+            )}
+          </div>
+        )}
 
         <div className="rounded-2xl p-6 mb-8" style={{ backgroundColor: "var(--ivory)", border: "1px solid var(--border-cream)", boxShadow: "rgba(0,0,0,0.05) 0px 4px 24px" }}>
           <div className="flex items-center justify-between mb-3">
@@ -739,11 +813,6 @@ export default function SkillsDashboardPage() {
           </div>
         </div>
 
-        {data.generated_at_utc && (
-          <p className="mt-6 text-xs font-sans text-center" style={{ color: "var(--stone-gray)" }}>
-            Datos generados: {new Date(data.generated_at_utc).toLocaleString("es-ES")} | Colección: {data.collection}
-          </p>
-        )}
       </div>
     </div>
   );

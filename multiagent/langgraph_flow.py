@@ -168,7 +168,17 @@ def build_multiagent_graph():
     try:
       params = state.get("params", {}) or {}
       top_n = int(params.get("top_n", 10) or 10)
-      result = insights_service.use_case_insights(state.get("offers", []), top_n=top_n)
+      result = insights_service.use_case_insights(
+        state.get("offers", []),
+        top_n=top_n,
+        filters={
+          "company": str(params.get("company", "") or "").strip(),
+          "city": str(params.get("city", "") or "").strip(),
+          "region": str(params.get("region", "") or "").strip(),
+          "seniority": str(params.get("seniority", "") or "").strip(),
+          "job_family": str(params.get("job_family", "") or "").strip(),
+        },
+      )
       return {**state, "result": result}
     except Exception as exc:
       return {

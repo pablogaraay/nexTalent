@@ -40,9 +40,49 @@ class InsightsService:
     self._job_title_map = out
     return out
 
-  def use_case_insights(self, offers: List[Dict], top_n: int = 10) -> Dict:
+  @staticmethod
+  def _normalize(value: str) -> str:
+    return str(value or "").strip().lower()
+
+  def _offer_matches_filters(self, offer: Dict, filters: Dict[str, str]) -> bool:
+    company = str(offer.get("company", "") or "").strip()
+    city = str(offer.get("city", "") or "").strip()
+    region = str(offer.get("region", "") or "").strip()
+    seniority = str(offer.get("seniority_raw", "") or "").strip()
+    job_family = str(((offer.get("job_mapping") or {}).get("job_family_wef", "") or "")).strip()
+
+    checks = [
+      ("company", company),
+      ("city", city),
+      ("region", region),
+      ("seniority", seniority),
+      ("job_family", job_family),
+    ]
+    for key, offer_value in checks:
+      selected_value = self._normalize(filters.get(key, ""))
+      if selected_value and self._normalize(offer_value) != selected_value:
+        return False
+    return True
+
+  @staticmethod
+  def _count_values(offers: List[Dict], getter) -> List[Dict[str, int | str]]:
+    counts: Dict[str, int] = {}
+    for offer in offers:
+      value = str(getter(offer) or "").strip()
+      if not value:
+        continue
+      counts[value] = counts.get(value, 0) + 1
+    return [
+      {"value": value, "count": count}
+      for value, count in sorted(counts.items(), key=lambda item: (-item[1], item[0].lower()))
+    ]
+
+  def use_case_insights(self, offers: List[Dict], top_n: int = 10, filters: Dict[str, str] | None = None) -> Dict:
     top_n = max(1, min(int(top_n), 100))
-    total_offers = len(offers or [])
+    filters = filters or {}
+    base_offers = offers or []
+    filtered_offers = [offer for offer in base_offers if self._offer_matches_filters(offer, filters)]
+    total_offers = len(filtered_offers)
     job_title_map = self._load_job_title_map()
 
     offers_with_job_mapping = 0
@@ -51,7 +91,7 @@ class InsightsService:
     jobs_counter: Dict[tuple, int] = {}
     skills_counter: Dict[tuple, int] = {}
 
-    for offer in offers or []:
+    for offer in filtered_offers:
       job_id = str(((offer.get("job_mapping") or {}).get("job_id_wef", "") or "")).strip()
       job_family = str(((offer.get("job_mapping") or {}).get("job_family_wef", "") or "")).strip()
       if job_id:
@@ -96,8 +136,23 @@ class InsightsService:
     return {
       "generated_at_utc": datetime.now(timezone.utc).isoformat(),
       "collection": Config.MAPPED_COLL,
+      "applied_filters": {
+        "company": str(filters.get("company", "") or "").strip(),
+        "city": str(filters.get("city", "") or "").strip(),
+        "region": str(filters.get("region", "") or "").strip(),
+        "seniority": str(filters.get("seniority", "") or "").strip(),
+        "job_family": str(filters.get("job_family", "") or "").strip(),
+      },
+      "available_filters": {
+        "companies": self._count_values(base_offers, lambda offer: offer.get("company", "")),
+        "cities": self._count_values(base_offers, lambda offer: offer.get("city", "")),
+        "regions": self._count_values(base_offers, lambda offer: offer.get("region", "")),
+        "seniorities": self._count_values(base_offers, lambda offer: offer.get("seniority_raw", "")),
+        "job_families": self._count_values(base_offers, lambda offer: (offer.get("job_mapping") or {}).get("job_family_wef", "")),
+      },
       "summary": {
-        "total_offers": total_offers,
+        "total_offers": len(base_offers),
+        "filtered_offers": total_offers,
         "offers_with_job_mapping": offers_with_job_mapping,
         "offers_with_skills_sfia": offers_with_skills_sfia,
         "job_mapping_coverage_pct": self._safe_share(offers_with_job_mapping, total_offers),

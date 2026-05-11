@@ -89,14 +89,24 @@ async def search(
 
 @app.get("/api/insights")
 def insights(
-  topN: int = Query(default=10)
+  topN: int = Query(default=10),
+  company: str = Query(default=""),
+  city: str = Query(default=""),
+  region: str = Query(default=""),
+  seniority: str = Query(default=""),
+  jobFamily: str = Query(default=""),
 ):
   safe_top_n = max(1, min(int(topN), 100))
   try:
     payload = run_multiagent_flow(
       params={
         "use_case": "insights",
-        "top_n": safe_top_n
+        "top_n": safe_top_n,
+        "company": (company or "").strip(),
+        "city": (city or "").strip(),
+        "region": (region or "").strip(),
+        "seniority": (seniority or "").strip(),
+        "job_family": (jobFamily or "").strip(),
       }
     )
     return JSONResponse(status_code=200, content=payload)

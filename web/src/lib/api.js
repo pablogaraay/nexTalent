@@ -20,7 +20,11 @@ export const jobsAPI = {
 };
 
 export const insightsAPI = {
-  get: (topN = 10) => api.get(`/insights?topN=${topN}`, { timeout: 60000 })
+  get: (params = {}) =>
+    api.get("/insights", {
+      params,
+      timeout: 60000
+    })
 };
 
 export default api;
