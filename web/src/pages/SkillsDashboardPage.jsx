@@ -99,8 +99,6 @@ export default function SkillsDashboardPage() {
 
   const chartRows = filteredRows.slice(0, topN);
 
-  const maxDemandFiltered = Math.max(...filteredRows.map((row) => Number(row.demand || 0)), 1);
-
   const valueFor = (row) => Number(row?.[metricField] || 0);
   const demandColorByRank = (i) => (i < 3 ? "#c96442" : i < 7 ? "#d97757" : "#87867f");
 
@@ -203,7 +201,6 @@ export default function SkillsDashboardPage() {
 
   const chartOption = useMemo(() => {
     const categories = chartRows.map((row) => row[labelField] || "");
-    const values = chartRows.map((row) => valueFor(row));
 
     const baseTooltip = {
       backgroundColor: "#141413",
