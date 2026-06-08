@@ -1,0 +1,67 @@
+[
+  {
+    "title": "Data Engineer",
+    "company": "Deloitte",
+    "city": "Madrid",
+    "region": "Comunidad de Madrid",
+    "country": "Spain",
+    "url": "https://www.linkedin.com/jobs/view/1001",
+    "role_raw": "data engineer",
+    "hard_skills_raw": ["SQL"],
+    "soft_skills_raw": ["trabajo en equipo"],
+    "tools_raw": ["Python"],
+    "seniority_raw": "senior",
+    "job_mapping": {
+      "job_id_wef": "JOB_DATA_ENGINEER",
+      "job_family_wef": "Data and AI",
+      "score": 0.91
+    },
+    "skills_sfia": [
+      {"skill_id": "SKILL_PY", "skill_name": "Python", "score": 0.93, "raw": "Python"},
+      {"skill_id": "SKILL_SQL", "skill_name": "SQL", "score": 0.9, "raw": "SQL"}
+    ]
+  },
+  {
+    "title": "Analytics Engineer",
+    "company": "Deloitte",
+    "city": "Madrid",
+    "region": "Comunidad de Madrid",
+    "country": "Spain",
+    "url": "https://www.linkedin.com/jobs/view/1005",
+    "role_raw": "analytics engineer",
+    "hard_skills_raw": ["SQL"],
+    "soft_skills_raw": ["comunicación"],
+    "tools_raw": ["Python", "Power BI"],
+    "seniority_raw": "mid",
+    "job_mapping": {
+      "job_id_wef": "JOB_ANALYTICS_ENGINEER",
+      "job_family_wef": "Data and AI",
+      "score": 0.87
+    },
+    "skills_sfia": [
+      {"skill_id": "SKILL_PY", "skill_name": "Python", "score": 0.92, "raw": "Python"},
+      {"skill_id": "SKILL_BI", "skill_name": "Business Intelligence", "score": 0.82, "raw": "Power BI"}
+    ]
+  },
+  {
+    "title": "Cloud Consultant",
+    "company": "Accenture",
+    "city": "Barcelona",
+    "region": "Catalonia",
+    "country": "Spain",
+    "url": "https://www.linkedin.com/jobs/view/1002",
+    "role_raw": "cloud consultant",
+    "hard_skills_raw": ["cloud"],
+    "soft_skills_raw": ["comunicación"],
+    "tools_raw": ["AWS"],
+    "seniority_raw": "junior",
+    "job_mapping": {
+      "job_id_wef": "JOB_CLOUD_CONSULTANT",
+      "job_family_wef": "Cloud",
+      "score": 0.84
+    },
+    "skills_sfia": [
+      {"skill_id": "SKILL_AWS", "skill_name": "AWS", "score": 0.88, "raw": "AWS"}
+    ]
+  }
+]

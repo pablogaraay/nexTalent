@@ -1,0 +1,34 @@
+[
+  {
+    "title": "Data Engineer",
+    "company": "Deloitte",
+    "city": "Madrid",
+    "region": "Comunidad de Madrid",
+    "country": "Spain",
+    "url": "https://www.linkedin.com/jobs/view/1001",
+    "description_clean": "Buscamos Data Engineer con Python, SQL y trabajo en equipo. Modalidad híbrida.",
+    "role_raw": "data engineer",
+    "hard_skills_raw": ["SQL"],
+    "soft_skills_raw": ["trabajo en equipo"],
+    "tools_raw": ["Python"],
+    "seniority_raw": "",
+    "work_modality_raw": "hibrido",
+    "employment_type_raw": ""
+  },
+  {
+    "title": "Cloud Consultant",
+    "company": "Accenture",
+    "city": "Barcelona",
+    "region": "Catalonia",
+    "country": "Spain",
+    "url": "https://www.linkedin.com/jobs/view/1002",
+    "description_clean": "Consultor cloud con AWS y comunicación. Contrato indefinido.",
+    "role_raw": "cloud consultant",
+    "hard_skills_raw": ["cloud"],
+    "soft_skills_raw": ["comunicación"],
+    "tools_raw": ["AWS"],
+    "seniority_raw": "",
+    "work_modality_raw": "",
+    "employment_type_raw": "contrato indefinido"
+  }
+]
