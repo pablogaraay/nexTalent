@@ -46,9 +46,7 @@ class Config:
   CHROMA_PORT = int(os.getenv("CHROMA_PORT", "8000") or "8000")
   CHROMA_SSL = _env_bool("CHROMA_SSL", False)
   RETRIEVAL_TOP_K = 50
-  RERANK_CANDIDATES = 15
   VECTOR_FALLBACK_MIN_SCORE = 0.60
-  LLM_MIN_MATCH_SCORE = 0.20
 
   # Autonomous agent planner
   AUTONOMOUS_AGENT_VERBOSE = _env_bool("AUTONOMOUS_AGENT_VERBOSE", True)

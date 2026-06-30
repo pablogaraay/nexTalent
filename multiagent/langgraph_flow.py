@@ -6,10 +6,10 @@ from langgraph.graph import END, StateGraph
 
 from config import Config
 from repositories.offer_repository import OfferRepository
+from utils.text import is_unknown_value
 
 from .llm_client import LLMClientService
 from .services.insights_service import InsightsService
-from .services.planner_service import PlannerService
 from .services.profile_service import ProfileService
 from .services.search_service import SearchService
 
@@ -34,7 +34,6 @@ def build_multiagent_graph():
   llm_client_service = LLMClientService()
   offer_repository = OfferRepository()
   profile_service = ProfileService(llm_client_service)
-  planner_service = PlannerService(llm_client_service)
   search_service = SearchService(llm_client_service, offer_repository=offer_repository)
   insights_service = InsightsService()
   graph = StateGraph(GraphState)
@@ -122,10 +121,10 @@ def build_multiagent_graph():
     level = str(signal.get("level", "weak") or "weak").strip().lower()
     enrichment_attempted = bool(state.get("profile_enrichment_attempted", False))
     if level == "strong":
-      return "autonomous_planner"
+      return "search"
     if not enrichment_attempted:
       return "enrich_profile"
-    return "autonomous_planner"
+    return "search"
 
   def enrich_profile_node(state: GraphState) -> GraphState:
     if state.get("error"):
@@ -145,24 +144,31 @@ def build_multiagent_graph():
         "profile_enrichment_attempted": True,
       }
 
-  def autonomous_planner_node(state: GraphState) -> GraphState:
-    if state.get("error"):
-      return state
-    try:
-      plan = planner_service.decide_search_plan(state.get("profile", {}) or {})
-      if getattr(Config, "AUTONOMOUS_AGENT_VERBOSE", False):
-        print(
-          f"Planificador autónomo | estrategia={plan.get('strategy')} "
-          f"| confianza={plan.get('confidence')} | source={plan.get('source')}"
-        )
-      return {**state, "plan": plan}
-    except Exception as exc:
-      if getattr(Config, "AUTONOMOUS_AGENT_VERBOSE", False):
-        print(f"Autonomous planner internal error, using fallback plan: {exc}")
-      return {
-        **state,
-        "plan": {"strategy": "llm_rerank", "source": "planner_error_fallback"},
-      }
+  def build_search_plan(profile: Dict[str, Any], signal: Dict[str, Any]) -> Dict[str, Any]:
+    level = str(signal.get("level", "weak") or "weak").strip().lower()
+    reasons = [str(reason) for reason in (signal.get("reasons") or [])]
+    score = round(float(signal.get("score", 0.0) or 0.0), 4)
+    missing_role_and_skills = "falta_rol_claro" in reasons and "falta_skills" in reasons
+
+    if level in {"strong", "medium"} or not missing_role_and_skills:
+      strategy = "vector_only"
+    else:
+      strategy = "no_match"
+
+    return {
+      "strategy": strategy,
+      "confidence": score,
+      "reasons": reasons or [f"profile_signal_{level}"],
+      "use_location_priority": bool(
+        str(profile.get("location_query", "") or "").strip()
+        or [x for x in (profile.get("location_targets") or []) if str(x).strip()]
+      ),
+      "use_seniority_priority": bool(
+        not is_unknown_value(str(profile.get("seniority_raw", "unknown") or "unknown"))
+      ),
+      "top_k_hint": int(getattr(Config, "RETRIEVAL_TOP_K", 50)),
+      "source": "profile_signal_rules",
+    }
 
   def search_node(state: GraphState) -> GraphState:
     if state.get("error"):
@@ -170,16 +176,18 @@ def build_multiagent_graph():
     try:
       params = state.get("params", {}) or {}
       top_n = int(params.get("top_n", 10) or 10)
+      plan = build_search_plan(
+        state.get("profile", {}) or {},
+        state.get("profile_signal", {}) or {},
+      )
       result = search_service.use_case_search(
         state.get("offers", []),
         state.get("profile", {}),
         top_n=top_n,
-        plan=state.get("plan", {}),
-        default_plan=planner_service.default_search_plan(),
-        coerce_plan=planner_service.coerce_search_plan,
+        plan=plan,
         total_candidates=state.get("total_candidates"),
       )
-      return {**state, "result": result}
+      return {**state, "plan": plan, "result": result}
     except Exception as exc:
       return {
         **state,
@@ -214,7 +222,6 @@ def build_multiagent_graph():
   graph.add_node("parse_profile", parse_profile_node)
   graph.add_node("assess_profile_signal", assess_profile_signal_node)
   graph.add_node("enrich_profile", enrich_profile_node)
-  graph.add_node("autonomous_planner", autonomous_planner_node)
   graph.add_node("search", search_node)
   graph.add_node("insights", insights_node)
 
@@ -233,12 +240,11 @@ def build_multiagent_graph():
     "assess_profile_signal",
     route_after_profile_assessment,
     {
-      "autonomous_planner": "autonomous_planner",
+      "search": "search",
       "enrich_profile": "enrich_profile",
     },
   )
   graph.add_edge("enrich_profile", "assess_profile_signal")
-  graph.add_edge("autonomous_planner", "search")
   graph.add_edge("search", END)
   graph.add_edge("insights", END)
 

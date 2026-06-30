@@ -108,28 +108,3 @@ def build_profile_enrichment_schema(seniority_levels: Iterable[str]):
     ],
     "additionalProperties": False
   }
-
-def build_reranker_schema(top_n: int):
-  safe_top_n = max(1, int(top_n))
-  return {
-    "type": "object",
-    "properties": {
-      "ranked": {
-        "type": "array",
-        "maxItems": safe_top_n,
-        "items": {
-          "type": "object",
-          "properties": {
-            "offer_id": {"type": "string"},
-            "score": {"type": "number", "minimum": 0, "maximum": 1},
-            "matched_skills": {"type": "array", "items": {"type": "string"}}
-          },
-          "required": ["offer_id", "score", "matched_skills"],
-          "additionalProperties": False
-        }
-      }
-    },
-    "required": ["ranked"],
-    "additionalProperties": False
-  }
-

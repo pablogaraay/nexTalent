@@ -10,7 +10,6 @@ from utils.text import (
   unique_keep_order,
 )
 from ..llm_client import LLMClientService
-from .planner_service import PlannerService
 
 class SearchService:
   SEARCH_OFFER_PROJECTION = {
@@ -49,22 +48,21 @@ class SearchService:
     raw.extend([(item or {}).get("skill_name", "") for item in (offer.get("skills_sfia", []) or [])])
     return unique_keep_order([str(item) for item in raw])[:12]
 
-  def _offer_for_llm(self, offer: Dict[str, Any], custom_id: str) -> Dict[str, Any]:
-    return {
-      "offer_id": custom_id,
-      "title": offer.get("title", ""),
-      "company": offer.get("company", ""),
-      "role_raw": offer.get("role_raw", ""),
-      "seniority_raw": offer.get("seniority_raw", ""),
-      "city": offer.get("city", ""),
-      "region": offer.get("region", ""),
-      "country": offer.get("country", ""),
-      "skills": self.offer_skills(offer),
-    }
-
   @staticmethod
   def _vector_min_score() -> float:
     return float(getattr(Config, "VECTOR_FALLBACK_MIN_SCORE", 0.60))
+
+  @staticmethod
+  def default_search_plan() -> Dict[str, Any]:
+    return {
+      "strategy": "vector_only",
+      "confidence": 0.5,
+      "reasons": ["default_plan"],
+      "use_location_priority": True,
+      "use_seniority_priority": True,
+      "top_k_hint": int(getattr(Config, "RETRIEVAL_TOP_K", 50)),
+      "source": "default_plan",
+    }
 
   def _build_result_entry(
     self,
@@ -249,47 +247,6 @@ class SearchService:
       )
     return out
 
-  def _rerank_final_with_llm(self, profile: Dict[str, Any], finalists: List[Dict[str, Any]], top_n: int) -> List[Dict[str, Any]]:
-    prompt = {
-      "profile": {
-        "role": profile.get("role", ""),
-        "skills": profile.get("skills", []),
-        "seniority_raw": profile.get("seniority_raw", "unknown"),
-        "seniority_raw_targets": profile.get("seniority_raw_targets", []),
-        "location_query": profile.get("location_query", ""),
-        "location_targets": profile.get("location_targets", []),
-      },
-      "instructions": {
-        "objective": f"Elegir top {top_n} final.",
-        "rules": [
-          "Prioriza ajuste global (rol + skills + seniority).",
-          "Si location_targets no está vacío, prioriza fuertemente ofertas en esas ubicaciones (city/region/country).",
-          "Devuelve un JSON con campo 'ranked'.",
-          f"Devuelve como maximo {top_n} elementos.",
-          "Cada elemento de ranked debe incluir: offer_id (string, exact matching), score (0..1), matched_skills (array de strings).",
-        ],
-      },
-      "offers": finalists,
-    }
-    raw_ranked = self.llm_client_service.call_reranker(prompt, top_n)
-    return self._coerce_ranked_items(raw_ranked)
-
-  @staticmethod
-  def _coerce_ranked_items(items: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
-    cleaned: List[Dict[str, Any]] = []
-    for item in items or []:
-      offer_id = str((item or {}).get("offer_id", "")).strip()
-      if not offer_id:
-        continue
-      try:
-        score = float((item or {}).get("score", 0))
-      except Exception:
-        score = 0.0
-      score = max(0.0, min(1.0, score))
-      matched = unique_keep_order([str(s) for s in ((item or {}).get("matched_skills") or [])])
-      cleaned.append({"offer_id": offer_id, "score": score, "matched_skills": matched})
-    return cleaned
-
   def use_case_search(
     self,
     offers: List[Dict[str, Any]],
@@ -304,20 +261,36 @@ class SearchService:
     if not offers and total_candidates <= 0:
       return {"profile": profile, "total_candidates": 0, "results": [], "agent": {}}
 
-    active_plan = default_plan or PlannerService.default_search_plan()
+    active_plan = default_plan or self.default_search_plan()
 
-    if isinstance(plan, dict) and plan and callable(coerce_plan):
+    if isinstance(plan, dict) and plan:
+      plan_payload = coerce_plan(plan) if callable(coerce_plan) else plan
       active_plan = {
         **active_plan,
-        **coerce_plan(plan),
-        "source": plan.get("source", "llm"),
+        **plan_payload,
+        "source": plan.get("source", plan_payload.get("source", "rules")),
       }
 
-    strategy_requested = str(active_plan.get("strategy", "llm_rerank") or "llm_rerank").strip()
-    strategy_applied = strategy_requested
+    strategy_requested = str(active_plan.get("strategy", "vector_only") or "vector_only").strip()
+    strategy_applied = "no_match" if strategy_requested == "no_match" else "vector_only"
     confidence = round(float(active_plan.get("confidence", 0.0)), 4)
     reasons = active_plan.get("reasons", [])
     source = active_plan.get("source", "")
+
+    if strategy_applied == "no_match":
+      return {
+        "profile": profile,
+        "total_candidates": total_candidates,
+        "results": [],
+        "agent": {
+          "strategy_requested": strategy_requested,
+          "strategy_applied": strategy_applied,
+          "confidence": confidence,
+          "reasons": reasons,
+          "source": source,
+          "message": "No hay señal suficiente para recomendar ofertas con calidad.",
+        },
+      }
 
     retrieval_k_default = int(getattr(Config, "RETRIEVAL_TOP_K", 50))
     retrieval_k = max(top_n, min(200, int(active_plan.get("top_k_hint", retrieval_k_default))))
@@ -344,94 +317,11 @@ class SearchService:
         },
       }
 
-    if strategy_applied == "no_match":
-      return {
-        "profile": profile,
-        "total_candidates": total_candidates,
-        "results": [],
-        "agent": {
-          "strategy_requested": strategy_requested,
-          "strategy_applied": strategy_applied,
-          "confidence": confidence,
-          "reasons": reasons,
-          "source": source,
-          "message": "No hay señal suficiente para recomendar ofertas con calidad.",
-        },
-      }
-
-    if strategy_applied == "vector_only":
-      vector_results = self._build_vector_only_results(top_candidates, profile, top_n)
-      return {
-        "profile": profile,
-        "total_candidates": total_candidates,
-        "results": vector_results,
-        "agent": {
-          "strategy_requested": strategy_requested,
-          "strategy_applied": strategy_applied,
-          "confidence": confidence,
-          "reasons": reasons,
-          "source": source,
-        },
-      }
-
-    rerank_candidates = int(getattr(Config, "RERANK_CANDIDATES", 20))
-    rerank_candidates = max(top_n, rerank_candidates)
-
-    candidates_for_rerank = top_candidates[:rerank_candidates]
-
-    finalists_payload = []
-    for idx, cand in enumerate(candidates_for_rerank):
-      finalists_payload.append(self._offer_for_llm(cand, custom_id=str(idx)))
-
-    final_ranked = self._rerank_final_with_llm(profile, finalists_payload, top_n=top_n)
-
-    results = []
-
-    if final_ranked:
-      llm_min_score = float(getattr(Config, "LLM_MIN_MATCH_SCORE", 0.20))
-      used_idx = set()
-      for item in final_ranked:
-        try:
-          idx = int(item.get("offer_id", "-1"))
-        except Exception:
-          continue
-        if idx < 0 or idx >= len(candidates_for_rerank) or idx in used_idx:
-          continue
-        if float(item.get("score", 0.0)) < llm_min_score:
-          continue
-        used_idx.add(idx)
-
-        offer = candidates_for_rerank[idx]
-        matched = unique_keep_order([str(s) for s in (item.get("matched_skills") or [])])
-        results.append(
-          self._build_result_entry(
-            offer=offer,
-            match_score=float(item.get("score", 0)),
-            matched_skills=matched,
-            why_match=f"Reranked by LLM. Vector Sim: {round(offer.get('vector_score', 0), 4)}",
-          )
-        )
-
-    if not results:
-      min_vector_score = self._vector_min_score()
-      strong_candidates = [
-        offer for offer in candidates_for_rerank
-        if float(offer.get("vector_score", 0.0)) >= min_vector_score
-      ]
-      for offer in strong_candidates[:top_n]:
-        results.append(
-          self._build_result_entry(
-            offer=offer,
-            match_score=float(offer.get("vector_score", 0.0)),
-            matched_skills=[],
-            why_match=f"Vector Fallback Sim: {round(offer.get('vector_score', 0), 4)}",
-          )
-        )
-
+    results = self._build_vector_only_results(top_candidates, profile, top_n)
     return {
       "profile": profile,
       "total_candidates": total_candidates,
-      "results": results[:top_n],
+      "results": results,
       "agent": {
         "strategy_requested": strategy_requested,
         "strategy_applied": strategy_applied,

@@ -41,7 +41,7 @@ nexTalent es una plataforma de análisis de ofertas de empleo que combina proces
 - Node.js 18+
 - MongoDB accesible
 - Ollama instalado y en ejecución
-- Clave de Groq con cuota disponible (para parseo/reranking LLM)
+- Clave de Groq con cuota disponible (para parseo de perfiles con LLM)
 
 ## Instalación
 
