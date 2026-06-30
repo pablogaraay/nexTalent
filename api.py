@@ -66,7 +66,7 @@ async def search(
         "use_case": "search",
         "profile_text": profile_text,
         "cv_file": temp_cv_path,
-        "top_n": 10
+        "top_n": 0
       }
     )
     return JSONResponse(status_code=200, content=payload)

@@ -10,11 +10,29 @@ import {
   GitCompareArrows,
   Briefcase,
   ExternalLink,
-  AlertCircle
+  AlertCircle,
+  ChevronLeft,
+  ChevronRight
 } from "lucide-react";
 import { jobsAPI } from "@/lib/api";
 
-const TOP_N = 10;
+const OFFERS_PER_PAGE = 20;
+
+function getPaginationItems(currentPage, totalPages) {
+  if (totalPages <= 8) {
+    return Array.from({ length: totalPages }, (_, i) => i + 1);
+  }
+
+  if (currentPage <= 5) {
+    return [1, 2, 3, 4, 5, 6, "end-ellipsis", totalPages];
+  }
+
+  if (currentPage >= totalPages - 4) {
+    return [1, "start-ellipsis", ...Array.from({ length: 6 }, (_, i) => totalPages - 5 + i)];
+  }
+
+  return [1, "start-ellipsis", currentPage - 1, currentPage, currentPage + 1, "end-ellipsis", totalPages];
+}
 
 export default function JobSearchPage() {
   const [searchMode, setSearchMode] = useState("prompt");
@@ -26,6 +44,7 @@ export default function JobSearchPage() {
   const [selectedOffers, setSelectedOffers] = useState([]);
   const [compareMode, setCompareMode] = useState(false);
   const [fileInputKey, setFileInputKey] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
 
   const onDrop = useCallback((acceptedFiles) => {
     if (acceptedFiles.length > 0) {
@@ -61,7 +80,7 @@ export default function JobSearchPage() {
       const { data } = await jobsAPI.search(formData);
 
       const resultData = data.result || {};
-      const offers = (resultData.results || []).slice(0, TOP_N).map((offer, i) => ({
+      const offers = (resultData.results || []).map((offer, i) => ({
         id: offer.url || `offer-${i}`,
         title: offer.title || "Sin título",
         company: offer.company || "Empresa desconocida",
@@ -81,6 +100,7 @@ export default function JobSearchPage() {
       });
       setSelectedOffers([]);
       setCompareMode(false);
+      setCurrentPage(1);
     } catch (err) {
       const detail =
         err.response?.data?.detail ||
@@ -96,6 +116,18 @@ export default function JobSearchPage() {
     setSelectedOffers((prev) =>
       prev.includes(offerId) ? prev.filter((id) => id !== offerId) : [...prev, offerId]
     );
+  };
+
+  const totalPages = results ? Math.max(1, Math.ceil(results.offers.length / OFFERS_PER_PAGE)) : 1;
+  const safeCurrentPage = Math.min(currentPage, totalPages);
+  const pageStart = (safeCurrentPage - 1) * OFFERS_PER_PAGE;
+  const pageEnd = pageStart + OFFERS_PER_PAGE;
+  const paginatedOffers = results ? results.offers.slice(pageStart, pageEnd) : [];
+  const visiblePageItems = getPaginationItems(safeCurrentPage, totalPages);
+
+  const goToPage = (page) => {
+    const nextPage = Math.max(1, Math.min(page, totalPages));
+    setCurrentPage(nextPage);
   };
 
   return (
@@ -275,12 +307,19 @@ export default function JobSearchPage() {
         {results && !compareMode && (
           <div data-testid="search-results">
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-6">
-              <h2 className="font-serif" style={{ fontSize: "1.6rem", fontWeight: 500, color: "var(--near-black)" }}>
-                {results.offers.length} ofertas encontradas
-              </h2>
+              <div>
+                <h2 className="font-serif" style={{ fontSize: "1.6rem", fontWeight: 500, color: "var(--near-black)" }}>
+                  {results.offers.length} ofertas encontradas
+                </h2>
+                {results.offers.length > 0 && (
+                  <p className="font-sans text-sm mt-1" style={{ color: "var(--stone-gray)" }}>
+                    Mostrando {pageStart + 1}-{Math.min(pageEnd, results.offers.length)} de {results.offers.length}
+                  </p>
+                )}
+              </div>
             </div>
             <div className="grid gap-4">
-              {results.offers.map((offer, i) => (
+              {paginatedOffers.map((offer, i) => (
                 <div
                   key={offer.id}
                   data-testid={`offer-card-${offer.id}`}
@@ -367,6 +406,61 @@ export default function JobSearchPage() {
                 </div>
               ))}
             </div>
+            {totalPages > 1 && (
+              <nav data-testid="search-pagination" className="flex items-center justify-center gap-1.5 mt-8 overflow-x-auto whitespace-nowrap" aria-label="Paginación de ofertas">
+                <button
+                  data-testid="pagination-prev"
+                  onClick={() => goToPage(safeCurrentPage - 1)}
+                  disabled={safeCurrentPage === 1}
+                  className="h-9 min-w-9 inline-flex items-center justify-center rounded-md transition-all disabled:opacity-40"
+                  style={{ backgroundColor: "var(--warm-sand)", color: "var(--charcoal-warm)" }}
+                  aria-label="Página anterior"
+                >
+                  <ChevronLeft size={16} />
+                </button>
+                {visiblePageItems.map(item => {
+                  if (typeof item !== "number") {
+                    return (
+                      <span
+                        key={item}
+                        className="h-9 min-w-7 inline-flex items-center justify-center text-sm font-sans"
+                        style={{ color: "var(--stone-gray)", fontWeight: 600 }}
+                      >
+                        ...
+                      </span>
+                    );
+                  }
+
+                  return (
+                    <button
+                      key={item}
+                      data-testid={`pagination-page-${item}`}
+                      onClick={() => goToPage(item)}
+                      className="h-9 min-w-9 px-3 inline-flex items-center justify-center rounded-md text-sm font-sans transition-all"
+                      style={{
+                        backgroundColor: item === safeCurrentPage ? "var(--near-black)" : "transparent",
+                        color: item === safeCurrentPage ? "var(--ivory)" : "var(--charcoal-warm)",
+                        border: item === safeCurrentPage ? "1px solid var(--near-black)" : "1px solid var(--border-cream)",
+                        fontWeight: 600
+                      }}
+                      aria-current={item === safeCurrentPage ? "page" : undefined}
+                    >
+                      {item}
+                    </button>
+                  );
+                })}
+                <button
+                  data-testid="pagination-next"
+                  onClick={() => goToPage(safeCurrentPage + 1)}
+                  disabled={safeCurrentPage === totalPages}
+                  className="h-9 min-w-9 inline-flex items-center justify-center rounded-md transition-all disabled:opacity-40"
+                  style={{ backgroundColor: "var(--warm-sand)", color: "var(--charcoal-warm)" }}
+                  aria-label="Página siguiente"
+                >
+                  <ChevronRight size={16} />
+                </button>
+              </nav>
+            )}
           </div>
         )}
 

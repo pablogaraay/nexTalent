@@ -61,6 +61,7 @@ class TestApi(unittest.TestCase):
     params = multiagent_flow.call_args.kwargs["params"]
     self.assertEqual(params["use_case"], "search")
     self.assertEqual(params["profile_text"], "Data engineer with Python")
+    self.assertEqual(params["top_n"], 0)
 
   @patch("api.run_multiagent_flow")
   def test_insights(self, multiagent_flow):

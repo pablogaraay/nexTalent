@@ -9,10 +9,16 @@ class FakeLLMClient:
 
 
 class FakeVectorStore:
+  def __init__(self):
+    self.requested_n_results = None
+
   def query(self, collection_name, query_embedding, n_results, include=None):
+    self.requested_n_results = n_results
+    metadatas = [{"url": "url-2"}, {"url": "url-1"}, {"url": "url-3"}]
+    distances = [0.05, 0.10, 0.50]
     return {
-      "metadatas": [[{"url": "url-2"}, {"url": "url-1"}]],
-      "distances": [[0.05, 0.10]],
+      "metadatas": [metadatas[:n_results]],
+      "distances": [distances[:n_results]],
     }
 
 
@@ -39,6 +45,13 @@ class FakeOfferRepository:
         "city": "Barcelona",
         "hard_skills_raw": ["SQL"],
       },
+      {
+        "url": "url-3",
+        "title": "Business Analyst",
+        "company": "KPMG",
+        "city": "Madrid",
+        "hard_skills_raw": ["Excel"],
+      },
     ]
 
 
@@ -64,6 +77,28 @@ class TestSearchServiceQueries(unittest.TestCase):
     self.assertEqual(repo.requested_urls, ["url-2", "url-1"])
     self.assertIsNotNone(repo.requested_projection)
     self.assertEqual(result["total_candidates"], 100)
+    self.assertEqual([offer["url"] for offer in result["results"]], ["url-2", "url-1"])
+
+  def test_top_n_zero_returns_all_candidates_above_threshold(self):
+    repo = FakeOfferRepository()
+    vector_store = FakeVectorStore()
+    service = SearchService(
+      llm_client_service=FakeLLMClient(),
+      vector_store=vector_store,
+      offer_repository=repo,
+    )
+
+    result = service.use_case_search(
+      offers=[],
+      profile={"role": "Data Engineer", "skills": ["Python"]},
+      top_n=0,
+      plan={"strategy": "vector_only", "top_k_hint": 2, "source": "test"},
+      default_plan={"strategy": "vector_only", "top_k_hint": 2},
+      coerce_plan=lambda plan: plan,
+      total_candidates=3,
+    )
+
+    self.assertEqual(vector_store.requested_n_results, 3)
     self.assertEqual([offer["url"] for offer in result["results"]], ["url-2", "url-1"])
 
 

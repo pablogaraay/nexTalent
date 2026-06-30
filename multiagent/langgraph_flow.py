@@ -30,6 +30,13 @@ class GraphState(TypedDict, total=False):
 _COMPILED_GRAPH = None
 
 
+def _parse_top_n_param(params: Dict[str, Any], default: int = 10) -> int:
+  raw_value = (params or {}).get("top_n", default)
+  if raw_value is None or raw_value == "":
+    return default
+  return int(raw_value)
+
+
 def build_multiagent_graph():
   llm_client_service = LLMClientService()
   offer_repository = OfferRepository()
@@ -175,7 +182,7 @@ def build_multiagent_graph():
       return state
     try:
       params = state.get("params", {}) or {}
-      top_n = int(params.get("top_n", 10) or 10)
+      top_n = _parse_top_n_param(params)
       plan = build_search_plan(
         state.get("profile", {}) or {},
         state.get("profile_signal", {}) or {},
@@ -199,7 +206,7 @@ def build_multiagent_graph():
       return state
     try:
       params = state.get("params", {}) or {}
-      top_n = int(params.get("top_n", 10) or 10)
+      top_n = _parse_top_n_param(params)
       result = insights_service.use_case_insights(
         state.get("offers", []),
         top_n=top_n,

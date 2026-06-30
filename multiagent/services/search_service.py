@@ -184,6 +184,7 @@ class SearchService:
     top_k: int,
     use_location_priority: bool = True,
     use_seniority_priority: bool = True,
+    return_all: bool = False,
   ) -> List[Dict[str, Any]]:
     query_text = self._build_search_query(profile, use_location_priority, use_seniority_priority)
     if not query_text:
@@ -198,7 +199,14 @@ class SearchService:
         if str(x).strip()
       ]
 
-    effective_top_k = min(len(all_offers), top_k * 4) if all_offers and location_targets else top_k * 4 if location_targets else top_k
+    if return_all:
+      effective_top_k = top_k
+    elif all_offers and location_targets:
+      effective_top_k = min(len(all_offers), top_k * 4)
+    elif location_targets:
+      effective_top_k = top_k * 4
+    else:
+      effective_top_k = top_k
 
     try:
       res = self.vector_store.query(
@@ -211,7 +219,7 @@ class SearchService:
       print("No se encontro la coleccion en ChromaDB. Regresando lista truncada.")
       if not all_offers:
         all_offers = self.offer_repository.load_mapped_offers(projection=self.SEARCH_OFFER_PROJECTION)
-      return all_offers[:top_k]
+      return all_offers if return_all else all_offers[:top_k]
 
     metas = res.get("metadatas", [[]])[0] if res.get("metadatas") else []
     dists = res.get("distances", [[]])[0] if res.get("distances") else []
@@ -234,7 +242,9 @@ class SearchService:
     min_vector_score = self._vector_min_score()
     strong_candidates = [offer for offer in top_candidates if float(offer.get("vector_score", 0.0)) >= min_vector_score]
 
-    for offer in strong_candidates[:top_n]:
+    selected_candidates = strong_candidates if top_n <= 0 else strong_candidates[:top_n]
+
+    for offer in selected_candidates:
       offer_skills = [str(x) for x in self.offer_skills(offer)]
       matched = [s for s in offer_skills if normalize_text(s) in profile_skills]
       out.append(
@@ -258,6 +268,8 @@ class SearchService:
     total_candidates: int | None = None,
   ) -> Dict[str, Any]:
     total_candidates = int(total_candidates if total_candidates is not None else len(offers))
+    result_limit = int(top_n or 0)
+    return_all_matches = result_limit <= 0
     if not offers and total_candidates <= 0:
       return {"profile": profile, "total_candidates": 0, "results": [], "agent": {}}
 
@@ -293,7 +305,11 @@ class SearchService:
       }
 
     retrieval_k_default = int(getattr(Config, "RETRIEVAL_TOP_K", 50))
-    retrieval_k = max(top_n, min(200, int(active_plan.get("top_k_hint", retrieval_k_default))))
+    retrieval_k = (
+      total_candidates
+      if return_all_matches
+      else max(result_limit, min(200, int(active_plan.get("top_k_hint", retrieval_k_default))))
+    )
 
     top_candidates = self._retrieve_candidates_vector(
       profile,
@@ -301,6 +317,7 @@ class SearchService:
       top_k=retrieval_k,
       use_location_priority=bool(active_plan.get("use_location_priority", True)),
       use_seniority_priority=bool(active_plan.get("use_seniority_priority", True)),
+      return_all=return_all_matches,
     )
 
     if not top_candidates:
