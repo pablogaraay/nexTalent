@@ -17,6 +17,7 @@ from .services.search_service import SearchService
 class GraphState(TypedDict, total=False):
   params: Dict[str, Any]
   offers: List[Dict[str, Any]]
+  total_candidates: int
   profile: Dict[str, Any]
   profile_signal: Dict[str, Any]
   profile_enrichment_attempted: bool
@@ -34,23 +35,45 @@ def build_multiagent_graph():
   offer_repository = OfferRepository()
   profile_service = ProfileService(llm_client_service)
   planner_service = PlannerService(llm_client_service)
-  search_service = SearchService(llm_client_service)
+  search_service = SearchService(llm_client_service, offer_repository=offer_repository)
   insights_service = InsightsService()
   graph = StateGraph(GraphState)
 
+  insights_projection = {
+    "_id": 0,
+    "company": 1,
+    "city": 1,
+    "region": 1,
+    "seniority_raw": 1,
+    "job_mapping": 1,
+    "skills_sfia": 1,
+    "is_active": 1,
+  }
+
   def load_data_node(state: GraphState) -> GraphState:
     try:
-      offers = offer_repository.load_mapped_offers() or []
       params = state.get("params", {}) or {}
       use_case = str(params.get("use_case", "search") or "search").strip().lower()
-      if not offers:
+      if use_case == "insights":
+        offers = offer_repository.load_mapped_offers(projection=insights_projection) or []
+        if not offers:
+          return {
+            **state,
+            "offers": [],
+            "use_case": use_case,
+            "error": f"No hay ofertas disponibles en la coleccion '{Config.MAPPED_COLL}'.",
+          }
+        return {**state, "offers": offers, "use_case": use_case, "total_candidates": len(offers)}
+
+      total_candidates = offer_repository.count_mapped_offers()
+      if total_candidates <= 0:
         return {
           **state,
           "offers": [],
           "use_case": use_case,
           "error": f"No hay ofertas disponibles en la coleccion '{Config.MAPPED_COLL}'.",
         }
-      return {**state, "offers": offers, "use_case": use_case}
+      return {**state, "offers": [], "use_case": use_case, "total_candidates": total_candidates}
     except Exception as exc:
       return {**state, "offers": [], "error": f"Error cargando datos desde Mongo: {exc}"}
 
@@ -154,6 +177,7 @@ def build_multiagent_graph():
         plan=state.get("plan", {}),
         default_plan=planner_service.default_search_plan(),
         coerce_plan=planner_service.coerce_search_plan,
+        total_candidates=state.get("total_candidates"),
       )
       return {**state, "result": result}
     except Exception as exc:

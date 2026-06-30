@@ -17,11 +17,26 @@ class OfferRepository:
     except Exception:
       pass
 
-  def load_offers(self, collection: str, active_only: bool = False) -> List[Dict[str, Any]]:
-    return self.db.load_offers(collection, active_only=active_only) or []
+  def load_offers(
+    self,
+    collection: str,
+    active_only: bool = False,
+    projection: Dict[str, int] | None = None,
+  ) -> List[Dict[str, Any]]:
+    return self.db.load_offers(collection, active_only=active_only, projection=projection) or []
 
-  def load_mapped_offers(self) -> List[Dict[str, Any]]:
-    return self.load_offers(Config.MAPPED_COLL, active_only=True)
+  def load_mapped_offers(self, projection: Dict[str, int] | None = None) -> List[Dict[str, Any]]:
+    return self.load_offers(Config.MAPPED_COLL, active_only=True, projection=projection)
+
+  def count_mapped_offers(self) -> int:
+    return int(self.db.count_offers(Config.MAPPED_COLL, active_only=True) or 0)
+
+  def load_mapped_offers_by_urls(
+    self,
+    urls: List[str],
+    projection: Dict[str, int] | None = None,
+  ) -> List[Dict[str, Any]]:
+    return list(self.db.load_offers_by_urls(Config.MAPPED_COLL, urls, projection=projection) or [])
 
   def load_unprocessed_offers(self, source_coll: str, processed_coll: str) -> List[Dict[str, Any]]:
     return list(self.db.load_unprocessed_offers(source_coll, processed_coll) or [])

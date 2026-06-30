@@ -1,6 +1,7 @@
 from __future__ import annotations
 from typing import Any, Dict, Iterable, List
 from config import Config
+from repositories.offer_repository import OfferRepository
 from repositories.vector_store import VectorStore
 from utils.text import (
   is_unknown_value,
@@ -12,13 +13,32 @@ from ..llm_client import LLMClientService
 from .planner_service import PlannerService
 
 class SearchService:
+  SEARCH_OFFER_PROJECTION = {
+    "_id": 0,
+    "url": 1,
+    "title": 1,
+    "company": 1,
+    "role_raw": 1,
+    "seniority_raw": 1,
+    "city": 1,
+    "region": 1,
+    "country": 1,
+    "job_mapping": 1,
+    "skills_sfia": 1,
+    "hard_skills_raw": 1,
+    "soft_skills_raw": 1,
+    "tools_raw": 1,
+  }
+
   def __init__(
     self,
     llm_client_service: LLMClientService | None = None,
     vector_store: VectorStore | None = None,
+    offer_repository: OfferRepository | None = None,
   ):
     self.llm_client_service = llm_client_service or LLMClientService()
     self.vector_store = vector_store or VectorStore()
+    self.offer_repository = offer_repository or OfferRepository()
 
   @staticmethod
   def offer_skills(offer: Dict[str, Any]) -> List[str]:
@@ -111,6 +131,37 @@ class SearchService:
         retrieved.append(offer)
     return retrieved
 
+  def _hydrate_offers_by_urls(
+    self,
+    metas: Iterable[Dict[str, Any]],
+    dists: Iterable[float],
+  ) -> List[Dict[str, Any]]:
+    hits = []
+    urls = []
+    seen_urls = set()
+    for m, d in zip(metas, dists):
+      url = (m or {}).get("url")
+      if not url:
+        continue
+      hits.append((url, d))
+      if url not in seen_urls:
+        urls.append(url)
+        seen_urls.add(url)
+
+    offers = self.offer_repository.load_mapped_offers_by_urls(
+      urls,
+      projection=self.SEARCH_OFFER_PROJECTION,
+    )
+    offers_by_url = {offer.get("url"): offer for offer in offers}
+
+    retrieved = []
+    for url, d in hits:
+      if url in offers_by_url:
+        offer = dict(offers_by_url[url])
+        offer["vector_score"] = 1.0 - d
+        retrieved.append(offer)
+    return retrieved
+
   @staticmethod
   def _apply_location_priority(retrieved: List[Dict[str, Any]], location_targets: List[str]) -> List[Dict[str, Any]]:
     if not location_targets:
@@ -149,7 +200,7 @@ class SearchService:
         if str(x).strip()
       ]
 
-    effective_top_k = min(len(all_offers), top_k * 4) if location_targets else top_k
+    effective_top_k = min(len(all_offers), top_k * 4) if all_offers and location_targets else top_k * 4 if location_targets else top_k
 
     try:
       res = self.vector_store.query(
@@ -160,12 +211,17 @@ class SearchService:
       )
     except Exception:
       print("No se encontro la coleccion en ChromaDB. Regresando lista truncada.")
+      if not all_offers:
+        all_offers = self.offer_repository.load_mapped_offers(projection=self.SEARCH_OFFER_PROJECTION)
       return all_offers[:top_k]
 
     metas = res.get("metadatas", [[]])[0] if res.get("metadatas") else []
     dists = res.get("distances", [[]])[0] if res.get("distances") else []
 
-    retrieved = self._hydrate_offers_from_results(all_offers, metas, dists)
+    if all_offers:
+      retrieved = self._hydrate_offers_from_results(all_offers, metas, dists)
+    else:
+      retrieved = self._hydrate_offers_by_urls(metas, dists)
     retrieved = self._apply_location_priority(retrieved, location_targets)
     return retrieved
 
@@ -242,8 +298,10 @@ class SearchService:
     plan: Dict[str, Any] | None = None,
     default_plan: Dict[str, Any] | None = None,
     coerce_plan=None,
+    total_candidates: int | None = None,
   ) -> Dict[str, Any]:
-    if not offers:
+    total_candidates = int(total_candidates if total_candidates is not None else len(offers))
+    if not offers and total_candidates <= 0:
       return {"profile": profile, "total_candidates": 0, "results": [], "agent": {}}
 
     active_plan = default_plan or PlannerService.default_search_plan()
@@ -275,7 +333,7 @@ class SearchService:
     if not top_candidates:
       return {
         "profile": profile,
-        "total_candidates": len(offers),
+        "total_candidates": total_candidates,
         "results": [],
         "agent": {
           "strategy_requested": strategy_requested,
@@ -289,7 +347,7 @@ class SearchService:
     if strategy_applied == "no_match":
       return {
         "profile": profile,
-        "total_candidates": len(offers),
+        "total_candidates": total_candidates,
         "results": [],
         "agent": {
           "strategy_requested": strategy_requested,
@@ -305,7 +363,7 @@ class SearchService:
       vector_results = self._build_vector_only_results(top_candidates, profile, top_n)
       return {
         "profile": profile,
-        "total_candidates": len(offers),
+        "total_candidates": total_candidates,
         "results": vector_results,
         "agent": {
           "strategy_requested": strategy_requested,
@@ -372,7 +430,7 @@ class SearchService:
 
     return {
       "profile": profile,
-      "total_candidates": len(offers),
+      "total_candidates": total_candidates,
       "results": results[:top_n],
       "agent": {
         "strategy_requested": strategy_requested,

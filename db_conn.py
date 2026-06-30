@@ -122,17 +122,53 @@ class MongoManager:
       self.db[Config.LLM_RAW_COLL].create_index([("url", 1)], unique=True)
 
       self.db[Config.MAPPED_COLL].create_index([("url", 1)], unique=True)
+      self.db[Config.MAPPED_COLL].create_index([("is_active", 1)])
+      self.db[Config.MAPPED_COLL].create_index([("company", 1)])
+      self.db[Config.MAPPED_COLL].create_index([("city", 1)])
+      self.db[Config.MAPPED_COLL].create_index([("region", 1)])
+      self.db[Config.MAPPED_COLL].create_index([("seniority_raw", 1)])
+      self.db[Config.MAPPED_COLL].create_index([("job_mapping.job_family_wef", 1)])
+      self.db[Config.MAPPED_COLL].create_index([
+        ("is_active", 1),
+        ("company", 1),
+        ("city", 1),
+        ("region", 1),
+        ("seniority_raw", 1),
+        ("job_mapping.job_family_wef", 1),
+      ])
 
     except Exception as e:
       print(f"Error al crear el indice: {e}")
 
-  def load_offers(self, coll, active_only=False):
+  def load_offers(self, coll, active_only=False, projection=None):
     try:
       query = {"is_active": {"$ne": False}} if active_only else {}
-      offers = list(self.db[coll].find(query))
+      offers = list(self.db[coll].find(query, projection))
       return offers
     except Exception as e:
       print(f"Error al cargar las ofertas: {e}")
+
+  def count_offers(self, coll, active_only=False):
+    try:
+      query = {"is_active": {"$ne": False}} if active_only else {}
+      return self.db[coll].count_documents(query)
+    except Exception as e:
+      print(f"Error al contar las ofertas: {e}")
+      return 0
+
+  def load_offers_by_urls(self, coll, urls, projection=None):
+    try:
+      clean_urls = [str(url or "").strip() for url in urls if str(url or "").strip()]
+      if not clean_urls:
+        return []
+      query = {
+        "url": {"$in": clean_urls},
+        "is_active": {"$ne": False},
+      }
+      return list(self.db[coll].find(query, projection))
+    except Exception as e:
+      print(f"Error al cargar ofertas por URL: {e}")
+      return []
 
   def load_unprocessed_offers(self, source_coll, processed_coll):
     try:
