@@ -40,7 +40,6 @@ def get_description(offer_link):
     print(f"Error al obtener la descripcion de la oferta {offer_link}")
     return ""
   
-
 def extract_offers(linkedin_api):
   db = MongoManager()
   offers_array = []

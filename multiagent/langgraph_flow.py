@@ -124,6 +124,8 @@ def build_multiagent_graph():
       }
 
   def route_after_profile_assessment(state: GraphState) -> str:
+    if state.get("error"):
+      return "end"
     signal = state.get("profile_signal", {}) or {}
     level = str(signal.get("level", "weak") or "weak").strip().lower()
     enrichment_attempted = bool(state.get("profile_enrichment_attempted", False))
@@ -246,11 +248,12 @@ def build_multiagent_graph():
   graph.add_conditional_edges(
     "assess_profile_signal",
     route_after_profile_assessment,
-    {
-      "search": "search",
-      "enrich_profile": "enrich_profile",
-    },
-  )
+	  {
+	    "search": "search",
+	    "enrich_profile": "enrich_profile",
+	    "end": END,
+	  },
+	)
   graph.add_edge("enrich_profile", "assess_profile_signal")
   graph.add_edge("search", END)
   graph.add_edge("insights", END)

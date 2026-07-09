@@ -36,6 +36,8 @@ class TestLLMContract(unittest.TestCase):
     schema = schemas.build_profile_parse_schema(["junior", "senior", "unknown"])
     expected_fields = {
       "role",
+      "performed_roles",
+      "role_experiences",
       "skills",
       "seniority_raw",
       "seniority_raw_targets",

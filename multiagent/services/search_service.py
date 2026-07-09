@@ -99,6 +99,28 @@ class SearchService:
     if role_candidates:
       parts.append(f"related_roles: {', '.join(role_candidates[:3])}")
 
+    performed_roles = [str(x).strip() for x in (profile.get("performed_roles") or []) if str(x).strip()]
+    if performed_roles:
+      parts.append(f"performed_roles: {', '.join(performed_roles[:6])}")
+
+    normalized_roles = [
+      str((item or {}).get("occupation", "") or "").strip()
+      for item in (profile.get("normalized_roles") or [])
+      if str((item or {}).get("occupation", "") or "").strip()
+    ]
+    if normalized_roles:
+      parts.append(f"normalized_roles: {', '.join(normalized_roles[:6])}")
+
+    role_experiences = []
+    for item in (profile.get("role_experiences") or [])[:6]:
+      role = str((item or {}).get("role", "") or "").strip()
+      normalized = str((item or {}).get("normalized_occupation", "") or "").strip()
+      seniority_item = str((item or {}).get("seniority_raw", "") or "").strip()
+      if role:
+        role_experiences.append(" / ".join([value for value in [role, normalized, seniority_item] if value]))
+    if role_experiences:
+      parts.append(f"role_experience_analysis: {'; '.join(role_experiences)}")
+
     seniority = (profile.get("seniority_raw") or "").strip()
     if use_seniority_priority and seniority and not is_unknown_value(seniority):
       parts.append(f"seniority: {seniority}")

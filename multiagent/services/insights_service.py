@@ -1,16 +1,16 @@
 from __future__ import annotations
 
-import json
 from datetime import datetime, timezone
-from pathlib import Path
 from typing import Dict, List
 
 from config import Config
+from repositories.offer_repository import OfferRepository
 
 
 class InsightsService:
-  def __init__(self):
+  def __init__(self, taxonomy_repository: OfferRepository | None = None):
     self._job_title_map: Dict[str, str] | None = None
+    self.taxonomy_repository = taxonomy_repository
 
   @staticmethod
   def _safe_share(count: int, total: int) -> float:
@@ -22,20 +22,33 @@ class InsightsService:
     if self._job_title_map is not None:
       return self._job_title_map
 
-    base_dir = Path(__file__).resolve().parent.parent.parent
-    jobs_file = base_dir / "nexTalent.wef_jobs_taxonomy.json"
     out: Dict[str, str] = {}
+    repository = self.taxonomy_repository
+    should_close_repository = False
 
     try:
-      rows = json.loads(jobs_file.read_text(encoding="utf-8"))
+      if repository is None:
+        repository = OfferRepository()
+        should_close_repository = True
+
+      rows = repository.load_offers(
+        Config.WEF_JOBS_TAXONOMY_COLL,
+        active_only=False,
+        projection={"_id": 0, "job_id": 1, "occupation": 1, "active": 1},
+      )
       if isinstance(rows, list):
         for row in rows:
+          if (row or {}).get("active", True) is False:
+            continue
           job_id = str((row or {}).get("job_id", "")).strip()
           title = str((row or {}).get("occupation", "")).strip()
           if job_id and title:
             out[job_id] = title
     except Exception:
       out = {}
+    finally:
+      if should_close_repository and repository is not None:
+        repository.close()
 
     self._job_title_map = out
     return out

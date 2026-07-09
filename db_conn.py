@@ -136,6 +136,10 @@ class MongoManager:
         ("seniority_raw", 1),
         ("job_mapping.job_family_wef", 1),
       ])
+      self.db[Config.WEF_JOBS_TAXONOMY_COLL].create_index([("job_id", 1)], unique=True)
+      self.db[Config.WEF_JOBS_TAXONOMY_COLL].create_index([("active", 1)])
+      self.db[Config.WEF_SKILLS_TAXONOMY_COLL].create_index([("skill_id", 1)], unique=True)
+      self.db[Config.WEF_SKILLS_TAXONOMY_COLL].create_index([("active", 1)])
 
     except Exception as e:
       print(f"Error al crear el indice: {e}")

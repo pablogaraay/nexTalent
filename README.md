@@ -5,7 +5,7 @@ nexTalent es una plataforma de análisis de ofertas de empleo que combina proces
 ## Casos de uso activos
 
 1. Búsqueda avanzada de empleo por perfil.
-- Entrada: texto libre y/o CV en PDF.
+- Entrada: texto libre y/o CV en PDF o DOCX.
 - Salida: top ofertas recomendadas con ranking y skills coincidentes.
 
 2. Insights de mercado.
@@ -168,6 +168,7 @@ El procesamiento periódico está separado en dos workflows:
 2. `LLM + Taxonomy + Mapping` (`llm_processor.py -> rag/index_taxonomy.py -> rag/map_offers.py`), con cron `0 5 */2 * *` en UTC.
 
 En el segundo workflow, `llm_processor.py` puede fallar (por cuota/tokens) y aun así se ejecutan indexado y mapping sobre lo ya procesado.
+`rag.index_taxonomy` lee las taxonomías desde las colecciones Mongo `wef_jobs_taxonomy` y `wef_skills_taxonomy`, y reconstruye las colecciones vectoriales `wef_jobs` y `sfia_skills` en Chroma.
 GitHub Actions actualiza MongoDB. La base vectorial de ofertas en Chroma es un indice derivado por entorno: en local se mantiene con `data/chroma` y en cloud debe reindexarse desde GCP/VM ejecutando `python3 -m rag.index_offers` contra el Chroma correspondiente.
 
 ### Reindexado de ofertas en Chroma
@@ -257,7 +258,7 @@ Búsqueda de empleo con texto:
 python3 multiagent_cli.py --profile-text "Data engineer con Python y SQL en Madrid"
 ```
 
-Búsqueda de empleo con CV PDF:
+Búsqueda de empleo con CV PDF o DOCX:
 
 ```bash
 python3 multiagent_cli.py --cv-file /ruta/a/mi_cv.pdf
@@ -302,7 +303,7 @@ Servicios por defecto:
 - `multipart/form-data`
 - Campos:
   - `profileText` (opcional)
-  - `cv` (opcional, solo `.pdf`)
+  - `cv` (opcional, solo `.pdf` o `.docx`)
 - Requiere al menos uno de los dos.
 
 `GET /api/insights`
@@ -323,6 +324,8 @@ MongoDB (`DB_NAME = nexTalent`):
 - `offers_cleaned`
 - `offers_llm_raw`
 - `offers_mapped`
+- `wef_jobs_taxonomy`
+- `wef_skills_taxonomy`
 
 ChromaDB:
 - `wef_jobs`
@@ -350,8 +353,6 @@ nexTalent/
   tests/
   utils/
   web/
-  nexTalent.wef_jobs_taxonomy.json
-  nexTalent.sfia_skills_taxonomy.json
 ```
 
 ## Pruebas

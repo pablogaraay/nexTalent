@@ -13,6 +13,7 @@ from fastapi.responses import JSONResponse
 
 from config import Config
 from multiagent import run_multiagent_flow
+from multiagent.cv_parser import SUPPORTED_CV_EXTENSIONS
 
 
 logger = logging.getLogger(__name__)
@@ -25,6 +26,22 @@ app.add_middleware(
   allow_methods=["GET", "POST", "OPTIONS"],
   allow_headers=["Content-Type", "Authorization"]
 )
+
+SUPPORTED_CV_LABEL = "PDF o DOCX"
+RATE_LIMIT_MESSAGE = (
+  "Se ha alcanzado el límite diario del servicio de IA. "
+  "No se ha podido analizar el CV en este momento. Inténtalo de nuevo más tarde."
+)
+
+
+def is_ai_rate_limit_error(message: str) -> bool:
+  normalized = str(message or "").lower()
+  return (
+    "error code: 429" in normalized
+    or "rate_limit" in normalized
+    or "rate limit" in normalized
+    or "tokens per day" in normalized
+  )
 
 
 @app.get("/api/health")
@@ -44,13 +61,13 @@ async def search(
     if cv is not None:
       filename = cv.filename or ""
       ext = Path(filename).suffix.lower()
-      if ext != ".pdf":
+      if ext not in SUPPORTED_CV_EXTENSIONS:
         return JSONResponse(
           status_code=400,
-          content={"error": "Solo se aceptan archivos con extensión .pdf."}
+          content={"error": "Solo se aceptan archivos con extensión .pdf o .docx."}
         )
 
-      with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as tmp:
+      with tempfile.NamedTemporaryFile(delete=False, suffix=ext) as tmp:
         content = await cv.read()
         tmp.write(content)
         temp_cv_path = tmp.name
@@ -58,7 +75,7 @@ async def search(
     if not profile_text and not temp_cv_path:
       return JSONResponse(
         status_code=400,
-        content={"error": "Debes enviar al menos un prompt de perfil o un archivo CV (.pdf)."}
+        content={"error": f"Debes enviar al menos un prompt de perfil o un archivo CV ({SUPPORTED_CV_LABEL})."}
       )
 
     payload = run_multiagent_flow(
@@ -69,9 +86,31 @@ async def search(
         "top_n": 0
       }
     )
+    if payload.get("error"):
+      error_message = str(payload.get("error") or "")
+      if is_ai_rate_limit_error(error_message):
+        return JSONResponse(
+          status_code=429,
+          content={
+            "error": RATE_LIMIT_MESSAGE,
+            "details": error_message,
+            "code": "ai_rate_limit_exceeded",
+          }
+        )
+      return JSONResponse(status_code=500, content=payload)
+
     return JSONResponse(status_code=200, content=payload)
   except Exception as exc:
     logger.exception("Error ejecutando /api/search")
+    if is_ai_rate_limit_error(str(exc)):
+      return JSONResponse(
+        status_code=429,
+        content={
+          "error": RATE_LIMIT_MESSAGE,
+          "details": str(exc),
+          "code": "ai_rate_limit_exceeded",
+        }
+      )
     return JSONResponse(
       status_code=500,
       content={

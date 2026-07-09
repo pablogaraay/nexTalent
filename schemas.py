@@ -49,6 +49,23 @@ def build_profile_parse_schema(seniority_levels: Iterable[str]):
     "type": "object",
     "properties": {
       "role": {"type": "string"},
+      "performed_roles": {
+        "type": "array",
+        "items": {"type": "string"}
+      },
+      "role_experiences": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "role": {"type": "string"},
+            "seniority_raw": {"type": "string", "enum": levels},
+            "location": {"type": "string"}
+          },
+          "required": ["role", "seniority_raw", "location"],
+          "additionalProperties": False
+        }
+      },
       "skills": {"type": "array", "items": {"type": "string"}},
       "seniority_raw": {"type": "string", "enum": levels},
       "seniority_raw_targets": {
@@ -63,6 +80,8 @@ def build_profile_parse_schema(seniority_levels: Iterable[str]):
     },
     "required": [
       "role",
+      "performed_roles",
+      "role_experiences",
       "skills",
       "seniority_raw",
       "seniority_raw_targets",
@@ -78,6 +97,23 @@ def build_profile_enrichment_schema(seniority_levels: Iterable[str]):
     "type": "object",
     "properties": {
       "role": {"type": "string"},
+      "performed_roles": {
+        "type": "array",
+        "items": {"type": "string"}
+      },
+      "role_experiences": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "role": {"type": "string"},
+            "seniority_raw": {"type": "string", "enum": levels},
+            "location": {"type": "string"}
+          },
+          "required": ["role", "seniority_raw", "location"],
+          "additionalProperties": False
+        }
+      },
       "role_candidates": {
         "type": "array",
         "items": {"type": "string"}
@@ -99,6 +135,8 @@ def build_profile_enrichment_schema(seniority_levels: Iterable[str]):
     },
     "required": [
       "role",
+      "performed_roles",
+      "role_experiences",
       "role_candidates",
       "skills",
       "seniority_raw",

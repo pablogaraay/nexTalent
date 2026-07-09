@@ -1,4 +1,5 @@
 import unittest
+from pathlib import Path
 from unittest.mock import patch
 
 from fastapi.testclient import TestClient
@@ -30,7 +31,24 @@ class TestApi(unittest.TestCase):
     )
 
     self.assertEqual(response.status_code, 400)
-    self.assertEqual(response.json()["error"], "Solo se aceptan archivos con extensión .pdf.")
+    self.assertEqual(response.json()["error"], "Solo se aceptan archivos con extensión .pdf o .docx.")
+
+  @patch("api.run_multiagent_flow")
+  def test_search_accepts_docx_cv(self, multiagent_flow):
+    multiagent_flow.return_value = {
+      "use_case": "search",
+      "error": None,
+      "result": {"profile": {}, "total_candidates": 0, "results": []},
+    }
+
+    response = self.client.post(
+      "/api/search",
+      files={"cv": ("cv.docx", b"fake docx bytes", "application/vnd.openxmlformats-officedocument.wordprocessingml.document")},
+    )
+
+    self.assertEqual(response.status_code, 200)
+    params = multiagent_flow.call_args.kwargs["params"]
+    self.assertEqual(Path(params["cv_file"]).suffix, ".docx")
 
   @patch("api.run_multiagent_flow")
   def test_search(self, multiagent_flow):
@@ -62,6 +80,33 @@ class TestApi(unittest.TestCase):
     self.assertEqual(params["use_case"], "search")
     self.assertEqual(params["profile_text"], "Data engineer with Python")
     self.assertEqual(params["top_n"], 0)
+
+  @patch("api.run_multiagent_flow")
+  def test_search_returns_429_when_flow_reports_ai_rate_limit(self, multiagent_flow):
+    multiagent_flow.return_value = {
+      "use_case": "search",
+      "error": "Error parseando perfil con LLM: Error code: 429 - rate_limit_exceeded on tokens per day",
+      "result": {},
+    }
+
+    response = self.client.post("/api/search", data={"profileText": "Data engineer"})
+
+    self.assertEqual(response.status_code, 429)
+    self.assertEqual(response.json()["code"], "ai_rate_limit_exceeded")
+    self.assertIn("límite diario", response.json()["error"])
+
+  @patch("api.run_multiagent_flow")
+  def test_search_returns_500_when_flow_reports_generic_error(self, multiagent_flow):
+    multiagent_flow.return_value = {
+      "use_case": "search",
+      "error": "Error parseando perfil con LLM: schema rejected",
+      "result": {},
+    }
+
+    response = self.client.post("/api/search", data={"profileText": "Data engineer"})
+
+    self.assertEqual(response.status_code, 500)
+    self.assertIn("schema rejected", response.json()["error"])
 
   @patch("api.run_multiagent_flow")
   def test_insights(self, multiagent_flow):

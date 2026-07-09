@@ -11,12 +11,18 @@ import {
   Briefcase,
   ExternalLink,
   AlertCircle,
+  BadgeCheck,
   ChevronLeft,
-  ChevronRight
+  ChevronRight,
+  Sparkles
 } from "lucide-react";
 import { jobsAPI } from "@/lib/api";
 
 const OFFERS_PER_PAGE = 20;
+
+function uniqueItems(items) {
+  return [...new Set((items || []).filter(Boolean))];
+}
 
 function getPaginationItems(currentPage, totalPages) {
   if (totalPages <= 8) {
@@ -55,13 +61,16 @@ export default function JobSearchPage() {
 
   const onDropRejected = useCallback(() => {
     setCvFile(null);
-    setError("Solo se aceptan archivos PDF.");
+    setError("Solo se aceptan archivos PDF o DOCX.");
   }, []);
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
     onDropRejected,
-    accept: { "application/pdf": [".pdf"] },
+    accept: {
+      "application/pdf": [".pdf"],
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.document": [".docx"]
+    },
     maxFiles: 1
   });
 
@@ -78,6 +87,9 @@ export default function JobSearchPage() {
         formData.append("profileText", prompt);
       }
       const { data } = await jobsAPI.search(formData);
+      if (data.error) {
+        throw new Error(data.error);
+      }
 
       const resultData = data.result || {};
       const offers = (resultData.results || []).map((offer, i) => ({
@@ -103,13 +115,29 @@ export default function JobSearchPage() {
       setCurrentPage(1);
     } catch (err) {
       const detail =
-        err.response?.data?.detail ||
         err.response?.data?.error ||
-        err.response?.data?.details;
+        err.response?.data?.detail ||
+        err.message;
       setError(typeof detail === "string" ? detail : "Error en la búsqueda. Intenta de nuevo.");
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleModeChange = (nextMode) => {
+    if (nextMode === searchMode) {
+      return;
+    }
+
+    setSearchMode(nextMode);
+    setPrompt("");
+    setCvFile(null);
+    setResults(null);
+    setError("");
+    setSelectedOffers([]);
+    setCompareMode(false);
+    setCurrentPage(1);
+    setFileInputKey((key) => key + 1);
   };
 
   const toggleOfferSelection = (offerId) => {
@@ -124,6 +152,54 @@ export default function JobSearchPage() {
   const pageEnd = pageStart + OFFERS_PER_PAGE;
   const paginatedOffers = results ? results.offers.slice(pageStart, pageEnd) : [];
   const visiblePageItems = getPaginationItems(safeCurrentPage, totalPages);
+  const hasResults = Boolean(results);
+  const detectedProfile = results?.profile || {};
+  const performedRoles = uniqueItems([
+    ...(detectedProfile.performed_roles || []),
+    ...(!detectedProfile.performed_roles?.length && detectedProfile.role ? [detectedProfile.role] : [])
+  ]);
+  const normalizedRoleGroups = (detectedProfile.normalized_roles || []).reduce((groups, role) => {
+    const occupation = role?.occupation;
+    if (!occupation) {
+      return groups;
+    }
+
+    const existing = groups.find(group => group.occupation === occupation);
+    const sourceRoles = uniqueItems(role.source_roles || []);
+    if (existing) {
+      existing.source_roles = uniqueItems([...existing.source_roles, ...sourceRoles]);
+      return groups;
+    }
+
+    return [...groups, { occupation, source_roles: sourceRoles }];
+  }, []);
+  const roleExperienceRows = (detectedProfile.role_experiences || [])
+    .map((experience) => ({
+      role: experience?.role || "",
+      seniority: experience?.seniority_raw && experience.seniority_raw !== "unknown" ? experience.seniority_raw : "",
+      location: experience?.location || "",
+      normalized: experience?.normalized_occupation || ""
+    }))
+    .filter(experience => experience.role);
+  const fallbackRoleExperienceRows = roleExperienceRows.length > 0
+    ? roleExperienceRows
+    : performedRoles.map(role => {
+      const normalizedGroup = normalizedRoleGroups.find(group => group.source_roles.includes(role));
+      return {
+        role,
+        seniority: detectedProfile.seniority_raw && detectedProfile.seniority_raw !== "unknown" ? detectedProfile.seniority_raw : "",
+        location: detectedProfile.location_query || "",
+        normalized: normalizedGroup?.occupation || ""
+      };
+    });
+  const profileFacts = [
+    {
+      key: "location",
+      label: "Ubicación preferente",
+      value: detectedProfile.location_query,
+      icon: MapPin
+    }
+  ].filter(item => item.value);
 
   const goToPage = (page) => {
     const nextPage = Math.max(1, Math.min(page, totalPages));
@@ -145,7 +221,7 @@ export default function JobSearchPage() {
         <div className="flex gap-2 mb-6">
           <button
             data-testid="mode-prompt-btn"
-            onClick={() => setSearchMode("prompt")}
+            onClick={() => handleModeChange("prompt")}
             className="flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-sans transition-all"
             style={{
               backgroundColor: searchMode === "prompt" ? "var(--near-black)" : "var(--warm-sand)",
@@ -158,7 +234,7 @@ export default function JobSearchPage() {
           </button>
           <button
             data-testid="mode-cv-btn"
-            onClick={() => setSearchMode("cv")}
+            onClick={() => handleModeChange("cv")}
             className="flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-sans transition-all"
             style={{
               backgroundColor: searchMode === "cv" ? "var(--near-black)" : "var(--warm-sand)",
@@ -167,11 +243,18 @@ export default function JobSearchPage() {
             }}
           >
             <Upload size={16} />
-            Subir CV (PDF)
+            Subir CV
           </button>
         </div>
 
-        <div className="rounded-2xl p-6 mb-8" style={{ backgroundColor: "var(--ivory)", border: "1px solid var(--border-cream)", boxShadow: "rgba(0,0,0,0.05) 0px 4px 24px" }}>
+        <div
+          className={hasResults ? "rounded-xl p-4 mb-5" : "rounded-2xl p-6 mb-8"}
+          style={{
+            backgroundColor: "var(--ivory)",
+            border: "1px solid var(--border-cream)",
+            boxShadow: hasResults ? "rgba(0,0,0,0.03) 0px 2px 14px" : "rgba(0,0,0,0.05) 0px 4px 24px"
+          }}
+        >
           {searchMode === "prompt" ? (
             <div>
               <label className="block text-sm font-sans mb-2" style={{ color: "var(--olive-gray)", fontWeight: 500 }}>
@@ -183,8 +266,8 @@ export default function JobSearchPage() {
                 onChange={(e) => setPrompt(e.target.value)}
                 placeholder="Ej: Desarrollador frontend con 3 años de experiencia en React y TypeScript, busco trabajo remoto en Madrid..."
                 className="w-full rounded-xl p-4 text-sm font-sans resize-none focus:outline-none focus:ring-2"
-                style={{ backgroundColor: "var(--parchment)", border: "1px solid var(--border-cream)", color: "var(--near-black)", minHeight: "120px", lineHeight: 1.6 }}
-                rows={4}
+                style={{ backgroundColor: "var(--parchment)", border: "1px solid var(--border-cream)", color: "var(--near-black)", minHeight: hasResults ? "72px" : "120px", lineHeight: 1.6 }}
+                rows={hasResults ? 2 : 4}
               />
             </div>
           ) : (
@@ -192,7 +275,7 @@ export default function JobSearchPage() {
               <div
                 {...getRootProps()}
                 data-testid="cv-dropzone"
-                className="rounded-xl p-8 text-center cursor-pointer transition-all"
+                className={hasResults ? "rounded-lg p-3 text-center cursor-pointer transition-all" : "rounded-xl p-8 text-center cursor-pointer transition-all"}
                 style={{
                   backgroundColor: isDragActive ? "rgba(201,100,66,0.05)" : "var(--parchment)",
                   border: `2px dashed ${isDragActive ? "var(--terracotta)" : "var(--border-warm)"}`
@@ -208,9 +291,9 @@ export default function JobSearchPage() {
                   })}
                 />
                 {cvFile ? (
-                  <div className="flex items-center justify-center gap-3">
-                    <FileText size={24} style={{ color: "var(--terracotta)" }} />
-                    <span className="font-sans text-sm" style={{ color: "var(--near-black)", fontWeight: 500 }}>{cvFile.name}</span>
+                  <div className="flex items-center justify-center gap-2 min-w-0">
+                    <FileText size={hasResults ? 18 : 24} style={{ color: "var(--terracotta)", flex: "0 0 auto" }} />
+                    <span className="font-sans text-sm truncate" style={{ color: "var(--near-black)", fontWeight: 500 }}>{cvFile.name}</span>
                     <button
                       data-testid="remove-cv-btn"
                       onClick={e => {
@@ -219,7 +302,7 @@ export default function JobSearchPage() {
                         setFileInputKey((k) => k + 1);
                         setError("");
                       }}
-                      className="p-1 rounded-full"
+                      className="p-1 rounded-full flex-shrink-0"
                       style={{ backgroundColor: "var(--warm-sand)" }}
                     >
                       <X size={14} style={{ color: "var(--charcoal-warm)" }} />
@@ -227,25 +310,11 @@ export default function JobSearchPage() {
                   </div>
                 ) : (
                   <div>
-                    <Upload size={32} style={{ color: "var(--stone-gray)", margin: "0 auto 12px" }} />
+                    <Upload size={hasResults ? 22 : 32} style={{ color: "var(--stone-gray)", margin: hasResults ? "0 auto 6px" : "0 auto 12px" }} />
                     <p className="font-sans text-sm" style={{ color: "var(--olive-gray)" }}>Arrastra tu CV aquí o haz clic para seleccionarlo</p>
-                    <p className="font-sans text-xs mt-1" style={{ color: "var(--stone-gray)" }}>Solo PDF</p>
+                    {!hasResults && <p className="font-sans text-xs mt-1" style={{ color: "var(--stone-gray)" }}>PDF o DOCX</p>}
                   </div>
                 )}
-              </div>
-              <div className="mt-4">
-                <label className="block text-xs font-sans mb-1" style={{ color: "var(--stone-gray)" }}>
-                  Opcional: añade un mensaje para refinar la búsqueda
-                </label>
-                <input
-                  data-testid="cv-prompt-input"
-                  type="text"
-                  value={prompt}
-                  onChange={e => setPrompt(e.target.value)}
-                  placeholder="Ej: Busco trabajo remoto en Madrid"
-                  className="w-full rounded-xl px-4 py-2.5 text-sm font-sans focus:outline-none"
-                  style={{ backgroundColor: "var(--parchment)", border: "1px solid var(--border-cream)", color: "var(--near-black)" }}
-                />
               </div>
             </div>
           )}
@@ -259,8 +328,8 @@ export default function JobSearchPage() {
           <button
             data-testid="search-submit-btn"
             onClick={handleSearch}
-            disabled={loading || (searchMode === "prompt" && !prompt.trim()) || (searchMode === "cv" && !cvFile && !prompt.trim())}
-            className="mt-4 w-full flex items-center justify-center gap-2 px-6 py-3 rounded-xl text-base font-sans transition-all disabled:opacity-50"
+            disabled={loading || (searchMode === "prompt" && !prompt.trim()) || (searchMode === "cv" && !cvFile)}
+            className={hasResults ? "mt-3 w-full flex items-center justify-center gap-2 px-5 py-2.5 rounded-lg text-sm font-sans transition-all disabled:opacity-50" : "mt-4 w-full flex items-center justify-center gap-2 px-6 py-3 rounded-xl text-base font-sans transition-all disabled:opacity-50"}
             style={{ backgroundColor: "var(--terracotta)", color: "var(--ivory)", fontWeight: 500 }}
           >
             {loading ? (
@@ -274,21 +343,181 @@ export default function JobSearchPage() {
           </button>
         </div>
 
-        {results?.profile && results.profile.role && (
-          <div data-testid="profile-summary" className="rounded-2xl p-5 mb-6" style={{ backgroundColor: "var(--ivory)", border: "1px solid var(--border-cream)" }}>
-            <h3 className="font-serif mb-3" style={{ fontSize: "1.1rem", fontWeight: 500, color: "var(--near-black)" }}>
-              Perfil Detectado
-            </h3>
-            <div className="flex flex-wrap gap-4 text-sm font-sans" style={{ color: "var(--olive-gray)" }}>
-              {results.profile.role && <div><span style={{ color: "var(--stone-gray)" }}>Rol:</span> <strong style={{ color: "var(--near-black)" }}>{results.profile.role}</strong></div>}
-              {results.profile.seniority_raw && results.profile.seniority_raw !== "unknown" && <div><span style={{ color: "var(--stone-gray)" }}>Nivel:</span> <strong style={{ color: "var(--near-black)" }}>{results.profile.seniority_raw}</strong></div>}
-              {results.profile.location_query && <div><span style={{ color: "var(--stone-gray)" }}>Ubicación:</span> <strong style={{ color: "var(--near-black)" }}>{results.profile.location_query}</strong></div>}
+        {(fallbackRoleExperienceRows.length > 0 || normalizedRoleGroups.length > 0 || detectedProfile.role) && (
+          <div
+            data-testid="profile-summary"
+            className="rounded-2xl p-5 mb-7"
+            style={{
+              background: "linear-gradient(135deg, rgba(250,249,245,1) 0%, rgba(250,246,240,1) 100%)",
+              border: "1px solid var(--border-cream)",
+              boxShadow: "rgba(0,0,0,0.035) 0px 3px 18px"
+            }}
+          >
+            <div className="flex items-center justify-between gap-4 mb-4">
+              <div className="flex items-center gap-3">
+                <span className="inline-flex h-10 w-10 items-center justify-center rounded-lg" style={{ backgroundColor: "var(--near-black)" }}>
+                  <Sparkles size={18} style={{ color: "var(--coral)" }} />
+                </span>
+                <h3 className="font-serif" style={{ fontSize: "1.25rem", fontWeight: 500, color: "var(--near-black)" }}>
+                  Perfil Detectado
+                </h3>
+              </div>
+              {detectedProfile.skills?.length > 0 && (
+                <span className="rounded-full px-3 py-1 text-xs font-sans" style={{ backgroundColor: "rgba(20,20,19,0.06)", color: "var(--charcoal-warm)", fontWeight: 600 }}>
+                  {detectedProfile.skills.length} habilidades
+                </span>
+              )}
             </div>
-            {results.profile.skills?.length > 0 && (
-              <div className="flex flex-wrap gap-1.5 mt-2">
-                {results.profile.skills.map(s => (
-                  <span key={s} className="px-2.5 py-0.5 rounded-md text-xs font-sans" style={{ backgroundColor: "rgba(201,100,66,0.08)", color: "var(--terracotta)", fontWeight: 500 }}>{s}</span>
-                ))}
+
+            <div className="grid gap-3 sm:grid-cols-2">
+              {profileFacts.map(({ key, label, value, icon: Icon }) => (
+                <div
+                  key={key}
+                  className="rounded-lg px-3 py-3"
+                  style={{ backgroundColor: "rgba(255,255,255,0.62)", border: "1px solid var(--border-cream)" }}
+                >
+                  <div className="flex items-center gap-2 mb-1">
+                    <Icon size={15} style={{ color: "var(--terracotta)", flex: "0 0 auto" }} />
+                    <span className="text-xs font-sans uppercase" style={{ color: "var(--stone-gray)", fontWeight: 700, letterSpacing: "0.04em" }}>
+                      {label}
+                    </span>
+                  </div>
+                  <p className="font-sans text-sm m-0" style={{ color: "var(--near-black)", fontWeight: 600, lineHeight: 1.35 }}>
+                    {value}
+                  </p>
+                </div>
+              ))}
+            </div>
+
+            {fallbackRoleExperienceRows.length > 0 && (
+              <div className="rounded-lg px-3 py-3 mt-3" style={{ backgroundColor: "rgba(255,255,255,0.62)", border: "1px solid var(--border-cream)" }}>
+                <div className="flex items-center gap-2 mb-3">
+                  <Briefcase size={15} style={{ color: "var(--terracotta)", flex: "0 0 auto" }} />
+                  <span className="text-xs font-sans uppercase" style={{ color: "var(--stone-gray)", fontWeight: 700, letterSpacing: "0.04em" }}>
+                    Análisis de roles
+                  </span>
+                </div>
+
+                <div className="grid gap-3">
+                  {fallbackRoleExperienceRows.map((experience, index) => (
+                    <div
+                      key={`${experience.role}-${index}`}
+                      className="rounded-lg p-3"
+                      style={{ backgroundColor: "rgba(245,244,237,0.72)", border: "1px solid var(--border-warm)" }}
+                    >
+	                      <div className="grid gap-3 lg:grid-cols-[minmax(320px,1fr)_minmax(260px,320px)_minmax(120px,150px)_minmax(190px,220px)] lg:items-start">
+	                        <div className="min-w-0">
+	                          <p className="font-sans text-xs m-0 mb-1" style={{ color: "var(--stone-gray)", fontWeight: 700, letterSpacing: "0.04em", textTransform: "uppercase" }}>
+	                            Rol
+	                          </p>
+                          <p className="font-sans text-sm m-0" style={{ color: "var(--near-black)", fontWeight: 700, lineHeight: 1.35 }}>
+	                            {experience.role}
+	                          </p>
+	                        </div>
+
+	                        <div className="min-w-0">
+	                          <p className="font-sans text-xs m-0 mb-1" style={{ color: "var(--stone-gray)", fontWeight: 700, letterSpacing: "0.04em", textTransform: "uppercase" }}>
+	                            Rol normalizado
+	                          </p>
+	                          {experience.normalized ? (
+	                            <span
+	                              className="inline-flex max-w-full items-center gap-1.5 rounded-full px-3 py-1 text-xs font-sans"
+	                              style={{ backgroundColor: "rgba(201,100,66,0.09)", color: "var(--terracotta)", border: "1px solid rgba(201,100,66,0.12)", fontWeight: 700 }}
+	                            >
+	                              <BadgeCheck size={12} style={{ flex: "0 0 auto" }} />
+	                              <span className="truncate">{experience.normalized}</span>
+	                            </span>
+	                          ) : (
+	                            <span
+	                              className="inline-flex max-w-full items-center rounded-full px-3 py-1 text-xs font-sans"
+	                              style={{ backgroundColor: "rgba(20,20,19,0.045)", color: "var(--stone-gray)", border: "1px solid rgba(20,20,19,0.07)", fontWeight: 600 }}
+	                            >
+	                              Sin equivalencia directa
+	                            </span>
+	                          )}
+	                        </div>
+
+	                        <div className="min-w-0">
+	                          <p className="font-sans text-xs m-0 mb-1" style={{ color: "var(--stone-gray)", fontWeight: 700, letterSpacing: "0.04em", textTransform: "uppercase" }}>
+	                            Experiencia
+	                          </p>
+	                          {experience.seniority ? (
+	                            <span
+	                              className="inline-flex max-w-full items-center rounded-full px-3 py-1 text-xs font-sans"
+	                              style={{ backgroundColor: "rgba(20,20,19,0.06)", color: "var(--charcoal-warm)", border: "1px solid rgba(20,20,19,0.08)", fontWeight: 600 }}
+	                            >
+	                              {experience.seniority}
+	                            </span>
+	                          ) : (
+	                            <span className="font-sans text-xs" style={{ color: "var(--stone-gray)", fontWeight: 600 }}>No detectada</span>
+	                          )}
+	                        </div>
+
+	                        <div className="min-w-0">
+	                          <p className="font-sans text-xs m-0 mb-1" style={{ color: "var(--stone-gray)", fontWeight: 700, letterSpacing: "0.04em", textTransform: "uppercase" }}>
+	                            Ubicación
+	                          </p>
+	                          {experience.location ? (
+	                            <span
+	                              className="inline-flex max-w-full items-center gap-1.5 rounded-full px-3 py-1 text-xs font-sans"
+	                              style={{ backgroundColor: "rgba(20,20,19,0.045)", color: "var(--charcoal-warm)", border: "1px solid rgba(20,20,19,0.07)", fontWeight: 600 }}
+	                            >
+	                              <MapPin size={12} style={{ flex: "0 0 auto" }} />
+	                              <span className="truncate">{experience.location}</span>
+	                            </span>
+	                          ) : (
+	                            <span className="font-sans text-xs" style={{ color: "var(--stone-gray)", fontWeight: 600 }}>No detectada</span>
+	                          )}
+	                        </div>
+	                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                {normalizedRoleGroups.length > 0 && (
+                  <div className="mt-3 pt-3" style={{ borderTop: "1px solid var(--border-cream)" }}>
+                    <p className="font-sans text-xs m-0 mb-2" style={{ color: "var(--stone-gray)", fontWeight: 700, letterSpacing: "0.04em", textTransform: "uppercase" }}>
+                      Roles normalizados agrupados
+                    </p>
+                    <div className="grid gap-2 sm:grid-cols-2">
+                      {normalizedRoleGroups.map(group => (
+                        <div
+                          key={group.occupation}
+                          className="rounded-lg px-3 py-2"
+                          style={{ backgroundColor: "rgba(255,255,255,0.55)", border: "1px solid var(--border-cream)" }}
+                        >
+                          <div className="flex items-center gap-2">
+                            <BadgeCheck size={13} style={{ color: "var(--terracotta)", flex: "0 0 auto" }} />
+                            <span className="font-sans text-xs" style={{ color: "var(--terracotta)", fontWeight: 700, lineHeight: 1.3 }}>
+                              {group.occupation}
+                            </span>
+                          </div>
+                          {group.source_roles.length > 1 && (
+                            <p className="font-sans text-xs m-0 mt-1" style={{ color: "var(--stone-gray)", lineHeight: 1.35 }}>
+                              Agrupa {group.source_roles.length} roles detectados
+                            </p>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {detectedProfile.skills?.length > 0 && (
+              <div className="mt-4">
+                <div className="flex flex-wrap gap-2">
+                  {detectedProfile.skills.map(s => (
+                    <span
+                      key={s}
+                      className="inline-flex items-center rounded-full px-3 py-1 text-xs font-sans"
+                      style={{ backgroundColor: "rgba(201,100,66,0.09)", color: "var(--terracotta)", border: "1px solid rgba(201,100,66,0.12)", fontWeight: 600 }}
+                    >
+                      {s}
+                    </span>
+                  ))}
+                </div>
               </div>
             )}
           </div>
