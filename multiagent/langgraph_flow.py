@@ -1,6 +1,9 @@
 from __future__ import annotations
 
+import logging
+from time import monotonic
 from typing import Any, Dict, List, TypedDict
+from uuid import uuid4
 
 from langgraph.graph import END, StateGraph
 
@@ -10,6 +13,7 @@ from utils.text import is_unknown_value
 
 from .llm_client import LLMClientService
 from .services.insights_service import InsightsService
+from .services.career_service import CareerService
 from .services.profile_service import ProfileService
 from .services.search_service import SearchService
 
@@ -28,6 +32,7 @@ class GraphState(TypedDict, total=False):
 
 
 _COMPILED_GRAPH = None
+logger = logging.getLogger(__name__)
 
 
 def _parse_top_n_param(params: Dict[str, Any], default: int = 10) -> int:
@@ -42,6 +47,7 @@ def build_multiagent_graph():
   offer_repository = OfferRepository()
   profile_service = ProfileService(llm_client_service)
   search_service = SearchService(llm_client_service, offer_repository=offer_repository)
+  career_service = CareerService(llm_client_service, offer_repository=offer_repository)
   insights_service = InsightsService()
   graph = StateGraph(GraphState)
 
@@ -89,7 +95,7 @@ def build_multiagent_graph():
     use_case = str(state.get("use_case", "search") or "search").strip().lower()
     if use_case == "insights":
       return "insights"
-    return "search"
+    return "profile"
 
   def parse_profile_node(state: GraphState) -> GraphState:
     if state.get("error"):
@@ -129,11 +135,12 @@ def build_multiagent_graph():
     signal = state.get("profile_signal", {}) or {}
     level = str(signal.get("level", "weak") or "weak").strip().lower()
     enrichment_attempted = bool(state.get("profile_enrichment_attempted", False))
+    destination = "career" if state.get("use_case") == "career" else "search"
     if level == "strong":
-      return "search"
+      return destination
     if not enrichment_attempted:
       return "enrich_profile"
-    return "search"
+    return destination
 
   def enrich_profile_node(state: GraphState) -> GraphState:
     if state.get("error"):
@@ -227,19 +234,37 @@ def build_multiagent_graph():
         "error": f"Error generando insights de mercado: {exc}",
       }
 
+  def career_node(state: GraphState) -> GraphState:
+    if state.get("error"):
+      return state
+    try:
+      params = state.get("params", {}) or {}
+      result = career_service.use_case_career(
+        profile=state.get("profile", {}) or {},
+        target_role=str(params.get("target_role", "") or "").strip(),
+        top_k=max(10, min(int(params.get("top_k", 30) or 30), 100)),
+      )
+      return {**state, "result": result}
+    except Exception as exc:
+      return {
+        **state,
+        "error": f"Error generando el análisis de brecha y plan de carrera: {exc}",
+      }
+
   graph.add_node("load_data", load_data_node)
   graph.add_node("parse_profile", parse_profile_node)
   graph.add_node("assess_profile_signal", assess_profile_signal_node)
   graph.add_node("enrich_profile", enrich_profile_node)
   graph.add_node("search", search_node)
   graph.add_node("insights", insights_node)
+  graph.add_node("career", career_node)
 
   graph.set_entry_point("load_data")
   graph.add_conditional_edges(
     "load_data",
     route_after_load,
     {
-      "search": "parse_profile",
+      "profile": "parse_profile",
       "insights": "insights",
       "end": END,
     },
@@ -250,6 +275,7 @@ def build_multiagent_graph():
     route_after_profile_assessment,
 	  {
 	    "search": "search",
+	    "career": "career",
 	    "enrich_profile": "enrich_profile",
 	    "end": END,
 	  },
@@ -257,6 +283,7 @@ def build_multiagent_graph():
   graph.add_edge("enrich_profile", "assess_profile_signal")
   graph.add_edge("search", END)
   graph.add_edge("insights", END)
+  graph.add_edge("career", END)
 
   return graph.compile()
 
@@ -269,11 +296,24 @@ def get_multiagent_graph():
 
 
 def run_multiagent_flow(params: Dict[str, Any]) -> Dict[str, Any]:
+  run_id = str(uuid4())
+  started_at = monotonic()
+  requested_use_case = str(params.get("use_case", "search") or "search").strip().lower()
+  logger.info("LangGraph run started run_id=%s use_case=%s", run_id, requested_use_case)
   app = get_multiagent_graph()
   state = app.invoke({"params": params})
   use_case = str(state.get("use_case", params.get("use_case", "search")) or "search").strip().lower()
+  duration_ms = round((monotonic() - started_at) * 1000)
+  logger.info(
+    "LangGraph run finished run_id=%s use_case=%s duration_ms=%s error=%s",
+    run_id,
+    use_case,
+    duration_ms,
+    bool(state.get("error")),
+  )
   return {
     "use_case": use_case,
     "error": state.get("error"),
     "result": state.get("result", {}),
+    "meta": {"run_id": run_id, "duration_ms": duration_ms},
   }

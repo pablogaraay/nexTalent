@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Search, BarChart3, ArrowRight, Sparkles } from "lucide-react";
+import { Search, BarChart3, ArrowRight, Compass, Sparkles } from "lucide-react";
 
 const features = [
   {
@@ -7,6 +7,13 @@ const features = [
     title: "Búsqueda Avanzada",
     description: "Encuentra las ofertas que mejor encajan con tu perfil. Sube tu CV o describe tu experiencia.",
     path: "/search",
+    color: "var(--terracotta)"
+  },
+  {
+    icon: Compass,
+    title: "Plan de Carrera",
+    description: "Descubre qué habilidades te separan de tu rol objetivo y crea una ruta basada en demanda real.",
+    path: "/career",
     color: "var(--terracotta)"
   },
   {
@@ -25,7 +32,7 @@ export default function HomePage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-32">
           <div className="max-w-3xl mx-auto text-center">
             <div
-              className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-sans mb-6 opacity-0 animate-fade-in-up"
+              className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-sans mb-6"
               style={{
                 backgroundColor: "rgba(201,100,66,0.08)",
                 color: "var(--terracotta)",
@@ -37,7 +44,7 @@ export default function HomePage() {
               Inteligencia laboral impulsada por IA
             </div>
             <h1
-              className="font-serif opacity-0 animate-fade-in-up stagger-1"
+              className="font-serif"
               style={{
                 fontSize: "clamp(2.5rem, 5vw, 4rem)",
                 fontWeight: 500,
@@ -49,7 +56,7 @@ export default function HomePage() {
               Tu brújula en el mercado laboral
             </h1>
             <p
-              className="font-sans opacity-0 animate-fade-in-up stagger-2"
+              className="font-sans"
               style={{
                 fontSize: "1.25rem",
                 lineHeight: 1.6,
@@ -58,9 +65,9 @@ export default function HomePage() {
                 margin: "0 auto 2.5rem"
               }}
             >
-              Descubre tendencias, compara ofertas y toma decisiones con información estructurada del mercado.
+              Crea un perfil, descubre oportunidades y convierte las brechas de habilidades en un plan profesional medible.
             </p>
-            <div className="flex flex-col sm:flex-row gap-3 justify-center opacity-0 animate-fade-in-up stagger-3">
+            <div className="flex flex-col sm:flex-row gap-3 justify-center">
               <Link
                 to="/search"
                 data-testid="hero-search-btn"
@@ -74,6 +81,15 @@ export default function HomePage() {
               >
                 <Search size={18} />
                 Buscar Empleo
+              </Link>
+              <Link
+                to="/career"
+                data-testid="hero-career-btn"
+                className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl text-base no-underline font-sans"
+                style={{ backgroundColor: "var(--near-black)", color: "var(--ivory)", fontWeight: 500 }}
+              >
+                <Compass size={18} />
+                Crear Plan
               </Link>
               <Link
                 to="/skills"
@@ -106,17 +122,17 @@ export default function HomePage() {
               Herramientas para decisiones informadas
             </h2>
             <p className="font-sans text-base max-w-lg mx-auto" style={{ color: "var(--warm-silver)", lineHeight: 1.6 }}>
-              Dos perspectivas clave del mercado laboral en una sola plataforma.
+              Tres perspectivas conectadas para avanzar en tu carrera profesional.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {features.map((feature, i) => (
               <Link
                 key={feature.title}
                 to={feature.path}
                 data-testid={`feature-card-${i}`}
-                className="group block p-6 rounded-2xl no-underline transition-all duration-300 opacity-0 animate-fade-in-up"
+                className="group block p-6 rounded-2xl no-underline transition-all duration-300 animate-fade-in-up"
                 style={{
                   backgroundColor: "var(--dark-surface)",
                   border: "1px solid var(--border-dark)",

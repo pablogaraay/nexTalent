@@ -16,7 +16,7 @@ export default function Footer() {
               </span>
             </div>
             <p className="text-sm leading-relaxed max-w-md" style={{ color: "var(--warm-silver)", lineHeight: 1.6 }}>
-              Inteligencia de mercado laboral impulsada por IA. Busca ofertas y analiza jobs y skills demandadas con datos reales.
+              Inteligencia laboral impulsada por IA. Busca ofertas, analiza brechas y planifica tu desarrollo con datos reales.
             </p>
           </div>
 
@@ -30,6 +30,15 @@ export default function Footer() {
               </Link>
               <Link to="/skills" className="text-sm no-underline hover:underline" style={{ color: "var(--stone-gray)" }}>
                 Tendencias del mercado
+              </Link>
+              <Link to="/career" className="text-sm no-underline hover:underline" style={{ color: "var(--stone-gray)" }}>
+                Plan de carrera
+              </Link>
+              <Link to="/workspace" className="text-sm no-underline hover:underline" style={{ color: "var(--stone-gray)" }}>
+                Mi espacio
+              </Link>
+              <Link to="/privacy" className="text-sm no-underline hover:underline" style={{ color: "var(--stone-gray)" }}>
+                Privacidad
               </Link>
             </div>
           </div>

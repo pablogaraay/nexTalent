@@ -32,7 +32,7 @@ class Config:
   LLM_RAW_COLL = "offers_llm_raw"
   MAPPED_COLL = "offers_mapped"
   WEF_JOBS_TAXONOMY_COLL = "wef_jobs_taxonomy"
-  WEF_SKILLS_TAXONOMY_COLL = "wef_skills_taxonomy"
+  SFIA_SKILLS_TAXONOMY_COLL = "sfia_skills_taxonomy"
 
   #LLM Config
   BATCH_SIZE = 2

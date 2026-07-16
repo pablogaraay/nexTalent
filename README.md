@@ -1,6 +1,6 @@
 # nexTalent
 
-nexTalent es una plataforma de análisis de ofertas de empleo que combina procesamiento de datos, enriquecimiento con LLM, mapeo taxonómico y recuperación semántica para dos casos de uso principales: búsqueda avanzada de empleo e insights de mercado.
+nexTalent es una plataforma de análisis de ofertas de empleo que combina procesamiento de datos, enriquecimiento con LLM, mapeo taxonómico y recuperación semántica para tres casos de uso principales: búsqueda avanzada de empleo, insights de mercado y planificación de carrera.
 
 ## Casos de uso activos
 
@@ -11,6 +11,25 @@ nexTalent es una plataforma de análisis de ofertas de empleo que combina proces
 2. Insights de mercado.
 - Entrada: ofertas ya procesadas.
 - Salida: jobs y skills más demandados sobre datos reales.
+
+3. Análisis de brecha y plan de carrera.
+- Entrada: rol objetivo y perfil libre y/o CV en PDF o DOCX.
+- Salida: preparación estimada, fortalezas, brechas priorizadas por demanda y hoja de ruta de hasta 12 semanas.
+- El cálculo usa la frecuencia observada de skills SFIA en ofertas semánticamente relacionadas con el rol objetivo.
+- El análisis, la preparación y el plan separan habilidades hard (`item_type=skill`) y soft (`item_type=attribute`).
+
+4. Espacio profesional local.
+- Mantiene en el navegador el perfil analizado, ofertas guardadas, feedback, planes, progreso, candidaturas y criterios de alerta.
+- Conecta los casos de uso: una oferta puede abrir un análisis de brecha o un kit de candidatura, y un perfil del mercado puede convertirse en objetivo profesional.
+- Incluye adaptación segura del CV, borrador editable de carta, preparación de entrevista y seguimiento de estados sin inventar experiencia.
+- En esta fase no existe autenticación ni sincronización entre dispositivos; los datos personales se guardan en `localStorage` y pueden eliminarse desde la aplicación.
+
+## Privacidad del perfil y CV
+
+- Los CV admitidos son PDF o DOCX con un máximo de 10 MB.
+- El fichero temporal de la API se elimina al finalizar la petición.
+- El texto del perfil se procesa con el proveedor LLM configurado (Groq en la configuración actual) y los embeddings se generan con Ollama.
+- La aplicación solicita consentimiento antes de enviar un CV y ofrece una página para revisar y eliminar los datos locales.
 
 ## Arquitectura funcional
 
@@ -168,7 +187,7 @@ El procesamiento periódico está separado en dos workflows:
 2. `LLM + Taxonomy + Mapping` (`llm_processor.py -> rag/index_taxonomy.py -> rag/map_offers.py`), con cron `0 5 */2 * *` en UTC.
 
 En el segundo workflow, `llm_processor.py` puede fallar (por cuota/tokens) y aun así se ejecutan indexado y mapping sobre lo ya procesado.
-`rag.index_taxonomy` lee las taxonomías desde las colecciones Mongo `wef_jobs_taxonomy` y `wef_skills_taxonomy`, y reconstruye las colecciones vectoriales `wef_jobs` y `sfia_skills` en Chroma.
+`rag.index_taxonomy` lee las taxonomías desde las colecciones Mongo `wef_jobs_taxonomy` y `sfia_skills_taxonomy`, y reconstruye las colecciones vectoriales `wef_jobs` y `sfia_skills` en Chroma.
 GitHub Actions actualiza MongoDB. La base vectorial de ofertas en Chroma es un indice derivado por entorno: en local se mantiene con `data/chroma` y en cloud debe reindexarse desde GCP/VM ejecutando `python3 -m rag.index_offers` contra el Chroma correspondiente.
 
 ### Reindexado de ofertas en Chroma
@@ -325,7 +344,7 @@ MongoDB (`DB_NAME = nexTalent`):
 - `offers_llm_raw`
 - `offers_mapped`
 - `wef_jobs_taxonomy`
-- `wef_skills_taxonomy`
+- `sfia_skills_taxonomy`
 
 ChromaDB:
 - `wef_jobs`

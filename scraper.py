@@ -5,6 +5,9 @@ from config import Config
 from db_conn import MongoManager
 
 def normalize_url(offer_link):
+  if not offer_link:
+    return ""
+  
   parsed = urlparse(offer_link)
   path_parts = parsed.path.split("-")
   job_id = path_parts[-1]

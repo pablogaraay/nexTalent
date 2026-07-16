@@ -1,15 +1,38 @@
-import { useEffect, useMemo, useState } from "react";
-import ReactECharts from "echarts-for-react";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { Link } from "react-router-dom";
 import {
   AlertCircle,
   BarChart3,
   Briefcase,
   ChevronDown,
   ChevronUp,
+  Database,
+  FileText,
   RefreshCw,
   SlidersHorizontal,
+  Upload,
+  X,
 } from "lucide-react";
+import { MarketChartPanel } from "@/components/insights/MarketChartPanel";
+import { MarketKpiGrid } from "@/components/insights/MarketKpiGrid";
+import { MarketReading } from "@/components/insights/MarketReading";
+import { useMarketChartOption } from "@/components/insights/useMarketChartOption";
+import { PageHeader } from "@/components/ui/PageHeader";
 import { insightsAPI } from "@/lib/api";
+
+const RAW_JSON_REQUIRED_FIELDS = [
+  "url",
+  "title",
+  "company",
+  "city",
+  "region",
+  "country",
+  "role_raw",
+  "hard_skills_raw",
+  "soft_skills_raw",
+  "tools_raw",
+  "seniority_raw",
+];
 
 function formatPct(value) {
   return Number(value || 0).toFixed(1);
@@ -30,26 +53,58 @@ export default function SkillsDashboardPage() {
   const [selectedCity, setSelectedCity] = useState("");
   const [selectedRegion, setSelectedRegion] = useState("");
   const [selectedSeniority, setSelectedSeniority] = useState("");
+  const [dataSource, setDataSource] = useState("database");
+  const [uploadedJsonFile, setUploadedJsonFile] = useState(null);
+  const [jsonWarnings, setJsonWarnings] = useState([]);
+  const [requiredFields, setRequiredFields] = useState(RAW_JSON_REQUIRED_FIELDS);
+  const [analystModeOpen, setAnalystModeOpen] = useState(false);
 
-  const fetchData = () => {
+  const fetchData = useCallback(() => {
     setLoading(true);
     setError("");
-    insightsAPI
-      .get({
+    setJsonWarnings([]);
+
+    const request = dataSource === "json"
+      ? (() => {
+        if (!uploadedJsonFile) {
+          setData(null);
+          setLoading(false);
+          return null;
+        }
+
+        const formData = new FormData();
+        formData.append("file", uploadedJsonFile);
+        formData.append("topN", String(topN));
+        formData.append("company", selectedCompany);
+        formData.append("city", selectedCity);
+        formData.append("region", selectedRegion);
+        formData.append("seniority", selectedSeniority);
+        return insightsAPI.uploadRaw(formData);
+      })()
+      : insightsAPI.get({
         topN,
         company: selectedCompany,
         city: selectedCity,
         region: selectedRegion,
         seniority: selectedSeniority,
-      })
+      });
+
+    if (!request) {
+      return;
+    }
+
+    request
       .then(({ data: resp }) => {
         if (resp?.error) {
           throw new Error(resp.error);
         }
         const result = resp.result || resp;
         setData(result);
+        setJsonWarnings(result.warnings || []);
+        setRequiredFields(result.required_fields || RAW_JSON_REQUIRED_FIELDS);
       })
       .catch((err) => {
+        setRequiredFields(err.response?.data?.required_fields || RAW_JSON_REQUIRED_FIELDS);
         setError(
           err.response?.data?.detail ||
           err.response?.data?.error ||
@@ -60,12 +115,11 @@ export default function SkillsDashboardPage() {
       .finally(() => {
         setLoading(false);
       });
-  };
+  }, [dataSource, selectedCity, selectedCompany, selectedRegion, selectedSeniority, topN, uploadedJsonFile]);
 
   useEffect(() => {
     fetchData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [topN, selectedCompany, selectedCity, selectedRegion, selectedSeniority]);
+  }, [fetchData]);
 
   const safeData = data || {};
   const topSkills = safeData.top_skills || [];
@@ -99,9 +153,6 @@ export default function SkillsDashboardPage() {
 
   const chartRows = filteredRows.slice(0, topN);
 
-  const valueFor = (row) => Number(row?.[metricField] || 0);
-  const demandColorByRank = (i) => (i < 3 ? "#c96442" : i < 7 ? "#d97757" : "#87867f");
-
   const topSkill = topSkills[0] || null;
   const topJob = topJobs[0] || null;
   const selectedFilterCount = [
@@ -110,6 +161,8 @@ export default function SkillsDashboardPage() {
     selectedRegion,
     selectedSeniority,
   ].filter(Boolean).length;
+  const sourceLabel = dataSource === "json" ? "JSON externo" : "Base de datos";
+  const careerTarget = activeFilter?.type === "jobs" ? activeFilter.label : topJob?.job_title;
 
   const kpis = [
     {
@@ -187,237 +240,15 @@ export default function SkillsDashboardPage() {
     ];
   }, [chartRows, labelField, summary, viewMode]);
 
-  const commonToolbox = {
-    show: true,
-    right: 8,
-    top: 0,
-    feature: {
-      restore: {},
-      saveAsImage: { name: "insights-nextalent" },
-    },
-    iconStyle: { borderColor: "#5e5d59" },
-    emphasis: { iconStyle: { borderColor: "#c96442" } },
-  };
-
-  const chartOption = useMemo(() => {
-    const categories = chartRows.map((row) => row[labelField] || "");
-
-    const baseTooltip = {
-      backgroundColor: "#141413",
-      borderColor: "#30302e",
-      textStyle: { color: "#faf9f5", fontFamily: "DM Sans" },
-    };
-
-    if (chartType === "horizontal") {
-      return {
-        tooltip: { ...baseTooltip, trigger: "axis", axisPointer: { type: "shadow" } },
-        toolbox: commonToolbox,
-        grid: { left: "24%", right: "5%", top: 50, bottom: 24 },
-        xAxis: {
-          type: "value",
-          name: metricLabel,
-          axisLabel: { color: "#5e5d59", fontFamily: "DM Sans" },
-          splitLine: { lineStyle: { color: "#f0eee6" } },
-        },
-        yAxis: {
-          type: "category",
-          data: categories,
-          axisLabel: {
-            color: "#5e5d59",
-            fontFamily: "DM Sans",
-            formatter: (value) => (value.length > 28 ? `${value.slice(0, 28)}...` : value),
-          },
-          axisLine: { lineStyle: { color: "#e8e6dc" } },
-        },
-        series: [
-          {
-            type: "bar",
-            data: chartRows.map((row, i) => ({
-              value: valueFor(row),
-              name: row[labelField],
-              id: row[idField],
-              itemStyle: { color: demandColorByRank(i), borderRadius: [0, 4, 4, 0] },
-            })),
-            barWidth: "55%",
-          },
-        ],
-      };
-    }
-
-    if (chartType === "line") {
-      return {
-        tooltip: {
-          ...baseTooltip,
-          trigger: "axis",
-          formatter: (params) => {
-            const p = params?.[0];
-            if (!p) return "";
-            return `${p.name}<br/>${metricLabel}: ${p.value}${metricSuffix}`;
-          },
-        },
-        toolbox: commonToolbox,
-        grid: { left: "3%", right: "4%", bottom: "16%", containLabel: true },
-        xAxis: {
-          type: "category",
-          data: categories,
-          axisLabel: {
-            color: "#5e5d59",
-            fontFamily: "DM Sans",
-            fontSize: 11,
-            rotate: 35,
-            formatter: (value) => (value.length > 28 ? `${value.slice(0, 28)}...` : value),
-          },
-          axisLine: { lineStyle: { color: "#e8e6dc" } },
-        },
-        yAxis: {
-          type: "value",
-          name: metricLabel,
-          axisLabel: { color: "#5e5d59", fontFamily: "DM Sans" },
-          splitLine: { lineStyle: { color: "#f0eee6" } },
-        },
-        dataZoom: [
-          { type: "inside", xAxisIndex: 0, filterMode: "none" },
-          { type: "slider", xAxisIndex: 0, height: 18, bottom: 8, borderColor: "#e8e6dc" },
-        ],
-        series: [
-          {
-            type: "line",
-            smooth: true,
-            symbolSize: 8,
-            lineStyle: { width: 3, color: "#c96442" },
-            itemStyle: { color: "#c96442" },
-            data: chartRows.map((row) => ({ value: valueFor(row), name: row[labelField], id: row[idField] })),
-          },
-        ],
-      };
-    }
-
-    if (chartType === "donut") {
-      return {
-        tooltip: {
-          ...baseTooltip,
-          trigger: "item",
-          formatter: (param) => `${param.name}<br/>${metricLabel}: ${param.value}${metricSuffix}`,
-        },
-        toolbox: commonToolbox,
-        legend: {
-          type: "scroll",
-          bottom: 4,
-          textStyle: { color: "#5e5d59", fontFamily: "DM Sans", fontSize: 11 },
-        },
-        series: [
-          {
-            type: "pie",
-            radius: ["34%", "64%"],
-            center: ["50%", "42%"],
-            itemStyle: { borderRadius: 6, borderColor: "#faf9f5", borderWidth: 3 },
-            label: { show: true, color: "#4d4c48", fontFamily: "DM Sans", fontSize: 11 },
-            data: chartRows.map((row, i) => ({
-              value: valueFor(row),
-              name: row[labelField],
-              id: row[idField],
-              itemStyle: { color: demandColorByRank(i) },
-            })),
-          },
-        ],
-      };
-    }
-
-    if (chartType === "treemap") {
-      return {
-        tooltip: {
-          ...baseTooltip,
-          trigger: "item",
-          formatter: (param) => `${param.name}<br/>${metricLabel}: ${param.value}${metricSuffix}`,
-        },
-        toolbox: commonToolbox,
-        series: [
-          {
-            type: "treemap",
-            roam: true,
-            nodeClick: "zoomToNode",
-            breadcrumb: { show: false },
-            label: {
-              show: true,
-              color: "#141413",
-              formatter: "{b}",
-              fontFamily: "DM Sans",
-            },
-            itemStyle: {
-              borderColor: "#faf9f5",
-              borderWidth: 2,
-              gapWidth: 2,
-            },
-            data: chartRows.map((row, i) => ({
-              name: row[labelField],
-              value: valueFor(row),
-              id: row[idField],
-              itemStyle: { color: i < 3 ? "#c96442" : i < 7 ? "#d97757" : "#e8e6dc" },
-            })),
-          },
-        ],
-      };
-    }
-
-    return {
-      tooltip: {
-        ...baseTooltip,
-        trigger: "axis",
-        axisPointer: { type: "shadow" },
-        formatter: (params) => {
-          const p = params?.[0];
-          if (!p) return "";
-          return `${p.name}<br/>${metricLabel}: ${p.value}${metricSuffix}`;
-        },
-      },
-      toolbox: commonToolbox,
-      grid: { left: "3%", right: "4%", bottom: "16%", containLabel: true },
-      xAxis: {
-        type: "category",
-        data: categories,
-        axisLabel: {
-          color: "#5e5d59",
-          fontFamily: "DM Sans",
-          fontSize: 11,
-          rotate: 35,
-          formatter: (value) => (value.length > 28 ? `${value.slice(0, 28)}...` : value),
-        },
-        axisLine: { lineStyle: { color: "#e8e6dc" } },
-      },
-      yAxis: {
-        type: "value",
-        name: metricLabel,
-        axisLabel: { color: "#5e5d59", fontFamily: "DM Sans" },
-        splitLine: { lineStyle: { color: "#f0eee6" } },
-      },
-      dataZoom: [
-        { type: "inside", xAxisIndex: 0, filterMode: "none" },
-        { type: "slider", xAxisIndex: 0, height: 18, bottom: 8, borderColor: "#e8e6dc" },
-      ],
-      series: [
-        {
-          type: "bar",
-          data: chartRows.map((row, i) => ({
-            value: valueFor(row),
-            name: row[labelField],
-            id: row[idField],
-            itemStyle: { color: demandColorByRank(i), borderRadius: [4, 4, 0, 0] },
-          })),
-          barWidth: "60%",
-        },
-      ],
-    };
-  }, [
+  const chartOption = useMarketChartOption({
     chartRows,
     chartType,
-    commonToolbox,
     idField,
     labelField,
+    metricField,
     metricLabel,
     metricSuffix,
-    metricMode,
-    valueFor,
-  ]);
+  });
 
   const chartEvents = {
     click: (params) => {
@@ -440,12 +271,47 @@ export default function SkillsDashboardPage() {
     setActiveFilter(null);
   };
 
+  const handleDataSourceChange = (nextSource) => {
+    setDataSource(nextSource);
+    setData(null);
+    setError("");
+    setJsonWarnings([]);
+    setActiveFilter(null);
+    resetFilters();
+  };
+
+  const handleJsonUpload = (event) => {
+    const file = event.target.files?.[0] || null;
+    setError("");
+    setJsonWarnings([]);
+    if (!file) {
+      return;
+    }
+    if (!file.name.toLowerCase().endsWith(".json")) {
+      setUploadedJsonFile(null);
+      setError("Solo se aceptan archivos JSON.");
+      return;
+    }
+    setDataSource("json");
+    setData(null);
+    setUploadedJsonFile(file);
+    setActiveFilter(null);
+    resetFilters();
+  };
+
+  const clearUploadedJson = () => {
+    setUploadedJsonFile(null);
+    setData(null);
+    setJsonWarnings([]);
+    setError("");
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center gap-3" style={{ backgroundColor: "var(--parchment)" }}>
         <div className="w-8 h-8 border-2 border-t-transparent rounded-full animate-spin" style={{ borderColor: "var(--ring-warm)", borderTopColor: "transparent" }} />
         <p className="font-sans text-sm" style={{ color: "var(--stone-gray)" }}>
-          Consultando base de datos de ofertas...
+          {dataSource === "json" ? "Mapeando JSON externo y calculando tendencias..." : "Consultando base de datos de ofertas..."}
         </p>
       </div>
     );
@@ -465,39 +331,115 @@ export default function SkillsDashboardPage() {
     );
   }
 
-  if (!data) return null;
-
   return (
     <div data-testid="skills-dashboard-page" className="min-h-screen" style={{ backgroundColor: "var(--parchment)" }}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="mb-4 inline-flex items-center gap-2 px-3 py-1.5 rounded-full" style={{ backgroundColor: "rgba(201,100,66,0.12)", color: "var(--terracotta)" }}>
-          <span className="text-xs font-sans" style={{ fontWeight: 600 }}>Datos en vivo</span>
-        </div>
+        <PageHeader
+          badge={`Fuente: ${sourceLabel}`}
+          title="Habilidades y perfiles más demandados"
+          description={`Análisis de ${summary.filtered_offers || 0} ofertas dentro de una base de ${summary.total_offers || 0}. Filtra, compara y descubre patrones.`}
+          actions={careerTarget ? <Link to={`/career?targetRole=${encodeURIComponent(careerTarget)}`} className="nt-button nt-button--primary nt-button--md">Crear plan para {careerTarget}</Link> : null}
+        />
 
-        <div className="mb-10">
-          <h1 className="font-serif mb-3" style={{ fontSize: "clamp(2rem, 4vw, 3.25rem)", fontWeight: 500, lineHeight: 1.2, color: "var(--near-black)" }}>
-            Habilidades y Perfiles más demandados
-          </h1>
-          <p className="font-sans text-lg" style={{ color: "var(--olive-gray)", lineHeight: 1.6 }}>
-            Análisis de {summary.filtered_offers || 0} ofertas dentro de una base de {summary.total_offers || 0}. Filtra, compara y descubre patrones.
-          </p>
-        </div>
+        <button onClick={() => setAnalystModeOpen((current) => !current)} className="mb-4 px-3 py-2 rounded-lg text-xs" style={{ backgroundColor: "var(--warm-sand)", color: "var(--charcoal-warm)", fontWeight: 600 }}>{analystModeOpen ? "Ocultar modo analista" : "Abrir modo analista y datos externos"}</button>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-5 gap-4 mb-8">
-          {kpis.map((stat) => (
-            <div key={stat.label} className="p-4 rounded-xl" style={{ backgroundColor: "var(--ivory)", border: "1px solid var(--border-cream)" }}>
-              <div className="font-serif" style={{ color: "var(--terracotta)", fontWeight: 500, fontSize: "1.45rem", lineHeight: 1.2 }}>
-                {stat.value}
-              </div>
-              <div className="font-sans text-[11px] mt-2 uppercase tracking-wide" style={{ color: "var(--stone-gray)", fontWeight: 600 }}>
-                {stat.label}
-              </div>
-              <div className="font-sans text-xs mt-1" style={{ color: "var(--olive-gray)", lineHeight: 1.4 }}>
-                {stat.detail}
+        <div className={`${analystModeOpen ? "" : "hidden"} rounded-2xl p-5 mb-8`} style={{ backgroundColor: "var(--ivory)", border: "1px solid var(--border-cream)" }}>
+          <div className="flex flex-col xl:flex-row xl:items-start justify-between gap-5">
+            <div>
+              <p className="font-sans text-[11px] uppercase tracking-wide mb-2" style={{ color: "var(--terracotta)", fontWeight: 700 }}>
+                Base de conocimiento
+              </p>
+              <div className="flex flex-wrap gap-2">
+                {[
+                  { key: "database", label: "Base de datos", icon: Database },
+                  { key: "json", label: "JSON externo", icon: FileText },
+                ].map((item) => {
+                  const Icon = item.icon;
+                  const active = dataSource === item.key;
+                  return (
+                    <button
+                      key={item.key}
+                      onClick={() => handleDataSourceChange(item.key)}
+                      className="px-3 py-2 rounded-lg text-sm font-sans flex items-center gap-2"
+                      style={{
+                        backgroundColor: active ? "var(--near-black)" : "var(--parchment)",
+                        color: active ? "var(--ivory)" : "var(--charcoal-warm)",
+                        border: active ? "1px solid var(--near-black)" : "1px solid var(--border-cream)",
+                        fontWeight: 600,
+                      }}
+                    >
+                      <Icon size={15} />
+                      {item.label}
+                    </button>
+                  );
+                })}
               </div>
             </div>
-          ))}
+
+            <div className="xl:min-w-[360px]">
+              <div className="flex flex-wrap items-center gap-2 mb-3">
+                <label
+                  className="inline-flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-sans cursor-pointer"
+                  style={{ backgroundColor: "var(--terracotta)", color: "var(--ivory)", fontWeight: 600 }}
+                >
+                  <Upload size={15} />
+                  Subir JSON
+                  <input
+                    type="file"
+                    accept="application/json,.json"
+                    onChange={handleJsonUpload}
+                    className="hidden"
+                  />
+                </label>
+                {uploadedJsonFile && (
+                  <div className="inline-flex min-w-0 items-center gap-2 px-3 py-2 rounded-lg" style={{ backgroundColor: "var(--parchment)", border: "1px solid var(--border-cream)" }}>
+                    <FileText size={14} style={{ color: "var(--terracotta)", flex: "0 0 auto" }} />
+                    <span className="font-sans text-xs truncate max-w-[220px]" style={{ color: "var(--charcoal-warm)", fontWeight: 600 }}>
+                      {uploadedJsonFile.name}
+                    </span>
+                    <button onClick={clearUploadedJson} className="p-0.5 rounded-full" style={{ backgroundColor: "var(--warm-sand)" }}>
+                      <X size={12} style={{ color: "var(--charcoal-warm)" }} />
+                    </button>
+                  </div>
+                )}
+              </div>
+
+              <p className="font-sans text-xs mb-2" style={{ color: "var(--stone-gray)", lineHeight: 1.45 }}>
+                Cada elemento del array JSON debe incluir estos campos:
+              </p>
+              <div className="flex flex-wrap gap-1.5">
+                {requiredFields.map((field) => (
+                  <span key={field} className="px-2 py-1 rounded-md text-[11px] font-sans" style={{ backgroundColor: "var(--parchment)", color: "var(--charcoal-warm)", border: "1px solid var(--border-cream)", fontWeight: 600 }}>
+                    {field}
+                  </span>
+                ))}
+              </div>
+
+              {dataSource === "json" && !uploadedJsonFile && (
+                <p className="font-sans text-xs mt-3" style={{ color: "var(--olive-gray)", lineHeight: 1.45 }}>
+                  Sube un JSON para calcular tendencias sobre una base externa sin modificar las ofertas almacenadas.
+                </p>
+              )}
+            </div>
+          </div>
+
+          {jsonWarnings.length > 0 && (
+            <div className="mt-4 rounded-xl p-3" style={{ backgroundColor: "rgba(201,100,66,0.08)", border: "1px solid rgba(201,100,66,0.16)" }}>
+              <div className="flex items-start gap-2">
+                <AlertCircle size={15} style={{ color: "var(--terracotta)", flex: "0 0 auto", marginTop: 2 }} />
+                <div className="space-y-1">
+                  {jsonWarnings.map((warning) => (
+                    <p key={warning} className="font-sans text-xs m-0" style={{ color: "var(--charcoal-warm)", lineHeight: 1.45 }}>
+                      {warning}
+                    </p>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
         </div>
+
+        <MarketKpiGrid items={kpis} />
 
         <div className="rounded-2xl mb-8" style={{ backgroundColor: "var(--ivory)", border: "1px solid var(--border-cream)" }}>
           <div className="px-5 py-4 border-b flex items-start justify-between gap-4" style={{ borderColor: "var(--border-cream)" }}>
@@ -775,65 +717,14 @@ export default function SkillsDashboardPage() {
           </div>
         )}
 
-        <div className="rounded-2xl p-6 mb-8" style={{ backgroundColor: "var(--ivory)", border: "1px solid var(--border-cream)", boxShadow: "rgba(0,0,0,0.05) 0px 4px 24px" }}>
-          <div className="flex items-center justify-between mb-3">
-            <h2 className="font-serif" style={{ fontSize: "1.85rem", fontWeight: 500, color: "var(--near-black)" }}>
-              {viewMode === "skills" ? "Habilidades" : "Perfiles"} - {metricLabel}
-            </h2>
-            <span className="font-sans text-xs" style={{ color: "var(--stone-gray)", fontWeight: 500 }}>
-              {chartRows.length} resultados
-            </span>
-          </div>
-
-          {chartRows.length ? (
-            <ReactECharts
-              key={`${viewMode}-${chartType}-${metricMode}`}
-              notMerge={true}
-              option={chartOption}
-              style={{ height: 420 }}
-              onEvents={chartEvents}
-            />
-          ) : (
-            <div className="h-[340px] flex items-center justify-center rounded-xl" style={{ backgroundColor: "var(--parchment)", border: "1px dashed var(--border-cream)" }}>
-              <p className="font-sans text-sm" style={{ color: "var(--stone-gray)" }}>No hay datos para los filtros seleccionados.</p>
-            </div>
-          )}
-        </div>
-
-        <div className="rounded-2xl p-6" style={{ backgroundColor: "var(--ivory)", border: "1px solid var(--border-cream)" }}>
-          <div className="mb-5">
-            <h3 className="font-serif" style={{ fontSize: "1.45rem", fontWeight: 500, color: "var(--near-black)" }}>
-              Lectura del mercado
-            </h3>
-            <p className="font-sans text-sm mt-1" style={{ color: "var(--stone-gray)", lineHeight: 1.5 }}>
-              Interpretación automática del segmento que estás visualizando.
-            </p>
-          </div>
-
-          {marketReading.length ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
-              {marketReading.map((item) => (
-                <div key={item.label} className="p-4 rounded-xl" style={{ backgroundColor: "var(--parchment)", border: "1px solid var(--border-cream)" }}>
-                  <div className="font-sans text-[11px] uppercase tracking-wide mb-2" style={{ color: "var(--stone-gray)", fontWeight: 700 }}>
-                    {item.label}
-                  </div>
-                  <div className="font-serif" style={{ color: "var(--near-black)", fontWeight: 500, fontSize: "1.25rem", lineHeight: 1.25 }}>
-                    {item.value}
-                  </div>
-                  <p className="font-sans text-xs mt-3" style={{ color: "var(--olive-gray)", lineHeight: 1.5 }}>
-                    {item.detail}
-                  </p>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <div className="rounded-xl p-5" style={{ backgroundColor: "var(--parchment)", border: "1px dashed var(--border-cream)" }}>
-              <p className="font-sans text-sm" style={{ color: "var(--stone-gray)" }}>
-                No hay datos suficientes para generar una lectura del mercado con los filtros actuales.
-              </p>
-            </div>
-          )}
-        </div>
+        <MarketChartPanel
+          chartKey={`${viewMode}-${chartType}-${metricMode}`}
+          events={chartEvents}
+          metricLabel={`${viewMode === "skills" ? "Habilidades" : "Perfiles"} · ${metricLabel}`}
+          option={chartOption}
+          resultCount={chartRows.length}
+        />
+        <MarketReading items={marketReading} />
 
       </div>
     </div>

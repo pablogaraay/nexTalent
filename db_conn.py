@@ -1,5 +1,6 @@
 from pymongo import MongoClient, UpdateOne
 from pymongo.server_api import ServerApi
+from pymongo.errors import ConnectionFailure
 from datetime import datetime, timezone
 from config import Config
 
@@ -21,8 +22,8 @@ class MongoManager:
   def verify_connection(self):
     try:
       self.client.admin.command('ping')
-    except Exception as e:
-      raise RuntimeError(f"Servidor no disponible: {e}") from e
+    except ConnectionFailure:
+      print("Servidor de MongoDB no disponible. Verifica la conexión.")
 
   def upsert_bulk_offers(self, coll: str, offers_array: list, stage_prefix: str):
     if not offers_array:
@@ -32,7 +33,11 @@ class MongoManager:
     ops = []
     for offer in offers_array:
       source_id = offer.get("_id")
-      offer_without_id = {k: v for k, v in offer.items() if k != "_id"}
+      offer_without_id = {}
+      for key, value in offer.items():
+        if key != "_id":
+          offer_without_id[key] = value
+
       set_on_insert = {f"first_{stage_prefix}": datetime.now(timezone.utc)}
       if source_id is not None:
         set_on_insert["_id"] = source_id
@@ -138,8 +143,8 @@ class MongoManager:
       ])
       self.db[Config.WEF_JOBS_TAXONOMY_COLL].create_index([("job_id", 1)], unique=True)
       self.db[Config.WEF_JOBS_TAXONOMY_COLL].create_index([("active", 1)])
-      self.db[Config.WEF_SKILLS_TAXONOMY_COLL].create_index([("skill_id", 1)], unique=True)
-      self.db[Config.WEF_SKILLS_TAXONOMY_COLL].create_index([("active", 1)])
+      self.db[Config.SFIA_SKILLS_TAXONOMY_COLL].create_index([("skill_id", 1)], unique=True)
+      self.db[Config.SFIA_SKILLS_TAXONOMY_COLL].create_index([("active", 1)])
 
     except Exception as e:
       print(f"Error al crear el indice: {e}")

@@ -1,22 +1,22 @@
 import { useState, useCallback } from "react";
 import { useDropzone } from "react-dropzone";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import {
   Search,
   Upload,
   FileText,
-  MapPin,
-  Building2,
   X,
   GitCompareArrows,
-  Briefcase,
-  ExternalLink,
-  AlertCircle,
-  BadgeCheck,
   ChevronLeft,
   ChevronRight,
-  Sparkles
 } from "lucide-react";
+import { OfferCard } from "@/components/jobs/OfferCard";
+import { OfferComparison } from "@/components/jobs/OfferComparison";
+import { ProfileSummary } from "@/components/jobs/ProfileSummary";
+import { PageHeader } from "@/components/ui/PageHeader";
+import { StatusMessage } from "@/components/ui/StatusMessage";
 import { jobsAPI } from "@/lib/api";
+import { useWorkspace } from "@/context/WorkspaceContext";
 
 const OFFERS_PER_PAGE = 20;
 
@@ -41,8 +41,23 @@ function getPaginationItems(currentPage, totalPages) {
 }
 
 export default function JobSearchPage() {
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const {
+    workspace,
+    saveProfile,
+    toggleSavedOffer,
+    ensureSavedOffer,
+    setOfferFeedback,
+    upsertApplication,
+    acceptPrivacy,
+    updateAlert,
+  } = useWorkspace();
   const [searchMode, setSearchMode] = useState("prompt");
-  const [prompt, setPrompt] = useState("");
+  const [prompt, setPrompt] = useState(() => {
+    const requestedRole = searchParams.get("role");
+    return requestedRole ? `Busco oportunidades como ${requestedRole}. ${workspace.profile.text || ""}`.trim() : workspace.profile.text || "";
+  });
   const [cvFile, setCvFile] = useState(null);
   const [results, setResults] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -71,10 +86,15 @@ export default function JobSearchPage() {
       "application/pdf": [".pdf"],
       "application/vnd.openxmlformats-officedocument.wordprocessingml.document": [".docx"]
     },
-    maxFiles: 1
+    maxFiles: 1,
+    maxSize: 10 * 1024 * 1024,
   });
 
   const handleSearch = async () => {
+    if (searchMode === "cv" && !workspace.privacyAcceptedAt) {
+      setError("Acepta el procesamiento temporal del CV antes de continuar.");
+      return;
+    }
     setLoading(true);
     setError("");
     setResults(null);
@@ -100,19 +120,42 @@ export default function JobSearchPage() {
         role: offer.role_raw || "",
         url: offer.url || "",
         matched_skills: offer.matched_skills || [],
+        match_score: Number(offer.match_score || offer.vector_score || 0),
+        why_match: offer.why_match || "",
         rank: i + 1
       }));
+      const feedbackWeight = (offer) => {
+        const value = workspace.offerFeedback[offer.id]?.value;
+        return value === "positive" ? 1 : value === "negative" ? -1 : 0;
+      };
+      offers.sort((a, b) => feedbackWeight(b) - feedbackWeight(a) || b.match_score - a.match_score);
+      offers.forEach((offer, index) => { offer.rank = index + 1; });
+      workspace.alerts.filter((alert) => alert.active).forEach((alert) => {
+        const roleNeedle = alert.role.toLocaleLowerCase("es");
+        const locationNeedle = (alert.location || "").toLocaleLowerCase("es");
+        const count = offers.filter((offer) => {
+          const roleHaystack = `${offer.title} ${offer.role}`.toLocaleLowerCase("es");
+          const locationHaystack = offer.location.toLocaleLowerCase("es");
+          return roleHaystack.includes(roleNeedle) && (!locationNeedle || locationHaystack.includes(locationNeedle));
+        }).length;
+        updateAlert(alert.id, { lastMatchCount: count, lastCheckedAt: new Date().toISOString() });
+      });
 
       const profile = resultData.profile || {};
       setResults({
         offers,
         total: resultData.total_candidates || offers.length,
         profile,
-        query: prompt || "CV uploaded"
+        query: prompt || "CV subido"
       });
       setSelectedOffers([]);
       setCompareMode(false);
       setCurrentPage(1);
+      saveProfile({
+        text: prompt,
+        parsed: profile,
+        cvName: cvFile?.name || "",
+      });
     } catch (err) {
       const detail =
         err.response?.data?.error ||
@@ -130,7 +173,7 @@ export default function JobSearchPage() {
     }
 
     setSearchMode(nextMode);
-    setPrompt("");
+    setPrompt(nextMode === "prompt" ? workspace.profile.text || "" : "");
     setCvFile(null);
     setResults(null);
     setError("");
@@ -144,6 +187,17 @@ export default function JobSearchPage() {
     setSelectedOffers((prev) =>
       prev.includes(offerId) ? prev.filter((id) => id !== offerId) : [...prev, offerId]
     );
+  };
+
+  const startCareerPlan = (offer) => {
+    ensureSavedOffer(offer);
+    navigate(`/career?targetRole=${encodeURIComponent(offer.role || offer.title)}`);
+  };
+
+  const prepareApplication = (offer) => {
+    ensureSavedOffer(offer);
+    upsertApplication(offer);
+    navigate(`/application?offerId=${encodeURIComponent(offer.id)}`);
   };
 
   const totalPages = results ? Math.max(1, Math.ceil(results.offers.length / OFFERS_PER_PAGE)) : 1;
@@ -192,15 +246,6 @@ export default function JobSearchPage() {
         normalized: normalizedGroup?.occupation || ""
       };
     });
-  const profileFacts = [
-    {
-      key: "location",
-      label: "Ubicación preferente",
-      value: detectedProfile.location_query,
-      icon: MapPin
-    }
-  ].filter(item => item.value);
-
   const goToPage = (page) => {
     const nextPage = Math.max(1, Math.min(page, totalPages));
     setCurrentPage(nextPage);
@@ -209,14 +254,10 @@ export default function JobSearchPage() {
   return (
     <div data-testid="job-search-page" className="min-h-screen" style={{ backgroundColor: "var(--parchment)" }}>
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="mb-10">
-          <h1 className="font-serif mb-3" style={{ fontSize: "clamp(2rem, 4vw, 3.25rem)", fontWeight: 500, lineHeight: 1.2, color: "var(--near-black)" }}>
-            Búsqueda Avanzada de Empleo
-          </h1>
-          <p className="font-sans text-lg" style={{ color: "var(--olive-gray)", lineHeight: 1.6 }}>
-            Encuentra las ofertas que mejor se ajustan a tu perfil.
-          </p>
-        </div>
+        <PageHeader
+          title="Búsqueda avanzada de empleo"
+          description="Encuentra oportunidades alineadas con tu experiencia y entiende por qué encajan contigo."
+        />
 
         <div className="flex gap-2 mb-6">
           <button
@@ -257,11 +298,12 @@ export default function JobSearchPage() {
         >
           {searchMode === "prompt" ? (
             <div>
-              <label className="block text-sm font-sans mb-2" style={{ color: "var(--olive-gray)", fontWeight: 500 }}>
+              <label htmlFor="search-profile-text" className="block text-sm font-sans mb-2" style={{ color: "var(--olive-gray)", fontWeight: 500 }}>
                 Describe tu perfil, experiencia o lo que buscas
               </label>
               <textarea
                 data-testid="search-prompt-input"
+                id="search-profile-text"
                 value={prompt}
                 onChange={(e) => setPrompt(e.target.value)}
                 placeholder="Ej: Desarrollador frontend con 3 años de experiencia en React y TypeScript, busco trabajo remoto en Madrid..."
@@ -319,10 +361,15 @@ export default function JobSearchPage() {
             </div>
           )}
 
+          {searchMode === "cv" && (
+            <label className="flex items-start gap-2 mt-3 text-xs" style={{ color: "var(--olive-gray)" }}>
+              <input type="checkbox" checked={Boolean(workspace.privacyAcceptedAt)} onChange={(event) => event.target.checked && acceptPrivacy()} className="mt-0.5" />
+              <span>Acepto el procesamiento temporal del CV y confirmo que tengo derecho a utilizarlo. <Link to="/privacy" style={{ color: "var(--terracotta)" }}>Privacidad</Link>.</span>
+            </label>
+          )}
+
           {error && (
-            <div data-testid="search-error" className="mt-3 flex items-center gap-2 p-3 rounded-lg text-sm font-sans" style={{ backgroundColor: "rgba(181,51,51,0.08)", color: "var(--error-crimson)" }}>
-              <AlertCircle size={16} /> {error}
-            </div>
+            <div data-testid="search-error" className="mt-3"><StatusMessage tone="error">{error}</StatusMessage></div>
           )}
 
           <button
@@ -343,186 +390,11 @@ export default function JobSearchPage() {
           </button>
         </div>
 
-        {(fallbackRoleExperienceRows.length > 0 || normalizedRoleGroups.length > 0 || detectedProfile.role) && (
-          <div
-            data-testid="profile-summary"
-            className="rounded-2xl p-5 mb-7"
-            style={{
-              background: "linear-gradient(135deg, rgba(250,249,245,1) 0%, rgba(250,246,240,1) 100%)",
-              border: "1px solid var(--border-cream)",
-              boxShadow: "rgba(0,0,0,0.035) 0px 3px 18px"
-            }}
-          >
-            <div className="flex items-center justify-between gap-4 mb-4">
-              <div className="flex items-center gap-3">
-                <span className="inline-flex h-10 w-10 items-center justify-center rounded-lg" style={{ backgroundColor: "var(--near-black)" }}>
-                  <Sparkles size={18} style={{ color: "var(--coral)" }} />
-                </span>
-                <h3 className="font-serif" style={{ fontSize: "1.25rem", fontWeight: 500, color: "var(--near-black)" }}>
-                  Perfil Detectado
-                </h3>
-              </div>
-              {detectedProfile.skills?.length > 0 && (
-                <span className="rounded-full px-3 py-1 text-xs font-sans" style={{ backgroundColor: "rgba(20,20,19,0.06)", color: "var(--charcoal-warm)", fontWeight: 600 }}>
-                  {detectedProfile.skills.length} habilidades
-                </span>
-              )}
-            </div>
-
-            <div className="grid gap-3 sm:grid-cols-2">
-              {profileFacts.map(({ key, label, value, icon: Icon }) => (
-                <div
-                  key={key}
-                  className="rounded-lg px-3 py-3"
-                  style={{ backgroundColor: "rgba(255,255,255,0.62)", border: "1px solid var(--border-cream)" }}
-                >
-                  <div className="flex items-center gap-2 mb-1">
-                    <Icon size={15} style={{ color: "var(--terracotta)", flex: "0 0 auto" }} />
-                    <span className="text-xs font-sans uppercase" style={{ color: "var(--stone-gray)", fontWeight: 700, letterSpacing: "0.04em" }}>
-                      {label}
-                    </span>
-                  </div>
-                  <p className="font-sans text-sm m-0" style={{ color: "var(--near-black)", fontWeight: 600, lineHeight: 1.35 }}>
-                    {value}
-                  </p>
-                </div>
-              ))}
-            </div>
-
-            {fallbackRoleExperienceRows.length > 0 && (
-              <div className="rounded-lg px-3 py-3 mt-3" style={{ backgroundColor: "rgba(255,255,255,0.62)", border: "1px solid var(--border-cream)" }}>
-                <div className="flex items-center gap-2 mb-3">
-                  <Briefcase size={15} style={{ color: "var(--terracotta)", flex: "0 0 auto" }} />
-                  <span className="text-xs font-sans uppercase" style={{ color: "var(--stone-gray)", fontWeight: 700, letterSpacing: "0.04em" }}>
-                    Análisis de roles
-                  </span>
-                </div>
-
-                <div className="grid gap-3">
-                  {fallbackRoleExperienceRows.map((experience, index) => (
-                    <div
-                      key={`${experience.role}-${index}`}
-                      className="rounded-lg p-3"
-                      style={{ backgroundColor: "rgba(245,244,237,0.72)", border: "1px solid var(--border-warm)" }}
-                    >
-	                      <div className="grid gap-3 lg:grid-cols-[minmax(320px,1fr)_minmax(260px,320px)_minmax(120px,150px)_minmax(190px,220px)] lg:items-start">
-	                        <div className="min-w-0">
-	                          <p className="font-sans text-xs m-0 mb-1" style={{ color: "var(--stone-gray)", fontWeight: 700, letterSpacing: "0.04em", textTransform: "uppercase" }}>
-	                            Rol
-	                          </p>
-                          <p className="font-sans text-sm m-0" style={{ color: "var(--near-black)", fontWeight: 700, lineHeight: 1.35 }}>
-	                            {experience.role}
-	                          </p>
-	                        </div>
-
-	                        <div className="min-w-0">
-	                          <p className="font-sans text-xs m-0 mb-1" style={{ color: "var(--stone-gray)", fontWeight: 700, letterSpacing: "0.04em", textTransform: "uppercase" }}>
-	                            Rol normalizado
-	                          </p>
-	                          {experience.normalized ? (
-	                            <span
-	                              className="inline-flex max-w-full items-center gap-1.5 rounded-full px-3 py-1 text-xs font-sans"
-	                              style={{ backgroundColor: "rgba(201,100,66,0.09)", color: "var(--terracotta)", border: "1px solid rgba(201,100,66,0.12)", fontWeight: 700 }}
-	                            >
-	                              <BadgeCheck size={12} style={{ flex: "0 0 auto" }} />
-	                              <span className="truncate">{experience.normalized}</span>
-	                            </span>
-	                          ) : (
-	                            <span
-	                              className="inline-flex max-w-full items-center rounded-full px-3 py-1 text-xs font-sans"
-	                              style={{ backgroundColor: "rgba(20,20,19,0.045)", color: "var(--stone-gray)", border: "1px solid rgba(20,20,19,0.07)", fontWeight: 600 }}
-	                            >
-	                              Sin equivalencia directa
-	                            </span>
-	                          )}
-	                        </div>
-
-	                        <div className="min-w-0">
-	                          <p className="font-sans text-xs m-0 mb-1" style={{ color: "var(--stone-gray)", fontWeight: 700, letterSpacing: "0.04em", textTransform: "uppercase" }}>
-	                            Experiencia
-	                          </p>
-	                          {experience.seniority ? (
-	                            <span
-	                              className="inline-flex max-w-full items-center rounded-full px-3 py-1 text-xs font-sans"
-	                              style={{ backgroundColor: "rgba(20,20,19,0.06)", color: "var(--charcoal-warm)", border: "1px solid rgba(20,20,19,0.08)", fontWeight: 600 }}
-	                            >
-	                              {experience.seniority}
-	                            </span>
-	                          ) : (
-	                            <span className="font-sans text-xs" style={{ color: "var(--stone-gray)", fontWeight: 600 }}>No detectada</span>
-	                          )}
-	                        </div>
-
-	                        <div className="min-w-0">
-	                          <p className="font-sans text-xs m-0 mb-1" style={{ color: "var(--stone-gray)", fontWeight: 700, letterSpacing: "0.04em", textTransform: "uppercase" }}>
-	                            Ubicación
-	                          </p>
-	                          {experience.location ? (
-	                            <span
-	                              className="inline-flex max-w-full items-center gap-1.5 rounded-full px-3 py-1 text-xs font-sans"
-	                              style={{ backgroundColor: "rgba(20,20,19,0.045)", color: "var(--charcoal-warm)", border: "1px solid rgba(20,20,19,0.07)", fontWeight: 600 }}
-	                            >
-	                              <MapPin size={12} style={{ flex: "0 0 auto" }} />
-	                              <span className="truncate">{experience.location}</span>
-	                            </span>
-	                          ) : (
-	                            <span className="font-sans text-xs" style={{ color: "var(--stone-gray)", fontWeight: 600 }}>No detectada</span>
-	                          )}
-	                        </div>
-	                      </div>
-                    </div>
-                  ))}
-                </div>
-
-                {normalizedRoleGroups.length > 0 && (
-                  <div className="mt-3 pt-3" style={{ borderTop: "1px solid var(--border-cream)" }}>
-                    <p className="font-sans text-xs m-0 mb-2" style={{ color: "var(--stone-gray)", fontWeight: 700, letterSpacing: "0.04em", textTransform: "uppercase" }}>
-                      Roles normalizados agrupados
-                    </p>
-                    <div className="grid gap-2 sm:grid-cols-2">
-                      {normalizedRoleGroups.map(group => (
-                        <div
-                          key={group.occupation}
-                          className="rounded-lg px-3 py-2"
-                          style={{ backgroundColor: "rgba(255,255,255,0.55)", border: "1px solid var(--border-cream)" }}
-                        >
-                          <div className="flex items-center gap-2">
-                            <BadgeCheck size={13} style={{ color: "var(--terracotta)", flex: "0 0 auto" }} />
-                            <span className="font-sans text-xs" style={{ color: "var(--terracotta)", fontWeight: 700, lineHeight: 1.3 }}>
-                              {group.occupation}
-                            </span>
-                          </div>
-                          {group.source_roles.length > 1 && (
-                            <p className="font-sans text-xs m-0 mt-1" style={{ color: "var(--stone-gray)", lineHeight: 1.35 }}>
-                              Agrupa {group.source_roles.length} roles detectados
-                            </p>
-                          )}
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-              </div>
-            )}
-
-            {detectedProfile.skills?.length > 0 && (
-              <div className="mt-4">
-                <div className="flex flex-wrap gap-2">
-                  {detectedProfile.skills.map(s => (
-                    <span
-                      key={s}
-                      className="inline-flex items-center rounded-full px-3 py-1 text-xs font-sans"
-                      style={{ backgroundColor: "rgba(201,100,66,0.09)", color: "var(--terracotta)", border: "1px solid rgba(201,100,66,0.12)", fontWeight: 600 }}
-                    >
-                      {s}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            )}
-          </div>
-        )}
-
+        <ProfileSummary
+          profile={detectedProfile}
+          roleExperiences={fallbackRoleExperienceRows}
+          normalizedRoles={normalizedRoleGroups}
+        />
         {selectedOffers.length >= 2 && (
           <div data-testid="compare-bar" className="fixed bottom-6 left-1/2 -translate-x-1/2 z-40 flex items-center gap-3 px-6 py-3 rounded-2xl animate-fade-in-up" style={{ backgroundColor: "var(--near-black)", boxShadow: "rgba(0,0,0,0.2) 0px 8px 32px" }}>
             <GitCompareArrows size={18} style={{ color: "var(--coral)" }} />
@@ -549,90 +421,19 @@ export default function JobSearchPage() {
             </div>
             <div className="grid gap-4">
               {paginatedOffers.map((offer, i) => (
-                <div
+                <OfferCard
                   key={offer.id}
-                  data-testid={`offer-card-${offer.id}`}
-                  className="rounded-2xl p-5 transition-all opacity-0 animate-fade-in-up"
-                  style={{
-                    backgroundColor: "var(--ivory)",
-                    border: selectedOffers.includes(offer.id) ? "2px solid var(--terracotta)" : "1px solid var(--border-cream)",
-                    boxShadow: "rgba(0,0,0,0.03) 0px 2px 12px",
-                    animationDelay: `${i * 0.05}s`, animationFillMode: "forwards"
-                  }}
-                >
-                  <div className="flex flex-col md:flex-row md:items-start gap-4">
-                    <div className="flex-1">
-                      <div className="flex items-start justify-between mb-2">
-                        <div>
-                          <h3 className="font-serif" style={{ fontSize: "1.25rem", fontWeight: 500, color: "var(--near-black)", lineHeight: 1.2 }}>
-                            {offer.title}
-                          </h3>
-                          <div className="flex flex-wrap items-center gap-3 mt-1.5">
-                            <span className="flex items-center gap-1 text-sm font-sans" style={{ color: "var(--olive-gray)" }}>
-                              <Building2 size={14} /> {offer.company}
-                            </span>
-                            {offer.location && (
-                              <span className="flex items-center gap-1 text-sm font-sans" style={{ color: "var(--olive-gray)" }}>
-                                <MapPin size={14} /> {offer.location}
-                              </span>
-                            )}
-                            {offer.role && (
-                              <span className="flex items-center gap-1 text-sm font-sans" style={{ color: "var(--olive-gray)" }}>
-                                <Briefcase size={14} /> {offer.role}
-                              </span>
-                            )}
-                          </div>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <div className="px-3 py-1 rounded-full text-sm font-sans" style={{ backgroundColor: "rgba(201,100,66,0.12)", color: "var(--terracotta)", fontWeight: 600 }}>
-                            Top #{offer.rank}
-                          </div>
-                        </div>
-                      </div>
-
-                      <div className="w-full h-2 rounded-full mb-3" style={{ backgroundColor: "var(--border-cream)" }}>
-                        <div className="h-2 rounded-full" style={{ width: `${Math.max(35, 100 - i * 7)}%`, backgroundColor: "var(--terracotta)" }} />
-                      </div>
-
-                      {offer.matched_skills.length > 0 && (
-                        <div className="flex flex-wrap gap-1.5 mb-3">
-                          {offer.matched_skills.map(skill => (
-                            <span key={skill} className="px-2.5 py-0.5 rounded-md text-xs font-sans" style={{ backgroundColor: "rgba(201,100,66,0.08)", color: "var(--terracotta)", fontWeight: 500 }}>
-                              {skill}
-                            </span>
-                          ))}
-                        </div>
-                      )}
-                    </div>
-
-                    <div className="flex flex-col gap-2 self-start">
-                      {offer.url && (
-                        <a
-                          href={offer.url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          data-testid={`offer-link-${offer.id}`}
-                          className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-sans no-underline whitespace-nowrap"
-                          style={{ backgroundColor: "var(--terracotta)", color: "var(--ivory)", fontWeight: 500 }}
-                        >
-                          <ExternalLink size={12} /> Ver oferta
-                        </a>
-                      )}
-                      <button
-                        data-testid={`select-offer-${offer.id}`}
-                        onClick={() => toggleOfferSelection(offer.id)}
-                        className="px-3 py-2 rounded-lg text-xs font-sans whitespace-nowrap transition-all"
-                        style={{
-                          backgroundColor: selectedOffers.includes(offer.id) ? "var(--near-black)" : "var(--warm-sand)",
-                          color: selectedOffers.includes(offer.id) ? "var(--ivory)" : "var(--charcoal-warm)",
-                          fontWeight: 500
-                        }}
-                      >
-                        {selectedOffers.includes(offer.id) ? "Seleccionada" : "Comparar"}
-                      </button>
-                    </div>
-                  </div>
-                </div>
+                  offer={offer}
+                  animationDelay={i * 0.05}
+                  isSelected={selectedOffers.includes(offer.id)}
+                  isSaved={workspace.savedOffers.some((item) => item.id === offer.id)}
+                  feedback={workspace.offerFeedback[offer.id]?.value}
+                  onSave={() => toggleSavedOffer(offer)}
+                  onSelect={() => toggleOfferSelection(offer.id)}
+                  onCareerPlan={() => startCareerPlan(offer)}
+                  onApplication={() => prepareApplication(offer)}
+                  onFeedback={(value) => setOfferFeedback(offer.id, { value })}
+                />
               ))}
             </div>
             {totalPages > 1 && (
@@ -694,48 +495,7 @@ export default function JobSearchPage() {
         )}
 
         {compareMode && selectedOffers.length >= 2 && results && (
-          <div data-testid="compare-view">
-            <h2 className="font-serif mb-6" style={{ fontSize: "1.6rem", fontWeight: 500, color: "var(--near-black)" }}>
-              Comparación de Ofertas
-            </h2>
-            <div className="overflow-x-auto">
-              <div className="grid gap-4" style={{ gridTemplateColumns: `repeat(${selectedOffers.length}, minmax(280px, 1fr))` }}>
-                {results.offers.filter(o => selectedOffers.includes(o.id)).map(offer => (
-                  <div key={offer.id} data-testid={`compare-card-${offer.id}`} className="rounded-2xl p-5" style={{ backgroundColor: "var(--ivory)", border: "1px solid var(--border-cream)" }}>
-                    <div className="px-3 py-1 rounded-full text-sm font-sans inline-block mb-3" style={{ backgroundColor: "rgba(201,100,66,0.12)", color: "var(--terracotta)", fontWeight: 600 }}>
-                      Top #{offer.rank}
-                    </div>
-                    <h3 className="font-serif mb-1" style={{ fontSize: "1.1rem", fontWeight: 500, color: "var(--near-black)" }}>{offer.title}</h3>
-                    <p className="font-sans text-sm mb-4" style={{ color: "var(--olive-gray)" }}>{offer.company}</p>
-                    {[
-                      { label: "Ubicación", value: offer.location || "N/A" },
-                      { label: "Perfil", value: offer.role || "N/A" }
-                    ].map(row => (
-                      <div key={row.label} className="flex justify-between py-2 border-t" style={{ borderColor: "var(--border-cream)" }}>
-                        <span className="text-xs font-sans" style={{ color: "var(--stone-gray)" }}>{row.label}</span>
-                        <span className="text-xs font-sans" style={{ color: "var(--near-black)", fontWeight: 500 }}>{row.value}</span>
-                      </div>
-                    ))}
-                    {offer.matched_skills.length > 0 && (
-                      <div className="mt-3">
-                        <span className="text-xs font-sans" style={{ color: "var(--stone-gray)" }}>Habilidades coincidentes</span>
-                        <div className="flex flex-wrap gap-1 mt-1">
-                          {offer.matched_skills.map(s => (
-                            <span key={s} className="px-2 py-0.5 rounded-md text-xs font-sans" style={{ backgroundColor: "rgba(201,100,66,0.08)", color: "var(--terracotta)" }}>{s}</span>
-                          ))}
-                        </div>
-                      </div>
-                    )}
-                    {offer.url && (
-                      <a href={offer.url} target="_blank" rel="noopener noreferrer" className="mt-3 flex items-center gap-1 text-xs font-sans no-underline" style={{ color: "var(--terracotta)", fontWeight: 500 }}>
-                        <ExternalLink size={12} /> Ver oferta original
-                      </a>
-                    )}
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
+          <OfferComparison offers={results.offers.filter((offer) => selectedOffers.includes(offer.id))} />
         )}
       </div>
     </div>

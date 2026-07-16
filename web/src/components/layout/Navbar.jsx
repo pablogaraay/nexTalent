@@ -1,10 +1,12 @@
 import { useState } from "react";
-import { BarChart3, Menu, Search, TrendingUp, X } from "lucide-react";
+import { BarChart3, Compass, Menu, Search, TrendingUp, UserRound, X } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 
 const navLinks = [
   { path: "/search", label: "Buscar Empleo", icon: Search },
-  { path: "/skills", label: "Mercado", icon: BarChart3 }
+  { path: "/career", label: "Plan de Carrera", icon: Compass },
+  { path: "/skills", label: "Mercado", icon: BarChart3 },
+  { path: "/workspace", label: "Mi espacio", icon: UserRound }
 ];
 
 export default function Navbar() {
