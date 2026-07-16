@@ -26,6 +26,19 @@ class MongoManager:
       print("Servidor de MongoDB no disponible. Verifica la conexión.")
 
   def upsert_bulk_offers(self, coll: str, offers_array: list, stage_prefix: str):
+    active_only_collections = {
+      Config.STRUCTURED_COLL,
+      Config.CLEANED_COLL,
+      Config.LLM_RAW_COLL,
+      Config.MAPPED_COLL,
+    }
+    if coll in active_only_collections:
+      received_count = len(offers_array)
+      offers_array = [offer for offer in offers_array if offer.get("is_active", True) is not False]
+      skipped_count = received_count - len(offers_array)
+      if skipped_count:
+        print(f"Se han omitido {skipped_count} ofertas inactivas para la coleccion {coll}")
+
     if not offers_array:
       print(f"No hay ofertas para insertar en la coleccion {coll}")
       return
@@ -42,7 +55,7 @@ class MongoManager:
       if source_id is not None:
         set_on_insert["_id"] = source_id
 
-      is_active = bool(offer_without_id.get("is_active", True))
+      is_active = offer_without_id.get("is_active", True) is not False
       set_fields = {
         **offer_without_id,
         "is_active": is_active,
@@ -71,7 +84,13 @@ class MongoManager:
     except Exception as e:
       print(f"Error al insertar las ofertas: {e}")
 
-  def sync_active_urls(self, active_urls: list[str], collections: list[str]):
+  def sync_offer_activity(
+    self,
+    active_urls: list[str],
+    history_collection: str,
+    active_only_collections: list[str],
+  ) -> bool:
+    """Archive inactive offers in the source and remove them from derived stages."""
     active_urls = sorted({str(url or "").strip() for url in active_urls if str(url or "").strip()})
     min_urls = int(getattr(Config, "SCRAPER_ACTIVITY_SYNC_MIN_URLS", 1) or 1)
 
@@ -81,40 +100,55 @@ class MongoManager:
         f"solo se han detectado {len(active_urls)} URLs activas "
         f"(minimo configurado: {min_urls})."
       )
-      return
+      return False
 
     now = datetime.now(timezone.utc)
-    for coll in collections:
+    active_update = {
+      "$set": {
+        "is_active": True,
+        "activity_status": "active",
+        "missing_count": 0,
+        "last_seen_active_source": now,
+      },
+      "$unset": {"inactive_at": "", "inactive_reason": "", "last_missing_at": ""},
+    }
+
+    active_res = self.db[history_collection].update_many(
+      {"url": {"$in": active_urls}},
+      active_update,
+    )
+    inactive_res = self.db[history_collection].update_many(
+      {"url": {"$nin": active_urls}},
+      {
+        "$set": {
+          "is_active": False,
+          "activity_status": "inactive",
+          "inactive_at": now,
+          "inactive_reason": "not_seen_in_latest_scrape",
+          "last_missing_at": now,
+        },
+        "$inc": {"missing_count": 1},
+      },
+    )
+    print(
+      f"Actividad sincronizada en {history_collection}: "
+      f"{active_res.modified_count} reactivadas/actualizadas, "
+      f"{inactive_res.modified_count} archivadas como inactivas."
+    )
+
+    for coll in active_only_collections:
       active_res = self.db[coll].update_many(
         {"url": {"$in": active_urls}},
-        {
-          "$set": {
-            "is_active": True,
-            "activity_status": "active",
-            "missing_count": 0,
-            "last_seen_active_source": now,
-          },
-          "$unset": {"inactive_at": "", "inactive_reason": "", "last_missing_at": ""}
-        }
+        active_update,
       )
-      inactive_res = self.db[coll].update_many(
-        {"url": {"$nin": active_urls}},
-        {
-          "$set": {
-            "is_active": False,
-            "activity_status": "inactive",
-            "inactive_at": now,
-            "inactive_reason": "not_seen_in_latest_scrape",
-            "last_missing_at": now,
-          },
-          "$inc": {"missing_count": 1}
-        }
-      )
+      deleted_res = self.db[coll].delete_many({"url": {"$nin": active_urls}})
       print(
-        f"Actividad sincronizada en {coll}: "
-        f"{active_res.modified_count} reactivadas/actualizadas, "
-        f"{inactive_res.modified_count} marcadas como inactivas."
+        f"Coleccion activa depurada en {coll}: "
+        f"{active_res.modified_count} activas actualizadas, "
+        f"{deleted_res.deleted_count} inactivas eliminadas."
       )
+
+    return True
 
   def create_indexes(self):
     try:

@@ -100,10 +100,10 @@ def extract_offers(linkedin_api):
   if offers_array:
     db.upsert_bulk_offers(Config.SCRAPED_COLL, offers_array, "scraped")
     print("Se han insertado/actualizado todas las ofertas")
-  db.sync_active_urls(
+  db.sync_offer_activity(
     list(active_urls),
+    Config.SCRAPED_COLL,
     [
-      Config.SCRAPED_COLL,
       Config.STRUCTURED_COLL,
       Config.CLEANED_COLL,
       Config.LLM_RAW_COLL,

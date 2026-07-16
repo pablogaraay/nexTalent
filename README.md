@@ -260,6 +260,8 @@ python3 -m rag.index_offers
 
 Notas:
 - El flujo es incremental por `url` en Mongo.
+- `offers` conserva el historico: las ofertas que desaparecen del ultimo scraping se marcan como inactivas.
+- Las colecciones derivadas (`offers_structured`, `offers_cleaned`, `offers_llm_raw` y `offers_mapped`) contienen exclusivamente ofertas activas; el scraper elimina de ellas las ofertas que dejan de estar activas.
 - `llm_processor.py` procesa ofertas de `offers_cleaned` no presentes en `offers_llm_raw`.
 - `map_offers.py` procesa ofertas de `offers_llm_raw` no presentes en `offers_mapped`.
 
@@ -338,11 +340,11 @@ Servicios por defecto:
 ## Persistencia y colecciones
 
 MongoDB (`DB_NAME = nexTalent`):
-- `offers`
-- `offers_structured`
-- `offers_cleaned`
-- `offers_llm_raw`
-- `offers_mapped`
+- `offers`: fuente e historico de ofertas activas e inactivas.
+- `offers_structured`: ofertas activas estructuradas.
+- `offers_cleaned`: ofertas activas limpias.
+- `offers_llm_raw`: ofertas activas enriquecidas por el LLM.
+- `offers_mapped`: ofertas activas mapeadas a las taxonomias.
 - `wef_jobs_taxonomy`
 - `sfia_skills_taxonomy`
 

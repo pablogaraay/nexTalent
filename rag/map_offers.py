@@ -104,8 +104,8 @@ def main():
   args = parse_args()
   offer_repository = OfferRepository()
   if args.refresh_all:
-    source_offers = offer_repository.load_offers(Config.LLM_RAW_COLL, active_only=False)
-    print(f"Remapeo completo activado: se procesaran todas las ofertas de {Config.LLM_RAW_COLL}.")
+    source_offers = offer_repository.load_offers(Config.LLM_RAW_COLL, active_only=True)
+    print(f"Remapeo completo activado: se procesaran todas las ofertas activas de {Config.LLM_RAW_COLL}.")
   else:
     source_offers = offer_repository.load_unprocessed_offers(Config.LLM_RAW_COLL, Config.MAPPED_COLL)
     print(
