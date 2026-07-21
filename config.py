@@ -3,18 +3,11 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-
 def _env_bool(name, default=False):
   value = os.getenv(name)
   if value is None:
     return default
   return str(value).strip().lower() in {"1", "true", "yes", "on"}
-
-
-def _env_list(name):
-  value = os.getenv(name, "")
-  return [item.strip() for item in value.split(",") if item.strip()]
-
 
 class Config:
   #Scraper config
@@ -33,6 +26,7 @@ class Config:
   MAPPED_COLL = "offers_mapped"
   WEF_JOBS_TAXONOMY_COLL = "wef_jobs_taxonomy"
   SFIA_SKILLS_TAXONOMY_COLL = "sfia_skills_taxonomy"
+  ONET_TECHNOLOGIES_TAXONOMY_COLL = "onet_technologies_taxonomy"
 
   #LLM Config
   BATCH_SIZE = 2
@@ -44,6 +38,7 @@ class Config:
   OFFERS_CHROMA_COLLECTION = "offers"
   JOBS_CHROMA_COLLECTION = "wef_jobs"
   SKILLS_CHROMA_COLLECTION = "sfia_skills"
+  ONET_TECHNOLOGIES_CHROMA_COLLECTION = "onet_technologies"
   CHROMA_HOST = os.getenv("CHROMA_HOST", "").strip()
   CHROMA_PORT = int(os.getenv("CHROMA_PORT", "8000") or "8000")
   CHROMA_SSL = _env_bool("CHROMA_SSL", False)
@@ -59,5 +54,4 @@ class Config:
     "http://127.0.0.1:5173",
     "https://nextalent.info",
     "https://www.nextalent.info",
-    *_env_list("CORS_ALLOWED_ORIGINS_EXTRA"),
   ]

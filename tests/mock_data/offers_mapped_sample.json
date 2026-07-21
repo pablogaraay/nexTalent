@@ -10,6 +10,9 @@
     "hard_skills_raw": ["SQL"],
     "soft_skills_raw": ["trabajo en equipo"],
     "tools_raw": ["Python"],
+    "technologies_onet": [
+      {"technology_id": "TECH_PYTHON", "preferred_label": "Python", "category_id": "programming", "score": 1.0, "raw_evidence": ["Python"], "mapping_method": "exact_label_or_alias"}
+    ],
     "seniority_raw": "senior",
     "job_mapping": {
       "job_id_wef": "JOB_DATA_ENGINEER",
@@ -17,7 +20,6 @@
       "score": 0.91
     },
     "skills_sfia": [
-      {"skill_id": "SKILL_PY", "skill_name": "Python", "score": 0.93, "raw": "Python"},
       {"skill_id": "SKILL_SQL", "skill_name": "SQL", "score": 0.9, "raw": "SQL"}
     ]
   },
@@ -32,6 +34,10 @@
     "hard_skills_raw": ["SQL"],
     "soft_skills_raw": ["comunicación"],
     "tools_raw": ["Python", "Power BI"],
+    "technologies_onet": [
+      {"technology_id": "TECH_PYTHON", "preferred_label": "Python", "category_id": "programming", "score": 1.0, "raw_evidence": ["Python"], "mapping_method": "exact_label_or_alias"},
+      {"technology_id": "TECH_POWER_BI", "preferred_label": "Power BI", "category_id": "business_intelligence", "score": 1.0, "raw_evidence": ["Power BI"], "mapping_method": "exact_label_or_alias"}
+    ],
     "seniority_raw": "mid",
     "job_mapping": {
       "job_id_wef": "JOB_ANALYTICS_ENGINEER",
@@ -39,8 +45,7 @@
       "score": 0.87
     },
     "skills_sfia": [
-      {"skill_id": "SKILL_PY", "skill_name": "Python", "score": 0.92, "raw": "Python"},
-      {"skill_id": "SKILL_BI", "skill_name": "Business Intelligence", "score": 0.82, "raw": "Power BI"}
+      {"skill_id": "SKILL_SQL", "skill_name": "SQL", "score": 0.9, "raw": "SQL"}
     ]
   },
   {
@@ -54,6 +59,9 @@
     "hard_skills_raw": ["cloud"],
     "soft_skills_raw": ["comunicación"],
     "tools_raw": ["AWS"],
+    "technologies_onet": [
+      {"technology_id": "TECH_AMAZON_WEB_SERVICES_AWS", "preferred_label": "Amazon Web Services (AWS)", "category_id": "cloud", "score": 1.0, "raw_evidence": ["AWS"], "mapping_method": "exact_label_or_alias"}
+    ],
     "seniority_raw": "junior",
     "job_mapping": {
       "job_id_wef": "JOB_CLOUD_CONSULTANT",
@@ -61,7 +69,7 @@
       "score": 0.84
     },
     "skills_sfia": [
-      {"skill_id": "SKILL_AWS", "skill_name": "AWS", "score": 0.88, "raw": "AWS"}
+      {"skill_id": "SKILL_CLOUD", "skill_name": "Cloud computing", "score": 0.88, "raw": "cloud"}
     ]
   }
 ]

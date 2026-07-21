@@ -24,6 +24,7 @@ class SearchService:
     "country": 1,
     "job_mapping": 1,
     "skills_sfia": 1,
+    "technologies_onet": 1,
     "hard_skills_raw": 1,
     "soft_skills_raw": 1,
     "tools_raw": 1,
@@ -46,6 +47,10 @@ class SearchService:
     raw.extend(offer.get("soft_skills_raw", []) or [])
     raw.extend(offer.get("tools_raw", []) or [])
     raw.extend([(item or {}).get("skill_name", "") for item in (offer.get("skills_sfia", []) or [])])
+    raw.extend([
+      (item or {}).get("preferred_label", "")
+      for item in (offer.get("technologies_onet", []) or [])
+    ])
     return unique_keep_order([str(item) for item in raw])[:12]
 
   @staticmethod

@@ -43,7 +43,8 @@ services:
     environment:
       MONGO_URI: ${MONGO_URI:-mongodb://mongo:27017/nexTalent}
       GROQ_API_KEY: ${GROQ_API_KEY:-}
-      PORT: ${PORT:-8080}
+      AUTONOMOUS_AGENT_VERBOSE: ${AUTONOMOUS_AGENT_VERBOSE:-true}
+      PORT: "8080"
       OLLAMA_HOST: http://ollama:11434
     ports:
       - "8787:8080"

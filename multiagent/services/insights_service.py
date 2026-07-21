@@ -100,9 +100,11 @@ class InsightsService:
 
     offers_with_job_mapping = 0
     offers_with_skills_sfia = 0
+    offers_with_technologies_onet = 0
 
     jobs_counter: Dict[tuple, int] = {}
     skills_counter: Dict[tuple, int] = {}
+    technologies_counter: Dict[tuple, int] = {}
 
     for offer in filtered_offers:
       job_id = str(((offer.get("job_mapping") or {}).get("job_id_wef", "") or "")).strip()
@@ -126,6 +128,20 @@ class InsightsService:
         key = (skill_id, skill_name)
         skills_counter[key] = skills_counter.get(key, 0) + 1
 
+      technologies = offer.get("technologies_onet") or []
+      if technologies:
+        offers_with_technologies_onet += 1
+      seen_technology_ids = set()
+      for item in technologies:
+        technology_id = str(((item or {}).get("technology_id", "") or "")).strip()
+        preferred_label = str(((item or {}).get("preferred_label", "") or "")).strip()
+        category_id = str(((item or {}).get("category_id", "") or "")).strip()
+        if not technology_id or not preferred_label or technology_id in seen_technology_ids:
+          continue
+        seen_technology_ids.add(technology_id)
+        key = (technology_id, preferred_label, category_id)
+        technologies_counter[key] = technologies_counter.get(key, 0) + 1
+
     top_jobs = []
     for (job_id, job_family), demand in sorted(jobs_counter.items(), key=lambda x: x[1], reverse=True)[:top_n]:
       job_title = job_title_map.get(job_id, "")
@@ -142,6 +158,18 @@ class InsightsService:
       top_skills.append({
         "skill_id": skill_id,
         "skill_name": skill_name,
+        "demand": demand,
+        "share_total_offers_pct": self._safe_share(demand, total_offers),
+      })
+
+    top_technologies = []
+    for (technology_id, preferred_label, category_id), demand in sorted(
+      technologies_counter.items(), key=lambda x: x[1], reverse=True
+    )[:top_n]:
+      top_technologies.append({
+        "technology_id": technology_id,
+        "preferred_label": preferred_label,
+        "category_id": category_id,
         "demand": demand,
         "share_total_offers_pct": self._safe_share(demand, total_offers),
       })
@@ -168,9 +196,12 @@ class InsightsService:
         "filtered_offers": total_offers,
         "offers_with_job_mapping": offers_with_job_mapping,
         "offers_with_skills_sfia": offers_with_skills_sfia,
+        "offers_with_technologies_onet": offers_with_technologies_onet,
         "job_mapping_coverage_pct": self._safe_share(offers_with_job_mapping, total_offers),
         "skills_sfia_coverage_pct": self._safe_share(offers_with_skills_sfia, total_offers),
+        "technologies_onet_coverage_pct": self._safe_share(offers_with_technologies_onet, total_offers),
       },
       "top_jobs": top_jobs,
       "top_skills": top_skills,
+      "top_technologies": top_technologies,
     }

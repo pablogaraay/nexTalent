@@ -67,6 +67,7 @@ jobs:
           MONGO_URI: ${{ secrets.MONGO_URI }}
         run: |
           python -m rag.index_taxonomy
+          python -m rag.index_technology_taxonomy
 
       - name: Map offers (siempre)
         if: ${{ always() }}

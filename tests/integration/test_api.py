@@ -1,5 +1,4 @@
 import unittest
-import json
 from pathlib import Path
 from unittest.mock import patch
 
@@ -182,57 +181,3 @@ class TestApi(unittest.TestCase):
     self.assertEqual(params["region"], "Comunidad de Madrid")
     self.assertEqual(params["seniority"], "senior")
     self.assertEqual(params["job_family"], "Data and AI")
-
-  @patch("api.ExternalInsightsService")
-  def test_insights_upload_raw_json(self, service_class):
-    service = service_class.return_value
-    service.use_case_insights_from_raw_json.return_value = {
-      "source": "uploaded_raw_json",
-      "summary": {"filtered_offers": 1},
-      "top_jobs": [],
-      "top_skills": [],
-      "available_filters": {},
-      "required_fields": ["url", "title"],
-      "warnings": [],
-    }
-    raw_offers = [
-      {
-        "url": "external-1",
-        "title": "Data Engineer",
-        "company": "External",
-        "city": "Madrid",
-        "region": "Comunidad de Madrid",
-        "country": "Spain",
-        "role_raw": "Data Engineer",
-        "hard_skills_raw": ["SQL"],
-        "soft_skills_raw": [],
-        "tools_raw": ["Python"],
-        "seniority_raw": "junior",
-      }
-    ]
-
-    response = self.client.post(
-      "/api/insights/upload-raw",
-      data={"topN": "7", "city": "Madrid", "jobFamily": "Data and AI"},
-      files={"file": ("external.json", json.dumps(raw_offers).encode("utf-8"), "application/json")},
-    )
-
-    self.assertEqual(response.status_code, 200)
-    payload = response.json()
-    self.assertEqual(payload["source"], "uploaded_raw_json")
-    self.assertEqual(payload["result"]["summary"]["filtered_offers"], 1)
-    args, kwargs = service.use_case_insights_from_raw_json.call_args
-    self.assertEqual(args[0][0]["url"], "external-1")
-    self.assertEqual(kwargs["top_n"], 7)
-    self.assertEqual(kwargs["filters"]["city"], "Madrid")
-    self.assertEqual(kwargs["filters"]["job_family"], "Data and AI")
-
-  def test_insights_upload_raw_json_rejects_non_json_file(self):
-    response = self.client.post(
-      "/api/insights/upload-raw",
-      files={"file": ("external.txt", b"[]", "text/plain")},
-    )
-
-    self.assertEqual(response.status_code, 400)
-    self.assertIn("Solo se aceptan", response.json()["error"])
-    self.assertIn("role_raw", response.json()["required_fields"])

@@ -42,9 +42,12 @@ class TestInsightsService(unittest.TestCase):
     self.assertEqual(result["summary"]["filtered_offers"], 3)
     self.assertEqual(result["summary"]["offers_with_job_mapping"], 3)
     self.assertEqual(result["summary"]["offers_with_skills_sfia"], 3)
+    self.assertEqual(result["summary"]["offers_with_technologies_onet"], 3)
     self.assertEqual(result["top_jobs"][0]["job_title"], "Data Engineer")
-    self.assertEqual(result["top_skills"][0]["skill_name"], "Python")
+    self.assertEqual(result["top_skills"][0]["skill_name"], "SQL")
     self.assertEqual(result["top_skills"][0]["demand"], 2)
+    self.assertEqual(result["top_technologies"][0]["preferred_label"], "Python")
+    self.assertEqual(result["top_technologies"][0]["demand"], 2)
     self.assertIn(
       {"value": "Deloitte", "count": 2},
       result["available_filters"]["companies"],
@@ -63,7 +66,7 @@ class TestInsightsService(unittest.TestCase):
     self.assertEqual(result["summary"]["filtered_offers"], 1)
     self.assertEqual(result["applied_filters"]["company"], "Deloitte")
     self.assertEqual(result["top_jobs"][0]["job_id"], "JOB_DATA_ENGINEER")
-    self.assertEqual(result["top_skills"][0]["skill_name"], "Python")
+    self.assertEqual(result["top_skills"][0]["skill_name"], "SQL")
 
   def test_job_family_filter(self):
     filters = {"job_family": "Cloud"}
@@ -72,4 +75,4 @@ class TestInsightsService(unittest.TestCase):
 
     self.assertEqual(result["summary"]["filtered_offers"], 1)
     self.assertEqual(result["top_jobs"][0]["job_family"], "Cloud")
-    self.assertEqual(result["top_skills"][0]["skill_name"], "AWS")
+    self.assertEqual(result["top_skills"][0]["skill_name"], "Cloud computing")

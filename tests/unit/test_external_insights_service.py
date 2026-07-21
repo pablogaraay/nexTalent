@@ -30,11 +30,33 @@ class FakeCollection:
         "metadatas": [[{"skill_id": "SKILL_SQL", "skill_name": "SQL"}]],
         "distances": [[0.09]],
       }
+    if self.kind == "technologies" and "python" in query:
+      return {
+        "metadatas": [[{
+          "technology_id": "TECH_PYTHON",
+          "preferred_label": "Python",
+          "aliases": "",
+          "category_id": "programming",
+        }]],
+        "distances": [[0.04]],
+      }
     return {"metadatas": [[]], "distances": [[]]}
+
+  def get(self, include=None):
+    if self.kind == "technologies":
+      return {"metadatas": [{
+        "technology_id": "TECH_PYTHON",
+        "preferred_label": "Python",
+        "aliases": "",
+        "category_id": "programming",
+      }]}
+    return {"metadatas": []}
 
 
 class FakeVectorStore:
   def get_collection(self, name):
+    if "technolog" in name:
+      return FakeCollection("technologies")
     if "skill" in name:
       return FakeCollection("skills")
     return FakeCollection("jobs")
@@ -83,9 +105,11 @@ class TestExternalInsightsService(unittest.TestCase):
     self.assertEqual(result["top_jobs"][0]["job_title"], "Data Engineer")
     self.assertEqual(
       {item["skill_name"] for item in result["top_skills"]},
-      {"Python", "SQL"},
+      {"SQL"},
     )
     self.assertTrue(all(item["demand"] == 1 for item in result["top_skills"]))
+    self.assertEqual(result["top_technologies"][0]["preferred_label"], "Python")
+    self.assertEqual(result["summary"]["technologies_onet_coverage_pct"], 100.0)
 
   def test_rejects_non_array_json(self):
     with self.assertRaises(ValueError):

@@ -167,6 +167,8 @@ class MongoManager:
       self.db[Config.MAPPED_COLL].create_index([("region", 1)])
       self.db[Config.MAPPED_COLL].create_index([("seniority_raw", 1)])
       self.db[Config.MAPPED_COLL].create_index([("job_mapping.job_family_wef", 1)])
+      self.db[Config.MAPPED_COLL].create_index([("technologies_onet.technology_id", 1)])
+      self.db[Config.MAPPED_COLL].create_index([("technologies_onet.category_id", 1)])
       self.db[Config.MAPPED_COLL].create_index([
         ("is_active", 1),
         ("company", 1),
@@ -179,6 +181,10 @@ class MongoManager:
       self.db[Config.WEF_JOBS_TAXONOMY_COLL].create_index([("active", 1)])
       self.db[Config.SFIA_SKILLS_TAXONOMY_COLL].create_index([("skill_id", 1)], unique=True)
       self.db[Config.SFIA_SKILLS_TAXONOMY_COLL].create_index([("active", 1)])
+      self.db[Config.ONET_TECHNOLOGIES_TAXONOMY_COLL].create_index([("technology_id", 1)], unique=True)
+      self.db[Config.ONET_TECHNOLOGIES_TAXONOMY_COLL].create_index([("preferred_label", 1)])
+      self.db[Config.ONET_TECHNOLOGIES_TAXONOMY_COLL].create_index([("aliases", 1)])
+      self.db[Config.ONET_TECHNOLOGIES_TAXONOMY_COLL].create_index([("category_id", 1)])
 
     except Exception as e:
       print(f"Error al crear el indice: {e}")

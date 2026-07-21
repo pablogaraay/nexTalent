@@ -12,7 +12,7 @@ export function CareerSummary({ result }) {
         <span className="text-xs uppercase tracking-wider text-[var(--warm-silver)]">Objetivo profesional</span>
         <h2 className="font-serif mt-2 mb-3 text-3xl">{result.target_role}</h2>
         <p className="text-sm text-[var(--warm-silver)]">
-          Análisis construido con {result.market?.offers_analyzed || 0} ofertas y habilidades normalizadas mediante SFIA.
+          Análisis construido con {result.market?.offers_analyzed || 0} ofertas, competencias SFIA y tecnologías O*NET.
         </p>
         <p className="text-xs mt-2 text-[var(--warm-silver)]">
           Confianza de la muestra: {result.market?.confidence_label || "orientativa"}. La preparación mide cobertura de habilidades, no probabilidad de contratación.

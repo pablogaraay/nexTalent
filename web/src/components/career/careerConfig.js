@@ -1,4 +1,4 @@
-import { Users, Wrench } from "lucide-react";
+import { Cpu, Users, Wrench } from "lucide-react";
 
 export const PRIORITY_LABELS = {
   critical: "Crítica",
@@ -20,6 +20,14 @@ export const SKILL_TYPES = [
     subtitle: "Conocimientos técnicos y profesionales",
     icon: Wrench,
     color: "#c96442",
+  },
+  {
+    key: "technology",
+    label: "Tecnologías y herramientas",
+    shortLabel: "Tecnologías",
+    subtitle: "Software, plataformas, frameworks y herramientas concretas",
+    icon: Cpu,
+    color: "#3f6f82",
   },
   {
     key: "soft",

@@ -3,6 +3,7 @@ from __future__ import annotations
 from typing import Any, Dict, List
 
 from config import Config
+from rag.technology_mapping import build_exact_technology_index, match_technology
 from repositories.vector_store import VectorStore
 from utils.text import unique_keep_order
 from ..llm_client import LLMClientService
@@ -66,7 +67,7 @@ class ExternalInsightsService:
   @staticmethod
   def _clean_skill_inputs(offer: Dict[str, Any]) -> List[str]:
     skill_inputs: List[str] = []
-    for field in ["hard_skills_raw", "soft_skills_raw", "tools_raw"]:
+    for field in ["hard_skills_raw", "soft_skills_raw"]:
       values = offer.get(field, []) or []
       if isinstance(values, str):
         values = [values]
@@ -117,15 +118,19 @@ class ExternalInsightsService:
 
     jobs_collection = self.vector_store.get_collection(Config.JOBS_CHROMA_COLLECTION)
     skills_collection = self.vector_store.get_collection(Config.SKILLS_CHROMA_COLLECTION)
+    technologies_collection = self.vector_store.get_collection(Config.ONET_TECHNOLOGIES_CHROMA_COLLECTION)
+    exact_technology_index = build_exact_technology_index(technologies_collection)
 
     mapped_offers: List[Dict[str, Any]] = []
     unmapped_roles = 0
     offers_without_mapped_skills = 0
+    offers_without_mapped_technologies = 0
 
     for offer in active_offers:
       mapped_offer = dict(offer)
       mapped_offer["job_mapping"] = {}
       mapped_offer["skills_sfia"] = []
+      mapped_offer["technologies_onet"] = []
 
       role_match = self._best_match(jobs_collection, mapped_offer.get("role_raw", ""), ROLE_LIMIT)
       if role_match["status"] == "mapped" and role_match["top1"]:
@@ -157,12 +162,55 @@ class ExternalInsightsService:
       if not skills_mapped:
         offers_without_mapped_skills += 1
 
+      technologies_mapped = []
+      seen_technology_ids = set()
+      technology_inputs = [
+        *[(str(item), True) for item in (mapped_offer.get("tools_raw", []) or [])],
+        *[(str(item), False) for item in (mapped_offer.get("hard_skills_raw", []) or [])],
+      ]
+      seen_inputs = set()
+      for technology, allow_semantic in technology_inputs:
+        input_key = technology.strip().casefold()
+        if not input_key or input_key in seen_inputs:
+          continue
+        seen_inputs.add(input_key)
+        technology_match = match_technology(
+          technologies_collection,
+          technology,
+          self.llm_client_service.embed_text,
+          exact_index=exact_technology_index,
+          allow_semantic=allow_semantic,
+        )
+        if technology_match["status"] != "mapped" or not technology_match["top1"]:
+          continue
+        metadata = technology_match["top1"]["metadata"] or {}
+        technology_id = str(metadata.get("technology_id", "") or "").strip()
+        if not technology_id or technology_id in seen_technology_ids:
+          continue
+        seen_technology_ids.add(technology_id)
+        technologies_mapped.append({
+          "technology_id": technology_id,
+          "preferred_label": metadata.get("preferred_label", ""),
+          "category_id": metadata.get("category_id", ""),
+          "score": technology_match["top1"]["score"],
+          "raw_evidence": [technology],
+          "mapping_method": technology_match.get("method", "semantic"),
+        })
+
+      mapped_offer["technologies_onet"] = technologies_mapped
+      if (mapped_offer.get("tools_raw") or []) and not technologies_mapped:
+        offers_without_mapped_technologies += 1
+
       mapped_offers.append(mapped_offer)
 
     if unmapped_roles:
       warnings.append(f"{unmapped_roles} ofertas no pudieron mapearse a la taxonomía de perfiles.")
     if offers_without_mapped_skills:
       warnings.append(f"{offers_without_mapped_skills} ofertas no tuvieron habilidades mapeadas.")
+    if offers_without_mapped_technologies:
+      warnings.append(
+        f"{offers_without_mapped_technologies} ofertas no tuvieron tecnologías normalizadas con O*NET."
+      )
 
     return mapped_offers, warnings
 

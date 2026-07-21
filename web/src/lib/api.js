@@ -24,11 +24,6 @@ export const insightsAPI = {
     api.get("/insights", {
       params,
       timeout: 60000
-    }),
-  uploadRaw: (formData) =>
-    api.post("/insights/upload-raw", formData, {
-      headers: { "Content-Type": "multipart/form-data" },
-      timeout: 180000
     })
 };
 

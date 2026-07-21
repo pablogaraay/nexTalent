@@ -1,0 +1,2413 @@
+[
+  {
+    "technology_id": "TECH_MICROSOFT_OFFICE",
+    "preferred_label": "Microsoft Office",
+    "aliases": [
+      "Microsoft 365",
+      "Microsoft Office software",
+      "MS Office",
+      "Office",
+      "Office 365"
+    ],
+    "category_id": "productivity"
+  },
+  {
+    "technology_id": "TECH_EXCEL",
+    "preferred_label": "Excel",
+    "aliases": [
+      "Microsoft Excel"
+    ],
+    "category_id": "productivity"
+  },
+  {
+    "technology_id": "TECH_POWERPOINT",
+    "preferred_label": "PowerPoint",
+    "aliases": [
+      "Microsoft PowerPoint",
+      "MS PowerPoint",
+      "Power Point"
+    ],
+    "category_id": "productivity"
+  },
+  {
+    "technology_id": "TECH_OUTLOOK",
+    "preferred_label": "Outlook",
+    "aliases": [
+      "Microsoft Outlook"
+    ],
+    "category_id": "productivity"
+  },
+  {
+    "technology_id": "TECH_WORD",
+    "preferred_label": "Word",
+    "aliases": [
+      "Microsoft Word"
+    ],
+    "category_id": "productivity"
+  },
+  {
+    "technology_id": "TECH_PYTHON",
+    "preferred_label": "Python",
+    "aliases": [],
+    "category_id": "programming"
+  },
+  {
+    "technology_id": "TECH_SAP",
+    "preferred_label": "SAP",
+    "aliases": [
+      "SAP software"
+    ],
+    "category_id": "enterprise_apps"
+  },
+  {
+    "technology_id": "TECH_AUTODESK_AUTOCAD",
+    "preferred_label": "Autodesk AutoCAD",
+    "aliases": [],
+    "category_id": "engineering_design"
+  },
+  {
+    "technology_id": "TECH_SQL",
+    "preferred_label": "SQL",
+    "aliases": [
+      "Structured Query Language",
+      "Structured query language SQL"
+    ],
+    "category_id": "databases"
+  },
+  {
+    "technology_id": "TECH_ADOBE_PHOTOSHOP",
+    "preferred_label": "Adobe Photoshop",
+    "aliases": [],
+    "category_id": "creative_media"
+  },
+  {
+    "technology_id": "TECH_R",
+    "preferred_label": "R",
+    "aliases": [],
+    "category_id": "programming"
+  },
+  {
+    "technology_id": "TECH_C_PLUS_PLUS",
+    "preferred_label": "C++",
+    "aliases": [
+      "CPP"
+    ],
+    "category_id": "programming"
+  },
+  {
+    "technology_id": "TECH_MICROSOFT_ACCESS",
+    "preferred_label": "Microsoft Access",
+    "aliases": [],
+    "category_id": "databases"
+  },
+  {
+    "technology_id": "TECH_LINUX",
+    "preferred_label": "Linux",
+    "aliases": [],
+    "category_id": "infrastructure"
+  },
+  {
+    "technology_id": "TECH_MATLAB",
+    "preferred_label": "MATLAB",
+    "aliases": [
+      "The MathWorks MATLAB"
+    ],
+    "category_id": "scientific"
+  },
+  {
+    "technology_id": "TECH_ARCGIS",
+    "preferred_label": "ArcGIS",
+    "aliases": [
+      "ESRI ArcGIS",
+      "ESRI ArcGIS software"
+    ],
+    "category_id": "geospatial"
+  },
+  {
+    "technology_id": "TECH_ADOBE_ILLUSTRATOR",
+    "preferred_label": "Adobe Illustrator",
+    "aliases": [],
+    "category_id": "creative_media"
+  },
+  {
+    "technology_id": "TECH_JAVA",
+    "preferred_label": "Java",
+    "aliases": [
+      "Oracle Java"
+    ],
+    "category_id": "programming"
+  },
+  {
+    "technology_id": "TECH_MICROSOFT_SHAREPOINT",
+    "preferred_label": "Microsoft SharePoint",
+    "aliases": [
+      "Sharepoint",
+      "SharePoint Online"
+    ],
+    "category_id": "productivity"
+  },
+  {
+    "technology_id": "TECH_ADOBE_CREATIVE_CLOUD_SOFTWARE",
+    "preferred_label": "Adobe Creative Cloud software",
+    "aliases": [],
+    "category_id": "creative_media"
+  },
+  {
+    "technology_id": "TECH_SALESFORCE",
+    "preferred_label": "Salesforce",
+    "aliases": [
+      "Salesforce software"
+    ],
+    "category_id": "enterprise_apps"
+  },
+  {
+    "technology_id": "TECH_AMAZON_WEB_SERVICES_AWS",
+    "preferred_label": "Amazon Web Services (AWS)",
+    "aliases": [
+      "Amazon Web Services",
+      "Amazon Web Services AWS software",
+      "AWS"
+    ],
+    "category_id": "cloud"
+  },
+  {
+    "technology_id": "TECH_SAS",
+    "preferred_label": "SAS",
+    "aliases": [],
+    "category_id": "scientific"
+  },
+  {
+    "technology_id": "TECH_TABLEAU",
+    "preferred_label": "Tableau",
+    "aliases": [],
+    "category_id": "business_intelligence"
+  },
+  {
+    "technology_id": "TECH_MICROSOFT_AZURE",
+    "preferred_label": "Microsoft Azure",
+    "aliases": [
+      "Azure",
+      "Microsoft Azure software"
+    ],
+    "category_id": "cloud"
+  },
+  {
+    "technology_id": "TECH_JAVASCRIPT",
+    "preferred_label": "JavaScript",
+    "aliases": [],
+    "category_id": "programming"
+  },
+  {
+    "technology_id": "TECH_ADOBE_INDESIGN",
+    "preferred_label": "Adobe InDesign",
+    "aliases": [],
+    "category_id": "creative_media"
+  },
+  {
+    "technology_id": "TECH_C",
+    "preferred_label": "C",
+    "aliases": [],
+    "category_id": "programming"
+  },
+  {
+    "technology_id": "TECH_JIRA",
+    "preferred_label": "Jira",
+    "aliases": [
+      "Atlassian Jira",
+      "Atlassian JIRA"
+    ],
+    "category_id": "enterprise_apps"
+  },
+  {
+    "technology_id": "TECH_DASSAULT_SYSTEMES_SOLIDWORKS",
+    "preferred_label": "Dassault Systemes SolidWorks",
+    "aliases": [],
+    "category_id": "engineering_design"
+  },
+  {
+    "technology_id": "TECH_HTML",
+    "preferred_label": "HTML",
+    "aliases": [
+      "HyperText Markup Language",
+      "Hypertext markup language HTML"
+    ],
+    "category_id": "web_mobile"
+  },
+  {
+    "technology_id": "TECH_GIT",
+    "preferred_label": "Git",
+    "aliases": [],
+    "category_id": "devops"
+  },
+  {
+    "technology_id": "TECH_C_SHARP",
+    "preferred_label": "C#",
+    "aliases": [
+      "C Sharp",
+      "csharp"
+    ],
+    "category_id": "programming"
+  },
+  {
+    "technology_id": "TECH_MICROSOFT_WINDOWS",
+    "preferred_label": "Microsoft Windows",
+    "aliases": [],
+    "category_id": "infrastructure"
+  },
+  {
+    "technology_id": "TECH_AUTODESK_REVIT",
+    "preferred_label": "Autodesk Revit",
+    "aliases": [],
+    "category_id": "engineering_design"
+  },
+  {
+    "technology_id": "TECH_POWER_BI",
+    "preferred_label": "Power BI",
+    "aliases": [
+      "Microsoft Power BI",
+      "PowerBI"
+    ],
+    "category_id": "business_intelligence"
+  },
+  {
+    "technology_id": "TECH_BENTLEY_MICROSTATION",
+    "preferred_label": "Bentley MicroStation",
+    "aliases": [],
+    "category_id": "engineering_design"
+  },
+  {
+    "technology_id": "TECH_UNIX",
+    "preferred_label": "UNIX",
+    "aliases": [],
+    "category_id": "infrastructure"
+  },
+  {
+    "technology_id": "TECH_MICROSOFT_VISIO",
+    "preferred_label": "Microsoft Visio",
+    "aliases": [],
+    "category_id": "productivity"
+  },
+  {
+    "technology_id": "TECH_MICROSOFT_PROJECT",
+    "preferred_label": "Microsoft Project",
+    "aliases": [
+      "MS Project"
+    ],
+    "category_id": "enterprise_apps"
+  },
+  {
+    "technology_id": "TECH_ZOOM",
+    "preferred_label": "Zoom",
+    "aliases": [],
+    "category_id": "productivity"
+  },
+  {
+    "technology_id": "TECH_INTUIT_QUICKBOOKS",
+    "preferred_label": "Intuit QuickBooks",
+    "aliases": [],
+    "category_id": "enterprise_apps"
+  },
+  {
+    "technology_id": "TECH_CSS",
+    "preferred_label": "CSS",
+    "aliases": [
+      "Cascading Style Sheets",
+      "Cascading style sheets CSS"
+    ],
+    "category_id": "web_mobile"
+  },
+  {
+    "technology_id": "TECH_AUTODESK_AUTOCAD_CIVIL_3D",
+    "preferred_label": "Autodesk AutoCAD Civil 3D",
+    "aliases": [],
+    "category_id": "engineering_design"
+  },
+  {
+    "technology_id": "TECH_MICROSOFT_SQL_SERVER",
+    "preferred_label": "Microsoft SQL Server",
+    "aliases": [],
+    "category_id": "databases"
+  },
+  {
+    "technology_id": "TECH_SPSS",
+    "preferred_label": "SPSS",
+    "aliases": [
+      "IBM SPSS Statistics"
+    ],
+    "category_id": "scientific"
+  },
+  {
+    "technology_id": "TECH_GITHUB",
+    "preferred_label": "GitHub",
+    "aliases": [],
+    "category_id": "devops"
+  },
+  {
+    "technology_id": "TECH_ADOBE_AFTER_EFFECTS",
+    "preferred_label": "Adobe After Effects",
+    "aliases": [],
+    "category_id": "creative_media"
+  },
+  {
+    "technology_id": "TECH_POWERSHELL",
+    "preferred_label": "PowerShell",
+    "aliases": [
+      "Microsoft PowerShell"
+    ],
+    "category_id": "programming"
+  },
+  {
+    "technology_id": "TECH_BASH",
+    "preferred_label": "Bash",
+    "aliases": [],
+    "category_id": "programming"
+  },
+  {
+    "technology_id": "TECH_DOCKER",
+    "preferred_label": "Docker",
+    "aliases": [
+      "Docker Compose",
+      "Docker-Compose"
+    ],
+    "category_id": "devops"
+  },
+  {
+    "technology_id": "TECH_GOOGLE_ANALYTICS",
+    "preferred_label": "Google Analytics",
+    "aliases": [],
+    "category_id": "business_intelligence"
+  },
+  {
+    "technology_id": "TECH_ADOBE_ACROBAT",
+    "preferred_label": "Adobe Acrobat",
+    "aliases": [],
+    "category_id": "productivity"
+  },
+  {
+    "technology_id": "TECH_XML",
+    "preferred_label": "XML",
+    "aliases": [
+      "Extensible Markup Language",
+      "Extensible markup language XML"
+    ],
+    "category_id": "data_engineering"
+  },
+  {
+    "technology_id": "TECH_LEARNING_MANAGEMENT_SYSTEM_LMS",
+    "preferred_label": "Learning management system LMS",
+    "aliases": [],
+    "category_id": "industry_specific"
+  },
+  {
+    "technology_id": "TECH_MICROSOFT_TEAMS",
+    "preferred_label": "Microsoft Teams",
+    "aliases": [],
+    "category_id": "enterprise_apps"
+  },
+  {
+    "technology_id": "TECH_SPLUNK_ENTERPRISE",
+    "preferred_label": "Splunk Enterprise",
+    "aliases": [
+      "Splunk"
+    ],
+    "category_id": "devops"
+  },
+  {
+    "technology_id": "TECH_TRIMBLE_SKETCHUP_PRO",
+    "preferred_label": "Trimble SketchUp Pro",
+    "aliases": [],
+    "category_id": "engineering_design"
+  },
+  {
+    "technology_id": "TECH_GO",
+    "preferred_label": "Go",
+    "aliases": [],
+    "category_id": "programming"
+  },
+  {
+    "technology_id": "TECH_APACHE_KAFKA",
+    "preferred_label": "Apache Kafka",
+    "aliases": [
+      "Kafka"
+    ],
+    "category_id": "data_engineering"
+  },
+  {
+    "technology_id": "TECH_SERVICENOW",
+    "preferred_label": "ServiceNow",
+    "aliases": [],
+    "category_id": "enterprise_apps"
+  },
+  {
+    "technology_id": "TECH_KUBERNETES",
+    "preferred_label": "Kubernetes",
+    "aliases": [
+      "K8s"
+    ],
+    "category_id": "devops"
+  },
+  {
+    "technology_id": "TECH_PERL",
+    "preferred_label": "Perl",
+    "aliases": [],
+    "category_id": "programming"
+  },
+  {
+    "technology_id": "TECH_MICROSOFT_ACTIVE_DIRECTORY",
+    "preferred_label": "Microsoft Active Directory",
+    "aliases": [],
+    "category_id": "infrastructure"
+  },
+  {
+    "technology_id": "TECH_POSTGRESQL",
+    "preferred_label": "PostgreSQL",
+    "aliases": [
+      "Postgres"
+    ],
+    "category_id": "databases"
+  },
+  {
+    "technology_id": "TECH_APACHE_HADOOP",
+    "preferred_label": "Apache Hadoop",
+    "aliases": [
+      "Hadoop"
+    ],
+    "category_id": "data_engineering"
+  },
+  {
+    "technology_id": "TECH_ANSIBLE",
+    "preferred_label": "Ansible",
+    "aliases": [
+      "Ansible software"
+    ],
+    "category_id": "devops"
+  },
+  {
+    "technology_id": "TECH_APPLE_MACOS",
+    "preferred_label": "Apple macOS",
+    "aliases": [],
+    "category_id": "infrastructure"
+  },
+  {
+    "technology_id": "TECH_GOOGLE_WORKSPACE_SOFTWARE",
+    "preferred_label": "Google Workspace software",
+    "aliases": [],
+    "category_id": "productivity"
+  },
+  {
+    "technology_id": "TECH_ORACLE_DATABASE",
+    "preferred_label": "Oracle Database",
+    "aliases": [],
+    "category_id": "databases"
+  },
+  {
+    "technology_id": "TECH_MYSQL",
+    "preferred_label": "MySQL",
+    "aliases": [],
+    "category_id": "databases"
+  },
+  {
+    "technology_id": "TECH_PHP",
+    "preferred_label": "PHP",
+    "aliases": [],
+    "category_id": "programming"
+  },
+  {
+    "technology_id": "TECH_APACHE_SPARK",
+    "preferred_label": "Apache Spark",
+    "aliases": [
+      "Spark"
+    ],
+    "category_id": "data_engineering"
+  },
+  {
+    "technology_id": "TECH_GEOGRAPHIC_INFORMATION_SYSTEM_GIS_SYSTEMS",
+    "preferred_label": "Geographic information system GIS systems",
+    "aliases": [],
+    "category_id": "geospatial"
+  },
+  {
+    "technology_id": "TECH_VBA",
+    "preferred_label": "VBA",
+    "aliases": [
+      "Excel Macros",
+      "Microsoft Visual Basic for Applications VBA",
+      "VBA/Macros",
+      "Visual Basic for Applications"
+    ],
+    "category_id": "programming"
+  },
+  {
+    "technology_id": "TECH_NOSQL",
+    "preferred_label": "NoSQL",
+    "aliases": [],
+    "category_id": "databases"
+  },
+  {
+    "technology_id": "TECH_WORDPRESS",
+    "preferred_label": "WordPress",
+    "aliases": [],
+    "category_id": "web_mobile"
+  },
+  {
+    "technology_id": "TECH_WORKDAY",
+    "preferred_label": "Workday",
+    "aliases": [
+      "Workday software"
+    ],
+    "category_id": "enterprise_apps"
+  },
+  {
+    "technology_id": "TECH_MONGODB",
+    "preferred_label": "MongoDB",
+    "aliases": [
+      "Mongo DB"
+    ],
+    "category_id": "databases"
+  },
+  {
+    "technology_id": "TECH_TERRAFORM",
+    "preferred_label": "Terraform",
+    "aliases": [
+      "HashiCorp Terraform",
+      "IBM Terraform"
+    ],
+    "category_id": "devops"
+  },
+  {
+    "technology_id": "TECH_MOZILLA_FIREFOX",
+    "preferred_label": "Mozilla Firefox",
+    "aliases": [],
+    "category_id": "industry_specific"
+  },
+  {
+    "technology_id": "TECH_JENKINS_CI",
+    "preferred_label": "Jenkins CI",
+    "aliases": [
+      "Jenkins"
+    ],
+    "category_id": "devops"
+  },
+  {
+    "technology_id": "TECH_CANVA",
+    "preferred_label": "Canva",
+    "aliases": [],
+    "category_id": "creative_media"
+  },
+  {
+    "technology_id": "TECH_NODE_JS",
+    "preferred_label": "Node.js",
+    "aliases": [
+      "NodeJS"
+    ],
+    "category_id": "web_mobile"
+  },
+  {
+    "technology_id": "TECH_CONFLUENCE",
+    "preferred_label": "Confluence",
+    "aliases": [
+      "Atlassian Confluence"
+    ],
+    "category_id": "productivity"
+  },
+  {
+    "technology_id": "TECH_REACT",
+    "preferred_label": "React",
+    "aliases": [],
+    "category_id": "web_mobile"
+  },
+  {
+    "technology_id": "TECH_YARDI_SOFTWARE",
+    "preferred_label": "Yardi software",
+    "aliases": [],
+    "category_id": "enterprise_apps"
+  },
+  {
+    "technology_id": "TECH_APPLE_SAFARI",
+    "preferred_label": "Apple Safari",
+    "aliases": [],
+    "category_id": "industry_specific"
+  },
+  {
+    "technology_id": "TECH_ECLIPSE_IDE",
+    "preferred_label": "Eclipse IDE",
+    "aliases": [],
+    "category_id": "programming"
+  },
+  {
+    "technology_id": "TECH_ANGULAR",
+    "preferred_label": "Angular",
+    "aliases": [
+      "Google Angular"
+    ],
+    "category_id": "web_mobile"
+  },
+  {
+    "technology_id": "TECH_MICROSOFT_WINDOWS_SERVER",
+    "preferred_label": "Microsoft Windows Server",
+    "aliases": [],
+    "category_id": "infrastructure"
+  },
+  {
+    "technology_id": "TECH_MICROSOFT_VISUAL_STUDIO",
+    "preferred_label": "Microsoft Visual Studio",
+    "aliases": [],
+    "category_id": "programming"
+  },
+  {
+    "technology_id": "TECH_SHELL_SCRIPT",
+    "preferred_label": "Shell script",
+    "aliases": [],
+    "category_id": "programming"
+  },
+  {
+    "technology_id": "TECH_FIGMA",
+    "preferred_label": "Figma",
+    "aliases": [],
+    "category_id": "creative_media"
+  },
+  {
+    "technology_id": "TECH_GOOGLE_DOCS",
+    "preferred_label": "Google Docs",
+    "aliases": [],
+    "category_id": "productivity"
+  },
+  {
+    "technology_id": "TECH_SCALA",
+    "preferred_label": "Scala",
+    "aliases": [],
+    "category_id": "programming"
+  },
+  {
+    "technology_id": "TECH_MICROSOFT_VISUAL_BASIC",
+    "preferred_label": "Microsoft Visual Basic",
+    "aliases": [],
+    "category_id": "programming"
+  },
+  {
+    "technology_id": "TECH_MICROSOFT_EDGE",
+    "preferred_label": "Microsoft Edge",
+    "aliases": [],
+    "category_id": "industry_specific"
+  },
+  {
+    "technology_id": "TECH_DOTNET_FRAMEWORK",
+    "preferred_label": ".NET Framework",
+    "aliases": [
+      "dotnet",
+      "Microsoft .NET",
+      "Microsoft .NET Framework",
+      ".NET"
+    ],
+    "category_id": "programming"
+  },
+  {
+    "technology_id": "TECH_ORACLE_PEOPLESOFT",
+    "preferred_label": "Oracle PeopleSoft",
+    "aliases": [],
+    "category_id": "enterprise_apps"
+  },
+  {
+    "technology_id": "TECH_APPLE_IOS",
+    "preferred_label": "Apple iOS",
+    "aliases": [],
+    "category_id": "web_mobile"
+  },
+  {
+    "technology_id": "TECH_TYPESCRIPT",
+    "preferred_label": "TypeScript",
+    "aliases": [
+      "TS"
+    ],
+    "category_id": "programming"
+  },
+  {
+    "technology_id": "TECH_SNOWFLAKE",
+    "preferred_label": "Snowflake",
+    "aliases": [],
+    "category_id": "databases"
+  },
+  {
+    "technology_id": "TECH_FIREWALL_SOFTWARE",
+    "preferred_label": "Firewall software",
+    "aliases": [],
+    "category_id": "cybersecurity"
+  },
+  {
+    "technology_id": "TECH_SPRING_FRAMEWORK",
+    "preferred_label": "Spring Framework",
+    "aliases": [],
+    "category_id": "web_mobile"
+  },
+  {
+    "technology_id": "TECH_AMAZON_REDSHIFT",
+    "preferred_label": "Amazon Redshift",
+    "aliases": [
+      "Redshift"
+    ],
+    "category_id": "databases"
+  },
+  {
+    "technology_id": "TECH_JQUERY",
+    "preferred_label": "jQuery",
+    "aliases": [],
+    "category_id": "web_mobile"
+  },
+  {
+    "technology_id": "TECH_JSON",
+    "preferred_label": "JSON",
+    "aliases": [
+      "JavaScript Object Notation",
+      "JavaScript Object Notation JSON"
+    ],
+    "category_id": "web_mobile"
+  },
+  {
+    "technology_id": "TECH_RED_HAT_ENTERPRISE_LINUX",
+    "preferred_label": "Red Hat Enterprise Linux",
+    "aliases": [],
+    "category_id": "infrastructure"
+  },
+  {
+    "technology_id": "TECH_SPRING_BOOT",
+    "preferred_label": "Spring Boot",
+    "aliases": [],
+    "category_id": "web_mobile"
+  },
+  {
+    "technology_id": "TECH_ORACLE_PL_SQL",
+    "preferred_label": "Oracle PL/SQL",
+    "aliases": [],
+    "category_id": "databases"
+  },
+  {
+    "technology_id": "TECH_ORACLE_PRIMAVERA_ENTERPRISE_PROJECT_PORTFOLIO_MANAGEMENT",
+    "preferred_label": "Oracle Primavera Enterprise Project Portfolio Management",
+    "aliases": [],
+    "category_id": "enterprise_apps"
+  },
+  {
+    "technology_id": "TECH_SELENIUM",
+    "preferred_label": "Selenium",
+    "aliases": [],
+    "category_id": "devops"
+  },
+  {
+    "technology_id": "TECH_GOOGLE_ANDROID",
+    "preferred_label": "Google Android",
+    "aliases": [],
+    "category_id": "web_mobile"
+  },
+  {
+    "technology_id": "TECH_TERADATA_DATABASE",
+    "preferred_label": "Teradata Database",
+    "aliases": [],
+    "category_id": "databases"
+  },
+  {
+    "technology_id": "TECH_AWS_CLOUDFORMATION",
+    "preferred_label": "AWS CloudFormation",
+    "aliases": [
+      "Amazon Web Services AWS CloudFormation",
+      "cloud formation",
+      "CloudFormation"
+    ],
+    "category_id": "cloud"
+  },
+  {
+    "technology_id": "TECH_MICROSOFT_SQL_SERVER_INTEGRATION_SERVICES_SSIS",
+    "preferred_label": "Microsoft SQL Server Integration Services SSIS",
+    "aliases": [],
+    "category_id": "data_engineering"
+  },
+  {
+    "technology_id": "TECH_TRANSACT_SQL",
+    "preferred_label": "Transact-SQL",
+    "aliases": [],
+    "category_id": "databases"
+  },
+  {
+    "technology_id": "TECH_MICROSOFT_ACTIVE_SERVER_PAGES_ASP",
+    "preferred_label": "Microsoft Active Server Pages ASP",
+    "aliases": [],
+    "category_id": "web_mobile"
+  },
+  {
+    "technology_id": "TECH_WAREHOUSE_MANAGEMENT_SYSTEM_WMS",
+    "preferred_label": "Warehouse management system WMS",
+    "aliases": [],
+    "category_id": "enterprise_apps"
+  },
+  {
+    "technology_id": "TECH_INVENTORY_MANAGEMENT_SYSTEMS",
+    "preferred_label": "Inventory management systems",
+    "aliases": [],
+    "category_id": "enterprise_apps"
+  },
+  {
+    "technology_id": "TECH_GOOGLE_MEET",
+    "preferred_label": "Google Meet",
+    "aliases": [],
+    "category_id": "productivity"
+  },
+  {
+    "technology_id": "TECH_KRONOS_WORKFORCE_TIMEKEEPER",
+    "preferred_label": "Kronos Workforce Timekeeper",
+    "aliases": [],
+    "category_id": "enterprise_apps"
+  },
+  {
+    "technology_id": "TECH_ORACLE_HRIS",
+    "preferred_label": "Oracle HRIS",
+    "aliases": [],
+    "category_id": "enterprise_apps"
+  },
+  {
+    "technology_id": "TECH_MICROSOFT_SQL_SERVER_REPORTING_SERVICES_SSRS",
+    "preferred_label": "Microsoft SQL Server Reporting Services SSRS",
+    "aliases": [],
+    "category_id": "business_intelligence"
+  },
+  {
+    "technology_id": "TECH_RUBY",
+    "preferred_label": "Ruby",
+    "aliases": [],
+    "category_id": "programming"
+  },
+  {
+    "technology_id": "TECH_ADOBE_PREMIERE_PRO",
+    "preferred_label": "Adobe Premiere Pro",
+    "aliases": [],
+    "category_id": "creative_media"
+  },
+  {
+    "technology_id": "TECH_STATACORP_STATA",
+    "preferred_label": "StataCorp Stata",
+    "aliases": [],
+    "category_id": "scientific"
+  },
+  {
+    "technology_id": "TECH_APACHE_HIVE",
+    "preferred_label": "Apache Hive",
+    "aliases": [],
+    "category_id": "data_engineering"
+  },
+  {
+    "technology_id": "TECH_MARKETO_MARKETING_AUTOMATION",
+    "preferred_label": "Marketo Marketing Automation",
+    "aliases": [],
+    "category_id": "enterprise_apps"
+  },
+  {
+    "technology_id": "TECH_APACHE_CASSANDRA",
+    "preferred_label": "Apache Cassandra",
+    "aliases": [
+      "Cassandra"
+    ],
+    "category_id": "databases"
+  },
+  {
+    "technology_id": "TECH_PUPPET",
+    "preferred_label": "Puppet",
+    "aliases": [],
+    "category_id": "devops"
+  },
+  {
+    "technology_id": "TECH_CISCO_WEBEX",
+    "preferred_label": "Cisco Webex",
+    "aliases": [],
+    "category_id": "productivity"
+  },
+  {
+    "technology_id": "TECH_SLACK",
+    "preferred_label": "Slack",
+    "aliases": [],
+    "category_id": "productivity"
+  },
+  {
+    "technology_id": "TECH_AJAX",
+    "preferred_label": "AJAX",
+    "aliases": [],
+    "category_id": "web_mobile"
+  },
+  {
+    "technology_id": "TECH_AWS_EC2",
+    "preferred_label": "AWS EC2",
+    "aliases": [
+      "Amazon EC2",
+      "Amazon Elastic Compute Cloud EC2",
+      "EC2"
+    ],
+    "category_id": "cloud"
+  },
+  {
+    "technology_id": "TECH_ELASTICSEARCH",
+    "preferred_label": "Elasticsearch",
+    "aliases": [
+      "Elastic Search"
+    ],
+    "category_id": "databases"
+  },
+  {
+    "technology_id": "TECH_SWIFT",
+    "preferred_label": "Swift",
+    "aliases": [],
+    "category_id": "programming"
+  },
+  {
+    "technology_id": "TECH_UNIX_SHELL",
+    "preferred_label": "UNIX Shell",
+    "aliases": [],
+    "category_id": "infrastructure"
+  },
+  {
+    "technology_id": "TECH_TENSORFLOW",
+    "preferred_label": "TensorFlow",
+    "aliases": [
+      "Tensor Flow"
+    ],
+    "category_id": "ai_ml"
+  },
+  {
+    "technology_id": "TECH_BORDER_GATEWAY_PROTOCOL_BGP",
+    "preferred_label": "Border Gateway Protocol BGP",
+    "aliases": [],
+    "category_id": "infrastructure"
+  },
+  {
+    "technology_id": "TECH_APACHE_SUBVERSION_SVN",
+    "preferred_label": "Apache Subversion SVN",
+    "aliases": [],
+    "category_id": "devops"
+  },
+  {
+    "technology_id": "TECH_APACHE_TOMCAT",
+    "preferred_label": "Apache Tomcat",
+    "aliases": [],
+    "category_id": "web_mobile"
+  },
+  {
+    "technology_id": "TECH_MATHWORKS_SIMULINK",
+    "preferred_label": "MathWorks Simulink",
+    "aliases": [],
+    "category_id": "scientific"
+  },
+  {
+    "technology_id": "TECH_ALTERYX",
+    "preferred_label": "Alteryx",
+    "aliases": [
+      "Alteryx software"
+    ],
+    "category_id": "business_intelligence"
+  },
+  {
+    "technology_id": "TECH_IBM_WEBSPHERE_MQ",
+    "preferred_label": "IBM WebSphere MQ",
+    "aliases": [],
+    "category_id": "industry_specific"
+  },
+  {
+    "technology_id": "TECH_PTC_CREO_PARAMETRIC",
+    "preferred_label": "PTC Creo Parametric",
+    "aliases": [],
+    "category_id": "engineering_design"
+  },
+  {
+    "technology_id": "TECH_APACHE_MAVEN",
+    "preferred_label": "Apache Maven",
+    "aliases": [],
+    "category_id": "devops"
+  },
+  {
+    "technology_id": "TECH_CHEF",
+    "preferred_label": "Chef",
+    "aliases": [],
+    "category_id": "devops"
+  },
+  {
+    "technology_id": "TECH_DJANGO",
+    "preferred_label": "Django",
+    "aliases": [],
+    "category_id": "web_mobile"
+  },
+  {
+    "technology_id": "TECH_MICROSOFT_ASP_DOTNET",
+    "preferred_label": "Microsoft ASP.NET",
+    "aliases": [],
+    "category_id": "web_mobile"
+  },
+  {
+    "technology_id": "TECH_PYTORCH",
+    "preferred_label": "PyTorch",
+    "aliases": [
+      "Torch"
+    ],
+    "category_id": "ai_ml"
+  },
+  {
+    "technology_id": "TECH_AWS_DYNAMODB",
+    "preferred_label": "AWS DynamoDB",
+    "aliases": [
+      "Amazon DynamoDB",
+      "DynamoDB"
+    ],
+    "category_id": "databases"
+  },
+  {
+    "technology_id": "TECH_JUNIT",
+    "preferred_label": "JUnit",
+    "aliases": [],
+    "category_id": "devops"
+  },
+  {
+    "technology_id": "TECH_ANSYS_SIMULATION_SOFTWARE",
+    "preferred_label": "ANSYS simulation software",
+    "aliases": [],
+    "category_id": "scientific"
+  },
+  {
+    "technology_id": "TECH_MCNEEL_RHINOCEROS_3D",
+    "preferred_label": "McNeel Rhinoceros 3D",
+    "aliases": [],
+    "category_id": "engineering_design"
+  },
+  {
+    "technology_id": "TECH_RESTFUL_API",
+    "preferred_label": "RESTful API",
+    "aliases": [
+      "APIs REST",
+      "REST",
+      "REST API",
+      "REST APIs"
+    ],
+    "category_id": "web_mobile"
+  },
+  {
+    "technology_id": "TECH_HUBSPOT_SOFTWARE",
+    "preferred_label": "HubSpot software",
+    "aliases": [],
+    "category_id": "enterprise_apps"
+  },
+  {
+    "technology_id": "TECH_GEOGRAPHIC_INFORMATION_SYSTEM_GIS_SOFTWARE",
+    "preferred_label": "Geographic information system GIS software",
+    "aliases": [],
+    "category_id": "geospatial"
+  },
+  {
+    "technology_id": "TECH_APACHE_AIRFLOW",
+    "preferred_label": "Apache Airflow",
+    "aliases": [
+      "Airflow"
+    ],
+    "category_id": "data_engineering"
+  },
+  {
+    "technology_id": "TECH_LOOKER",
+    "preferred_label": "Looker",
+    "aliases": [
+      "Google Looker Analytics"
+    ],
+    "category_id": "business_intelligence"
+  },
+  {
+    "technology_id": "TECH_PROCORE_SOFTWARE",
+    "preferred_label": "Procore software",
+    "aliases": [],
+    "category_id": "enterprise_apps"
+  },
+  {
+    "technology_id": "TECH_DASSAULT_SYSTEMES_CATIA",
+    "preferred_label": "Dassault Systemes CATIA",
+    "aliases": [],
+    "category_id": "engineering_design"
+  },
+  {
+    "technology_id": "TECH_HIBERNATE_ORM",
+    "preferred_label": "Hibernate ORM",
+    "aliases": [],
+    "category_id": "databases"
+  },
+  {
+    "technology_id": "TECH_AUTODESK_MAYA",
+    "preferred_label": "Autodesk Maya",
+    "aliases": [],
+    "category_id": "engineering_design"
+  },
+  {
+    "technology_id": "TECH_APPLE_FINAL_CUT_PRO",
+    "preferred_label": "Apple Final Cut Pro",
+    "aliases": [],
+    "category_id": "creative_media"
+  },
+  {
+    "technology_id": "TECH_BLACKBAUD_THE_RAISER_S_EDGE",
+    "preferred_label": "Blackbaud The Raiser's Edge",
+    "aliases": [],
+    "category_id": "enterprise_apps"
+  },
+  {
+    "technology_id": "TECH_GRAFANA",
+    "preferred_label": "Grafana",
+    "aliases": [
+      "Grafana Labs Grafana Cloud"
+    ],
+    "category_id": "devops"
+  },
+  {
+    "technology_id": "TECH_INFORMATICA_SOFTWARE",
+    "preferred_label": "Informatica software",
+    "aliases": [],
+    "category_id": "data_engineering"
+  },
+  {
+    "technology_id": "TECH_SAP_CONCUR",
+    "preferred_label": "SAP Concur",
+    "aliases": [],
+    "category_id": "enterprise_apps"
+  },
+  {
+    "technology_id": "TECH_OPENSHIFT",
+    "preferred_label": "OpenShift",
+    "aliases": [
+      "Red Hat OpenShift"
+    ],
+    "category_id": "devops"
+  },
+  {
+    "technology_id": "TECH_AUTODESK_NAVISWORKS",
+    "preferred_label": "Autodesk Navisworks",
+    "aliases": [],
+    "category_id": "engineering_design"
+  },
+  {
+    "technology_id": "TECH_MITRE_ATT_CK_SOFTWARE",
+    "preferred_label": "MITRE ATT&CK software",
+    "aliases": [],
+    "category_id": "cybersecurity"
+  },
+  {
+    "technology_id": "TECH_TAX_SOFTWARE",
+    "preferred_label": "Tax software",
+    "aliases": [],
+    "category_id": "enterprise_apps"
+  },
+  {
+    "technology_id": "TECH_IBM_DB2",
+    "preferred_label": "IBM DB2",
+    "aliases": [],
+    "category_id": "databases"
+  },
+  {
+    "technology_id": "TECH_G_CODE",
+    "preferred_label": "G-code",
+    "aliases": [],
+    "category_id": "programming"
+  },
+  {
+    "technology_id": "TECH_MICROSOFT_POWER_PLATFORM",
+    "preferred_label": "Microsoft Power Platform",
+    "aliases": [
+      "Microsoft Power Platform software",
+      "Power Platform"
+    ],
+    "category_id": "data_engineering"
+  },
+  {
+    "technology_id": "TECH_PROMETHEUS",
+    "preferred_label": "Prometheus",
+    "aliases": [],
+    "category_id": "devops"
+  },
+  {
+    "technology_id": "TECH_APPLICANT_TRACKING_SOFTWARE",
+    "preferred_label": "Applicant tracking software",
+    "aliases": [],
+    "category_id": "enterprise_apps"
+  },
+  {
+    "technology_id": "TECH_CONTENT_MANAGEMENT_SYSTEMS_CMS",
+    "preferred_label": "Content management systems CMS",
+    "aliases": [],
+    "category_id": "web_mobile"
+  },
+  {
+    "technology_id": "TECH_PURCHASING_SOFTWARE",
+    "preferred_label": "Purchasing software",
+    "aliases": [],
+    "category_id": "enterprise_apps"
+  },
+  {
+    "technology_id": "TECH_NAVISWORKS_JETSTREAM",
+    "preferred_label": "NavisWorks Jetstream",
+    "aliases": [],
+    "category_id": "engineering_design"
+  },
+  {
+    "technology_id": "TECH_ENTERPRISE_APPLICATION_INTEGRATION_EAI_SOFTWARE",
+    "preferred_label": "Enterprise application integration EAI software",
+    "aliases": [],
+    "category_id": "data_engineering"
+  },
+  {
+    "technology_id": "TECH_VIDEO_EDITING_SOFTWARE",
+    "preferred_label": "Video editing software",
+    "aliases": [],
+    "category_id": "creative_media"
+  },
+  {
+    "technology_id": "TECH_MAGELLAN_FIRMWARE",
+    "preferred_label": "Magellan Firmware",
+    "aliases": [],
+    "category_id": "infrastructure"
+  },
+  {
+    "technology_id": "TECH_GRAPHQL",
+    "preferred_label": "GraphQL",
+    "aliases": [],
+    "category_id": "web_mobile"
+  },
+  {
+    "technology_id": "TECH_VUE_JS",
+    "preferred_label": "Vue.js",
+    "aliases": [
+      "Vue",
+      "VueJS"
+    ],
+    "category_id": "web_mobile"
+  },
+  {
+    "technology_id": "TECH_NATIONAL_INSTRUMENTS_LABVIEW",
+    "preferred_label": "National Instruments LabVIEW",
+    "aliases": [],
+    "category_id": "programming"
+  },
+  {
+    "technology_id": "TECH_ORACLE_JAVA_2_PLATFORM_ENTERPRISE_EDITION_J2EE",
+    "preferred_label": "Oracle Java 2 Platform Enterprise Edition J2EE",
+    "aliases": [],
+    "category_id": "programming"
+  },
+  {
+    "technology_id": "TECH_HEC_RAS",
+    "preferred_label": "HEC-RAS",
+    "aliases": [],
+    "category_id": "scientific"
+  },
+  {
+    "technology_id": "TECH_MASTERCAM_COMPUTER_AIDED_DESIGN_AND_MANUFACTURING_SOFTWARE",
+    "preferred_label": "Mastercam computer-aided design and manufacturing software",
+    "aliases": [],
+    "category_id": "engineering_design"
+  },
+  {
+    "technology_id": "TECH_GOOGLE_SHEETS",
+    "preferred_label": "Google Sheets",
+    "aliases": [],
+    "category_id": "productivity"
+  },
+  {
+    "technology_id": "TECH_STUDENT_INFORMATION_SYSTEMS_SIS_SOFTWARE",
+    "preferred_label": "Student information systems SIS software",
+    "aliases": [],
+    "category_id": "databases"
+  },
+  {
+    "technology_id": "TECH_THOMSON_REUTERS_WESTLAW",
+    "preferred_label": "Thomson Reuters Westlaw",
+    "aliases": [],
+    "category_id": "industry_specific"
+  },
+  {
+    "technology_id": "TECH_ESRI_ARCVIEW",
+    "preferred_label": "ESRI ArcView",
+    "aliases": [],
+    "category_id": "geospatial"
+  },
+  {
+    "technology_id": "TECH_DRUPAL",
+    "preferred_label": "Drupal",
+    "aliases": [],
+    "category_id": "web_mobile"
+  },
+  {
+    "technology_id": "TECH_GOOGLE_ADS",
+    "preferred_label": "Google Ads",
+    "aliases": [],
+    "category_id": "enterprise_apps"
+  },
+  {
+    "technology_id": "TECH_HEC_HMS",
+    "preferred_label": "HEC-HMS",
+    "aliases": [],
+    "category_id": "scientific"
+  },
+  {
+    "technology_id": "TECH_INVENTORY_CONTROL_SYSTEM_SOFTWARE",
+    "preferred_label": "Inventory control system software",
+    "aliases": [],
+    "category_id": "enterprise_apps"
+  },
+  {
+    "technology_id": "TECH_TENABLE_NESSUS",
+    "preferred_label": "Tenable Nessus",
+    "aliases": [],
+    "category_id": "cybersecurity"
+  },
+  {
+    "technology_id": "TECH_UNITY",
+    "preferred_label": "Unity",
+    "aliases": [
+      "Unity Technologies Unity"
+    ],
+    "category_id": "programming"
+  },
+  {
+    "technology_id": "TECH_ADP_WORKFORCE_NOW",
+    "preferred_label": "ADP Workforce Now",
+    "aliases": [],
+    "category_id": "databases"
+  },
+  {
+    "technology_id": "TECH_PROPERTY_MANAGEMENT_SYSTEM_PMS_SOFTWARE",
+    "preferred_label": "Property management system PMS software",
+    "aliases": [],
+    "category_id": "databases"
+  },
+  {
+    "technology_id": "TECH_SKM_SYSTEMS_ANALYSIS_POWER_TOOLS",
+    "preferred_label": "SKM Systems Analysis Power Tools",
+    "aliases": [],
+    "category_id": "scientific"
+  },
+  {
+    "technology_id": "TECH_TAX_COMPLIANCE_PROPERTY_TAX_MANAGEMENT_SOFTWARE",
+    "preferred_label": "Tax compliance property tax management software",
+    "aliases": [],
+    "category_id": "industry_specific"
+  },
+  {
+    "technology_id": "TECH_VERILOG",
+    "preferred_label": "Verilog",
+    "aliases": [],
+    "category_id": "programming"
+  },
+  {
+    "technology_id": "TECH_MICROSOFT_TEAM_FOUNDATION_SERVER",
+    "preferred_label": "Microsoft Team Foundation Server",
+    "aliases": [],
+    "category_id": "devops"
+  },
+  {
+    "technology_id": "TECH_ORACLE_SQL_DEVELOPER",
+    "preferred_label": "Oracle SQL Developer",
+    "aliases": [],
+    "category_id": "programming"
+  },
+  {
+    "technology_id": "TECH_DISASSEMBLER_SOFTWARE",
+    "preferred_label": "Disassembler software",
+    "aliases": [],
+    "category_id": "programming"
+  },
+  {
+    "technology_id": "TECH_QGIS",
+    "preferred_label": "QGIS",
+    "aliases": [],
+    "category_id": "geospatial"
+  },
+  {
+    "technology_id": "TECH_UNREAL_ENGINE",
+    "preferred_label": "Unreal Engine",
+    "aliases": [
+      "Unreal Technology Unreal Engine"
+    ],
+    "category_id": "programming"
+  },
+  {
+    "technology_id": "TECH_PAYROLL_SOFTWARE",
+    "preferred_label": "Payroll software",
+    "aliases": [],
+    "category_id": "enterprise_apps"
+  },
+  {
+    "technology_id": "TECH_CHAOS_ENSCAPE",
+    "preferred_label": "Chaos Enscape",
+    "aliases": [],
+    "category_id": "engineering_design"
+  },
+  {
+    "technology_id": "TECH_ESRI_ARCGIS_SURVEY_123",
+    "preferred_label": "ESRI ArcGIS Survey 123",
+    "aliases": [],
+    "category_id": "geospatial"
+  },
+  {
+    "technology_id": "TECH_ETAP",
+    "preferred_label": "ETAP",
+    "aliases": [],
+    "category_id": "geospatial"
+  },
+  {
+    "technology_id": "TECH_PANDAS",
+    "preferred_label": "pandas",
+    "aliases": [],
+    "category_id": "ai_ml"
+  },
+  {
+    "technology_id": "TECH_SCIKIT_LEARN",
+    "preferred_label": "scikit-learn",
+    "aliases": [
+      "sklearn"
+    ],
+    "category_id": "ai_ml"
+  },
+  {
+    "technology_id": "TECH_ASANA",
+    "preferred_label": "Asana",
+    "aliases": [],
+    "category_id": "productivity"
+  },
+  {
+    "technology_id": "TECH_SAP_ERP",
+    "preferred_label": "SAP ERP",
+    "aliases": [],
+    "category_id": "enterprise_apps"
+  },
+  {
+    "technology_id": "TECH_ADOBE_AUDITION",
+    "preferred_label": "Adobe Audition",
+    "aliases": [],
+    "category_id": "creative_media"
+  },
+  {
+    "technology_id": "TECH_AUTODESK_INVENTOR",
+    "preferred_label": "Autodesk Inventor",
+    "aliases": [],
+    "category_id": "engineering_design"
+  },
+  {
+    "technology_id": "TECH_MICROSOFT_INTERNET_INFORMATION_SERVICES_IIS",
+    "preferred_label": "Microsoft Internet Information Services (IIS)",
+    "aliases": [],
+    "category_id": "infrastructure"
+  },
+  {
+    "technology_id": "TECH_SAS_JMP",
+    "preferred_label": "SAS JMP",
+    "aliases": [],
+    "category_id": "scientific"
+  },
+  {
+    "technology_id": "TECH_SIMULATION_PROGRAM_WITH_INTEGRATED_CIRCUIT_EMPHASIS_SPICE",
+    "preferred_label": "Simulation program with integrated circuit emphasis SPICE",
+    "aliases": [],
+    "category_id": "scientific"
+  },
+  {
+    "technology_id": "TECH_ROCKWARE_ARCMAP",
+    "preferred_label": "RockWare ArcMap",
+    "aliases": [],
+    "category_id": "geospatial"
+  },
+  {
+    "technology_id": "TECH_WEB_SERVER_SOFTWARE",
+    "preferred_label": "Web server software",
+    "aliases": [],
+    "category_id": "industry_specific"
+  },
+  {
+    "technology_id": "TECH_OPERATIONAL_DATA_STORE_ODS_SOFTWARE",
+    "preferred_label": "Operational Data Store ODS software",
+    "aliases": [],
+    "category_id": "databases"
+  },
+  {
+    "technology_id": "TECH_VERSION_CONTROL_SOFTWARE",
+    "preferred_label": "Version control software",
+    "aliases": [],
+    "category_id": "devops"
+  },
+  {
+    "technology_id": "TECH_BITBUCKET",
+    "preferred_label": "Bitbucket",
+    "aliases": [
+      "Atlassian Bitbucket"
+    ],
+    "category_id": "devops"
+  },
+  {
+    "technology_id": "TECH_BOOTSTRAP",
+    "preferred_label": "Bootstrap",
+    "aliases": [],
+    "category_id": "web_mobile"
+  },
+  {
+    "technology_id": "TECH_GITLAB",
+    "preferred_label": "GitLab",
+    "aliases": [],
+    "category_id": "devops"
+  },
+  {
+    "technology_id": "TECH_MICROSOFT_POWER_AUTOMATE",
+    "preferred_label": "Microsoft Power Automate",
+    "aliases": [],
+    "category_id": "data_engineering"
+  },
+  {
+    "technology_id": "TECH_ORACLE_CLOUD_SOFTWARE",
+    "preferred_label": "Oracle Cloud software",
+    "aliases": [],
+    "category_id": "cloud"
+  },
+  {
+    "technology_id": "TECH_REDIS",
+    "preferred_label": "Redis",
+    "aliases": [],
+    "category_id": "databases"
+  },
+  {
+    "technology_id": "TECH_MICROSOFT_DYNAMICS",
+    "preferred_label": "Microsoft Dynamics",
+    "aliases": [
+      "Dynamics 365",
+      "Microsoft Dynamics 365",
+      "Microsoft Dynamics 365 Business Central",
+      "Microsoft Dynamics 365 CRM",
+      "Microsoft Dynamics 365 Customer Engagement"
+    ],
+    "category_id": "enterprise_apps"
+  },
+  {
+    "technology_id": "TECH_MAXON_CINEMA_4D",
+    "preferred_label": "Maxon Cinema 4D",
+    "aliases": [],
+    "category_id": "creative_media"
+  },
+  {
+    "technology_id": "TECH_XACTWARE_XACTIMATE",
+    "preferred_label": "Xactware Xactimate",
+    "aliases": [],
+    "category_id": "databases"
+  },
+  {
+    "technology_id": "TECH_IBM_NOTES",
+    "preferred_label": "IBM Notes",
+    "aliases": [],
+    "category_id": "productivity"
+  },
+  {
+    "technology_id": "TECH_CHATBOT_SOFTWARE",
+    "preferred_label": "Chatbot software",
+    "aliases": [],
+    "category_id": "ai_ml"
+  },
+  {
+    "technology_id": "TECH_FILEMAKER_PRO",
+    "preferred_label": "FileMaker Pro",
+    "aliases": [],
+    "category_id": "databases"
+  },
+  {
+    "technology_id": "TECH_SINGLE_SIGN_ON_SSO",
+    "preferred_label": "Single sign-on SSO",
+    "aliases": [],
+    "category_id": "cybersecurity"
+  },
+  {
+    "technology_id": "TECH_MICROSOFT_PUBLISHER",
+    "preferred_label": "Microsoft Publisher",
+    "aliases": [],
+    "category_id": "creative_media"
+  },
+  {
+    "technology_id": "TECH_APACHE_JMETER",
+    "preferred_label": "Apache JMeter",
+    "aliases": [],
+    "category_id": "devops"
+  },
+  {
+    "technology_id": "TECH_AZURE_DEVOPS",
+    "preferred_label": "Azure DevOps",
+    "aliases": [
+      "Azure Dev Ops",
+      "Microsoft Azure DevOps Services"
+    ],
+    "category_id": "devops"
+  },
+  {
+    "technology_id": "TECH_EMBEDDED_SYSTEMS_DEVELOPMENT_SOFTWARE",
+    "preferred_label": "Embedded systems development software",
+    "aliases": [],
+    "category_id": "programming"
+  },
+  {
+    "technology_id": "TECH_GUIDANCE_SOFTWARE_ENCASE_ENTERPRISE",
+    "preferred_label": "Guidance Software EnCase Enterprise",
+    "aliases": [],
+    "category_id": "cybersecurity"
+  },
+  {
+    "technology_id": "TECH_METASPLOIT",
+    "preferred_label": "Metasploit",
+    "aliases": [],
+    "category_id": "cybersecurity"
+  },
+  {
+    "technology_id": "TECH_ORDER_MANAGEMENT_SOFTWARE",
+    "preferred_label": "Order management software",
+    "aliases": [],
+    "category_id": "enterprise_apps"
+  },
+  {
+    "technology_id": "TECH_PERFORCE_SOFTWARE",
+    "preferred_label": "Perforce software",
+    "aliases": [],
+    "category_id": "databases"
+  },
+  {
+    "technology_id": "TECH_RELATIONAL_DATABASE_MANAGEMENT_SYSTEM_SOFTWARE",
+    "preferred_label": "Relational database management system software",
+    "aliases": [],
+    "category_id": "databases"
+  },
+  {
+    "technology_id": "TECH_ROCKWARE_MODFLOW",
+    "preferred_label": "RockWare MODFLOW",
+    "aliases": [],
+    "category_id": "scientific"
+  },
+  {
+    "technology_id": "TECH_SPARTA_SYSTEMS_TRACKWISE",
+    "preferred_label": "Sparta Systems TrackWise",
+    "aliases": [],
+    "category_id": "industry_specific"
+  },
+  {
+    "technology_id": "TECH_SYSTEMVERILOG",
+    "preferred_label": "SystemVerilog",
+    "aliases": [],
+    "category_id": "programming"
+  },
+  {
+    "technology_id": "TECH_TECHSMITH_CAMTASIA",
+    "preferred_label": "TechSmith Camtasia",
+    "aliases": [],
+    "category_id": "creative_media"
+  },
+  {
+    "technology_id": "TECH_VERY_HIGH_SPEED_INTEGRATED_CIRCUIT_VHSIC_HARDWARE_DESCRIPTION_LANGUAGE_VHDL_SIMULATION_SOFTWARE",
+    "preferred_label": "Very high speed integrated circuit VHSIC hardware description language VHDL simulation software",
+    "aliases": [],
+    "category_id": "scientific"
+  },
+  {
+    "technology_id": "TECH_MINITAB",
+    "preferred_label": "Minitab",
+    "aliases": [],
+    "category_id": "scientific"
+  },
+  {
+    "technology_id": "TECH_ORACLE_JD_EDWARDS_ENTERPRISEONE",
+    "preferred_label": "Oracle JD Edwards EnterpriseOne",
+    "aliases": [],
+    "category_id": "enterprise_apps"
+  },
+  {
+    "technology_id": "TECH_GOOGLE_DRIVE",
+    "preferred_label": "Google Drive",
+    "aliases": [],
+    "category_id": "productivity"
+  },
+  {
+    "technology_id": "TECH_CLINICAL_TRIAL_MANAGEMENT_SOFTWARE",
+    "preferred_label": "Clinical trial management software",
+    "aliases": [],
+    "category_id": "databases"
+  },
+  {
+    "technology_id": "TECH_COREL_WORDPERFECT_OFFICE_SUITE",
+    "preferred_label": "Corel WordPerfect Office Suite",
+    "aliases": [],
+    "category_id": "productivity"
+  },
+  {
+    "technology_id": "TECH_KALI_LINUX",
+    "preferred_label": "Kali Linux",
+    "aliases": [],
+    "category_id": "cybersecurity"
+  },
+  {
+    "technology_id": "TECH_OPENROADS_DESIGNER",
+    "preferred_label": "OpenRoads Designer",
+    "aliases": [],
+    "category_id": "engineering_design"
+  },
+  {
+    "technology_id": "TECH_ORION_LAW_MANAGEMENT_SYSTEMS_ORION",
+    "preferred_label": "Orion Law Management Systems Orion",
+    "aliases": [],
+    "category_id": "databases"
+  },
+  {
+    "technology_id": "TECH_PORTSWIGGER_BURP_SUITE",
+    "preferred_label": "Portswigger BurP Suite",
+    "aliases": [],
+    "category_id": "cybersecurity"
+  },
+  {
+    "technology_id": "TECH_QUALTRICS_INSIGHT",
+    "preferred_label": "Qualtrics Insight",
+    "aliases": [],
+    "category_id": "enterprise_apps"
+  },
+  {
+    "technology_id": "TECH_SIEMENS_TEAMCENTER",
+    "preferred_label": "Siemens Teamcenter",
+    "aliases": [],
+    "category_id": "enterprise_apps"
+  },
+  {
+    "technology_id": "TECH_TESTNG",
+    "preferred_label": "TestNG",
+    "aliases": [],
+    "category_id": "devops"
+  },
+  {
+    "technology_id": "TECH_TOOL_COMMAND_LANGUAGE_TCL",
+    "preferred_label": "Tool command language Tcl",
+    "aliases": [],
+    "category_id": "programming"
+  },
+  {
+    "technology_id": "TECH_TRANSPORTATION_MANAGEMENT_SYSTEM_TMS_SOFTWARE",
+    "preferred_label": "Transportation management system TMS software",
+    "aliases": [],
+    "category_id": "geospatial"
+  },
+  {
+    "technology_id": "TECH_SUPERVISORY_CONTROL_AND_DATA_ACQUISITION_SCADA_SOFTWARE",
+    "preferred_label": "Supervisory control and data acquisition SCADA software",
+    "aliases": [],
+    "category_id": "engineering_design"
+  },
+  {
+    "technology_id": "TECH_MICROSOFT_INTERNET_EXPLORER",
+    "preferred_label": "Microsoft Internet Explorer",
+    "aliases": [],
+    "category_id": "industry_specific"
+  },
+  {
+    "technology_id": "TECH_ADOBE_DREAMWEAVER",
+    "preferred_label": "Adobe Dreamweaver",
+    "aliases": [],
+    "category_id": "web_mobile"
+  },
+  {
+    "technology_id": "TECH_MICROSOFT_EXCHANGE",
+    "preferred_label": "Microsoft Exchange",
+    "aliases": [
+      "Exchange Online"
+    ],
+    "category_id": "productivity"
+  },
+  {
+    "technology_id": "TECH_BLACKBOARD_SOFTWARE",
+    "preferred_label": "Blackboard software",
+    "aliases": [],
+    "category_id": "databases"
+  },
+  {
+    "technology_id": "TECH_LEXISNEXIS",
+    "preferred_label": "LexisNexis",
+    "aliases": [],
+    "category_id": "industry_specific"
+  },
+  {
+    "technology_id": "TECH_IBM_COGNOS_IMPROMPTU",
+    "preferred_label": "IBM Cognos Impromptu",
+    "aliases": [],
+    "category_id": "business_intelligence"
+  },
+  {
+    "technology_id": "TECH_ORACLE_HYPERION",
+    "preferred_label": "Oracle Hyperion",
+    "aliases": [],
+    "category_id": "business_intelligence"
+  },
+  {
+    "technology_id": "TECH_SAP_BUSINESS_OBJECTS",
+    "preferred_label": "SAP Business Objects",
+    "aliases": [],
+    "category_id": "business_intelligence"
+  },
+  {
+    "technology_id": "TECH_MICROSOFT_DYNAMICS_GP",
+    "preferred_label": "Microsoft Dynamics GP",
+    "aliases": [],
+    "category_id": "enterprise_apps"
+  },
+  {
+    "technology_id": "TECH_QLIKVIEW",
+    "preferred_label": "QlikView",
+    "aliases": [
+      "Qlik Tech QlikView"
+    ],
+    "category_id": "business_intelligence"
+  },
+  {
+    "technology_id": "TECH_NETSUITE_ERP",
+    "preferred_label": "NetSuite ERP",
+    "aliases": [],
+    "category_id": "enterprise_apps"
+  },
+  {
+    "technology_id": "TECH_AMAZON_SAGEMAKER",
+    "preferred_label": "Amazon SageMaker",
+    "aliases": [
+      "Amazon Web Services AWS SageMaker",
+      "AWS SageMaker",
+      "SageMaker"
+    ],
+    "category_id": "ai_ml"
+  },
+  {
+    "technology_id": "TECH_AUTODESK_FUSION_360",
+    "preferred_label": "Autodesk Fusion 360",
+    "aliases": [],
+    "category_id": "engineering_design"
+  },
+  {
+    "technology_id": "TECH_BING_ADS",
+    "preferred_label": "Bing Ads",
+    "aliases": [],
+    "category_id": "enterprise_apps"
+  },
+  {
+    "technology_id": "TECH_DAVINCI_RESOLVE",
+    "preferred_label": "DaVinci Resolve",
+    "aliases": [],
+    "category_id": "creative_media"
+  },
+  {
+    "technology_id": "TECH_ESRI_ARCGIS_ARCPY",
+    "preferred_label": "ESRI ArcGIS ArcPy",
+    "aliases": [],
+    "category_id": "geospatial"
+  },
+  {
+    "technology_id": "TECH_JAVASCRIPT_FRAMEWORK_SOFTWARE",
+    "preferred_label": "JavaScript framework software",
+    "aliases": [],
+    "category_id": "web_mobile"
+  },
+  {
+    "technology_id": "TECH_NMAP",
+    "preferred_label": "Nmap",
+    "aliases": [],
+    "category_id": "cybersecurity"
+  },
+  {
+    "technology_id": "TECH_ON_CENTER_ON_SCREEN_TAKEOFF",
+    "preferred_label": "On Center On-Screen Takeoff",
+    "aliases": [],
+    "category_id": "enterprise_apps"
+  },
+  {
+    "technology_id": "TECH_OUTAGE_MANAGEMENT_SYSTEM_OMS",
+    "preferred_label": "Outage management system OMS",
+    "aliases": [],
+    "category_id": "engineering_design"
+  },
+  {
+    "technology_id": "TECH_PVSYST",
+    "preferred_label": "PVsyst",
+    "aliases": [],
+    "category_id": "scientific"
+  },
+  {
+    "technology_id": "TECH_PYSPARK",
+    "preferred_label": "PySpark",
+    "aliases": [],
+    "category_id": "ai_ml"
+  },
+  {
+    "technology_id": "TECH_QUALYS_CLOUD_PLATFORM",
+    "preferred_label": "Qualys Cloud Platform",
+    "aliases": [],
+    "category_id": "cybersecurity"
+  },
+  {
+    "technology_id": "TECH_REDCAP_RESEARCH_ELECTRONIC_DATA_CAPTURE",
+    "preferred_label": "REDCap Research Electronic Data Capture",
+    "aliases": [],
+    "category_id": "scientific"
+  },
+  {
+    "technology_id": "TECH_RUST",
+    "preferred_label": "Rust",
+    "aliases": [
+      "Rust programming language"
+    ],
+    "category_id": "programming"
+  },
+  {
+    "technology_id": "TECH_ZEMAX",
+    "preferred_label": "Zemax",
+    "aliases": [],
+    "category_id": "engineering_design"
+  },
+  {
+    "technology_id": "TECH_MICROSTRATEGY",
+    "preferred_label": "MicroStrategy",
+    "aliases": [],
+    "category_id": "business_intelligence"
+  },
+  {
+    "technology_id": "TECH_INVENTORY_TRACKING_SOFTWARE",
+    "preferred_label": "Inventory tracking software",
+    "aliases": [],
+    "category_id": "enterprise_apps"
+  },
+  {
+    "technology_id": "TECH_ORACLE_BUSINESS_INTELLIGENCE_ENTERPRISE_EDITION",
+    "preferred_label": "Oracle Business Intelligence Enterprise Edition",
+    "aliases": [],
+    "category_id": "business_intelligence"
+  },
+  {
+    "technology_id": "TECH_ORACLE_E_BUSINESS_SUITE_FINANCIALS",
+    "preferred_label": "Oracle E-Business Suite Financials",
+    "aliases": [],
+    "category_id": "business_intelligence"
+  },
+  {
+    "technology_id": "TECH_HUMAN_RESOURCE_MANAGEMENT_SOFTWARE_HRMS",
+    "preferred_label": "Human resource management software HRMS",
+    "aliases": [],
+    "category_id": "enterprise_apps"
+  },
+  {
+    "technology_id": "TECH_SAP_CRYSTAL_REPORTS",
+    "preferred_label": "SAP Crystal Reports",
+    "aliases": [],
+    "category_id": "business_intelligence"
+  },
+  {
+    "technology_id": "TECH_SMUGMUG_FLICKR",
+    "preferred_label": "SmugMug Flickr",
+    "aliases": [],
+    "category_id": "creative_media"
+  },
+  {
+    "technology_id": "TECH_DELPHI_TECHNOLOGY",
+    "preferred_label": "Delphi Technology",
+    "aliases": [],
+    "category_id": "business_intelligence"
+  },
+  {
+    "technology_id": "TECH_SAGE_50_ACCOUNTING",
+    "preferred_label": "Sage 50 Accounting",
+    "aliases": [],
+    "category_id": "databases"
+  },
+  {
+    "technology_id": "TECH_ORACLE_PEOPLESOFT_FINANCIALS",
+    "preferred_label": "Oracle PeopleSoft Financials",
+    "aliases": [],
+    "category_id": "enterprise_apps"
+  },
+  {
+    "technology_id": "TECH_BLACKBOARD_LEARN",
+    "preferred_label": "Blackboard Learn",
+    "aliases": [],
+    "category_id": "industry_specific"
+  },
+  {
+    "technology_id": "TECH_DESIRE2LEARN_LMS_SOFTWARE",
+    "preferred_label": "Desire2Learn LMS software",
+    "aliases": [],
+    "category_id": "industry_specific"
+  },
+  {
+    "technology_id": "TECH_IBM_DOMINO",
+    "preferred_label": "IBM Domino",
+    "aliases": [],
+    "category_id": "infrastructure"
+  },
+  {
+    "technology_id": "TECH_COURSE_MANAGEMENT_SYSTEM_SOFTWARE",
+    "preferred_label": "Course management system software",
+    "aliases": [],
+    "category_id": "industry_specific"
+  },
+  {
+    "technology_id": "TECH_DOC_COP",
+    "preferred_label": "DOC Cop",
+    "aliases": [],
+    "category_id": "industry_specific"
+  },
+  {
+    "technology_id": "TECH_IPARADIGMS_TURNITIN",
+    "preferred_label": "iParadigms Turnitin",
+    "aliases": [],
+    "category_id": "industry_specific"
+  },
+  {
+    "technology_id": "TECH_ORACLE_FUSION_APPLICATIONS",
+    "preferred_label": "Oracle Fusion Applications",
+    "aliases": [],
+    "category_id": "enterprise_apps"
+  },
+  {
+    "technology_id": "TECH_SAKAI_CLE",
+    "preferred_label": "Sakai CLE",
+    "aliases": [],
+    "category_id": "industry_specific"
+  },
+  {
+    "technology_id": "TECH_IMAGE_SCANNING_SOFTWARE",
+    "preferred_label": "Image scanning software",
+    "aliases": [],
+    "category_id": "industry_specific"
+  },
+  {
+    "technology_id": "TECH_NORTONLIFELOCK_CYBERSECURITY_SOFTWARE",
+    "preferred_label": "NortonLifeLock cybersecurity software",
+    "aliases": [],
+    "category_id": "cybersecurity"
+  },
+  {
+    "technology_id": "TECH_FUND_ACCOUNTING_SOFTWARE",
+    "preferred_label": "Fund accounting software",
+    "aliases": [],
+    "category_id": "enterprise_apps"
+  },
+  {
+    "technology_id": "TECH_IBM_POWER_SYSTEMS_SOFTWARE",
+    "preferred_label": "IBM Power Systems software",
+    "aliases": [],
+    "category_id": "industry_specific"
+  },
+  {
+    "technology_id": "TECH_MCAFEE",
+    "preferred_label": "McAfee",
+    "aliases": [],
+    "category_id": "cybersecurity"
+  },
+  {
+    "technology_id": "TECH_GLOBAL_POSITIONING_SYSTEM_GPS_SOFTWARE",
+    "preferred_label": "Global positioning system GPS software",
+    "aliases": [],
+    "category_id": "geospatial"
+  },
+  {
+    "technology_id": "TECH_MICROSOFT_VISUAL_BASIC_SCRIPTING_EDITION_VBSCRIPT",
+    "preferred_label": "Microsoft Visual Basic Scripting Edition VBScript",
+    "aliases": [],
+    "category_id": "programming"
+  },
+  {
+    "technology_id": "TECH_ADOBE_ACTIONSCRIPT",
+    "preferred_label": "Adobe ActionScript",
+    "aliases": [],
+    "category_id": "programming"
+  },
+  {
+    "technology_id": "TECH_APACHE_PIG",
+    "preferred_label": "Apache Pig",
+    "aliases": [],
+    "category_id": "data_engineering"
+  },
+  {
+    "technology_id": "TECH_EKO",
+    "preferred_label": "Eko",
+    "aliases": [],
+    "category_id": "industry_specific"
+  },
+  {
+    "technology_id": "TECH_CITRIX_CLOUD_COMPUTING_SOFTWARE",
+    "preferred_label": "Citrix cloud computing software",
+    "aliases": [],
+    "category_id": "infrastructure"
+  },
+  {
+    "technology_id": "TECH_MOODLE",
+    "preferred_label": "Moodle",
+    "aliases": [],
+    "category_id": "industry_specific"
+  },
+  {
+    "technology_id": "TECH_ADOBE_ANALYTICS",
+    "preferred_label": "Adobe Analytics",
+    "aliases": [],
+    "category_id": "business_intelligence"
+  },
+  {
+    "technology_id": "TECH_ADOBE_PHOTOSHOP_LIGHTROOM",
+    "preferred_label": "Adobe Photoshop Lightroom",
+    "aliases": [],
+    "category_id": "creative_media"
+  },
+  {
+    "technology_id": "TECH_ADOBE_XD",
+    "preferred_label": "Adobe XD",
+    "aliases": [],
+    "category_id": "creative_media"
+  },
+  {
+    "technology_id": "TECH_AHREFS_SITE_EXPLORER",
+    "preferred_label": "Ahrefs Site Explorer",
+    "aliases": [],
+    "category_id": "web_mobile"
+  },
+  {
+    "technology_id": "TECH_AMADEUS_CRS",
+    "preferred_label": "Amadeus CRS",
+    "aliases": [],
+    "category_id": "databases"
+  },
+  {
+    "technology_id": "TECH_APPIUM",
+    "preferred_label": "Appium",
+    "aliases": [],
+    "category_id": "devops"
+  },
+  {
+    "technology_id": "TECH_ARCHIVISTS_TOOLKIT",
+    "preferred_label": "Archivists' Toolkit",
+    "aliases": [],
+    "category_id": "databases"
+  },
+  {
+    "technology_id": "TECH_ARTICULATE_STORYLINE",
+    "preferred_label": "Articulate Storyline",
+    "aliases": [],
+    "category_id": "industry_specific"
+  },
+  {
+    "technology_id": "TECH_AURORA_HELIOSCOPE",
+    "preferred_label": "Aurora HelioScope",
+    "aliases": [],
+    "category_id": "web_mobile"
+  },
+  {
+    "technology_id": "TECH_AZURE_DATA_FACTORY",
+    "preferred_label": "Azure Data Factory",
+    "aliases": [
+      "ADF",
+      "Microsoft Azure Data Factory"
+    ],
+    "category_id": "data_engineering"
+  },
+  {
+    "technology_id": "TECH_BIOCONDUCTOR_SOFTWARE",
+    "preferred_label": "Bioconductor software",
+    "aliases": [],
+    "category_id": "databases"
+  },
+  {
+    "technology_id": "TECH_CONSTRUCTCONNECT_PLANSWIFT",
+    "preferred_label": "ConstructConnect PlanSwift",
+    "aliases": [],
+    "category_id": "enterprise_apps"
+  },
+  {
+    "technology_id": "TECH_CUBIC_SYNCHRO_STUDIO",
+    "preferred_label": "Cubic Synchro Studio",
+    "aliases": [],
+    "category_id": "scientific"
+  },
+  {
+    "technology_id": "TECH_ELECTRONIC_LAB_NOTEBOOK_SOFTWARE",
+    "preferred_label": "Electronic lab notebook software",
+    "aliases": [],
+    "category_id": "scientific"
+  },
+  {
+    "technology_id": "TECH_EMASS",
+    "preferred_label": "eMASS",
+    "aliases": [],
+    "category_id": "industry_specific"
+  },
+  {
+    "technology_id": "TECH_EXTENSIBLE_HYPERTEXT_MARKUP_LANGUAGE_XHTML",
+    "preferred_label": "Extensible hypertext markup language XHTML",
+    "aliases": [],
+    "category_id": "web_mobile"
+  },
+  {
+    "technology_id": "TECH_FORSK_ATOLL",
+    "preferred_label": "Forsk Atoll",
+    "aliases": [],
+    "category_id": "infrastructure"
+  },
+  {
+    "technology_id": "TECH_GOOGLE_TAG_MANAGER",
+    "preferred_label": "Google Tag Manager",
+    "aliases": [],
+    "category_id": "enterprise_apps"
+  },
+  {
+    "technology_id": "TECH_HUGGING_FACE",
+    "preferred_label": "Hugging Face",
+    "aliases": [],
+    "category_id": "ai_ml"
+  },
+  {
+    "technology_id": "TECH_LANGCHAIN",
+    "preferred_label": "LangChain",
+    "aliases": [],
+    "category_id": "ai_ml"
+  },
+  {
+    "technology_id": "TECH_LUMION",
+    "preferred_label": "Lumion",
+    "aliases": [],
+    "category_id": "engineering_design"
+  },
+  {
+    "technology_id": "TECH_MECHANICAL_ELECTRICAL_PLUMBING_MEP_DESIGN_SOFTWARE",
+    "preferred_label": "Mechanical electrical plumbing MEP design software",
+    "aliases": [],
+    "category_id": "engineering_design"
+  },
+  {
+    "technology_id": "TECH_MICROSOFT_INTERNET_INFORMATION_SERVICES_IIS_MANAGER",
+    "preferred_label": "Microsoft Internet Information Services (IIS) Manager",
+    "aliases": [],
+    "category_id": "industry_specific"
+  },
+  {
+    "technology_id": "TECH_MICROSOFT_PLAYWRIGHT",
+    "preferred_label": "Microsoft Playwright",
+    "aliases": [],
+    "category_id": "devops"
+  },
+  {
+    "technology_id": "TECH_ABAP",
+    "preferred_label": "ABAP",
+    "aliases": [
+      "Advanced business application programming ABAP"
+    ],
+    "category_id": "programming"
+  },
+  {
+    "technology_id": "TECH_NAGIOS",
+    "preferred_label": "Nagios",
+    "aliases": [],
+    "category_id": "devops"
+  },
+  {
+    "technology_id": "TECH_VMWARE",
+    "preferred_label": "VMware",
+    "aliases": [],
+    "category_id": "infrastructure"
+  },
+  {
+    "technology_id": "TECH_AWS_S3",
+    "preferred_label": "AWS S3",
+    "aliases": [
+      "Amazon S3",
+      "Amazon Simple Storage Service S3",
+      "S3"
+    ],
+    "category_id": "cloud"
+  },
+  {
+    "technology_id": "TECH_GOOGLE_CLOUD_PLATFORM_GCP",
+    "preferred_label": "Google Cloud Platform (GCP)",
+    "aliases": [
+      "GCP",
+      "Google Cloud",
+      "Google Cloud Platform",
+      "Google Cloud software"
+    ],
+    "category_id": "cloud"
+  },
+  {
+    "technology_id": "TECH_TALEND",
+    "preferred_label": "Talend",
+    "aliases": [
+      "Talend Big Data Integration",
+      "Talend Data Fabric",
+      "Talend Open Studio",
+      "TalendForge"
+    ],
+    "category_id": "data_engineering"
+  },
+  {
+    "technology_id": "TECH_ZABBIX",
+    "preferred_label": "Zabbix",
+    "aliases": [],
+    "category_id": "devops"
+  },
+  {
+    "technology_id": "TECH_IBM_DOORS",
+    "preferred_label": "IBM DOORS",
+    "aliases": [
+      "DOORS",
+      "Dynamic object-oriented requirements system DOORS",
+      "IBM Rational DOORS",
+      "Rational DOORS"
+    ],
+    "category_id": "scientific"
+  },
+  {
+    "technology_id": "TECH_KOTLIN",
+    "preferred_label": "Kotlin",
+    "aliases": [],
+    "category_id": "programming"
+  },
+  {
+    "technology_id": "TECH_BIGQUERY",
+    "preferred_label": "BigQuery",
+    "aliases": [
+      "Big Query",
+      "Google BigQuery"
+    ],
+    "category_id": "databases"
+  },
+  {
+    "technology_id": "TECH_DYNATRACE",
+    "preferred_label": "Dynatrace",
+    "aliases": [],
+    "category_id": "devops"
+  },
+  {
+    "technology_id": "TECH_MICROSOFT_SENTINEL",
+    "preferred_label": "Microsoft Sentinel",
+    "aliases": [
+      "Azure Sentinel",
+      "Microsoft Azure Sentinel"
+    ],
+    "category_id": "cybersecurity"
+  },
+  {
+    "technology_id": "TECH_MLFLOW",
+    "preferred_label": "MLflow",
+    "aliases": [],
+    "category_id": "ai_ml"
+  },
+  {
+    "technology_id": "TECH_NEO4J",
+    "preferred_label": "Neo4j",
+    "aliases": [],
+    "category_id": "databases"
+  },
+  {
+    "technology_id": "TECH_PALO_ALTO_NETWORKS",
+    "preferred_label": "Palo Alto Networks",
+    "aliases": [
+      "Palo Alto",
+      "Palo Alto Networks Next-Generation Security Platform"
+    ],
+    "category_id": "cybersecurity"
+  },
+  {
+    "technology_id": "TECH_SONARQUBE",
+    "preferred_label": "SonarQube",
+    "aliases": [],
+    "category_id": "devops"
+  }
+]

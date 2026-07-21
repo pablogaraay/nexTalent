@@ -59,6 +59,7 @@ def build_multiagent_graph():
     "seniority_raw": 1,
     "job_mapping": 1,
     "skills_sfia": 1,
+    "technologies_onet": 1,
     "is_active": 1,
   }
 

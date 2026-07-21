@@ -17,7 +17,7 @@ import { careerAPI } from "@/lib/api";
 const LOADING_STAGES = [
   "Analizando tu perfil profesional...",
   "Localizando ofertas del rol objetivo...",
-  "Separando habilidades técnicas e interpersonales...",
+  "Separando competencias, tecnologías y habilidades interpersonales...",
   "Construyendo tu hoja de ruta...",
 ];
 
@@ -51,10 +51,11 @@ export default function CareerPlanPage() {
   const groupedGaps = useMemo(() => {
     const groups = {
       hard: { critical: [], recommended: [], complementary: [] },
+      technology: { critical: [], recommended: [], complementary: [] },
       soft: { critical: [], recommended: [], complementary: [] },
     };
     for (const gap of result?.gaps || []) {
-      const type = gap.skill_type === "soft" ? "soft" : "hard";
+      const type = gap.skill_type === "soft" ? "soft" : gap.skill_type === "technology" ? "technology" : "hard";
       (groups[type][gap.priority] || groups[type].complementary).push(gap);
     }
     return groups;
@@ -96,7 +97,8 @@ export default function CareerPlanPage() {
   };
 
   const strengthsByType = result?.strengths_by_type || {
-    hard: (result?.strengths || []).filter((skill) => skill.skill_type !== "soft"),
+    hard: (result?.strengths || []).filter((skill) => !["soft", "technology"].includes(skill.skill_type)),
+    technology: (result?.strengths || []).filter((skill) => skill.skill_type === "technology"),
     soft: (result?.strengths || []).filter((skill) => skill.skill_type === "soft"),
   };
   const savedPlan = workspace.careerPlans.find((plan) => plan.target_role?.toLowerCase() === result?.target_role?.toLowerCase());

@@ -55,12 +55,14 @@ class LLMProcessor:
 
       - role_raw: el rol principal del puesto, expresado de forma breve.
 
-      - hard_skills_raw: conocimientos técnicos, metodologías, certificaciones, técnicas e idiomas profesionales requeridos.
-        No incluyas aquí software, plataformas, librerías o herramientas concretas si deben ir en tools_raw.
+      - hard_skills_raw: conocimientos profesionales, metodologías, prácticas, certificaciones,
+        técnicas e idiomas humanos requeridos. No incluyas software, plataformas, librerías,
+        herramientas, bases de datos, lenguajes de programación o lenguajes de consulta.
 
       - soft_skills_raw: competencias personales o interpersonales requeridas.
 
-      - tools_raw: herramientas, software, plataformas, frameworks, librerías o tecnologías concretas requeridas.
+      - tools_raw: herramientas, software, plataformas, frameworks, librerías, bases de datos,
+        lenguajes de programación, lenguajes de consulta o tecnologías concretas requeridas.
 
       - seniority_raw: usa solo uno de estos valores si hay evidencia suficiente:
         'practicas', 'beca', 'junior', 'mid', 'senior', 'lead', 'manager', 'director'
@@ -113,9 +115,9 @@ class LLMProcessor:
         "ofertas": [
           {
             "role_raw": "data analyst",
-            "hard_skills_raw": ["SQL"],
+            "hard_skills_raw": [],
             "soft_skills_raw": ["capacidad analítica", "comunicación", "trabajo en equipo"],
-            "tools_raw": ["Power BI", "Excel"],
+            "tools_raw": ["SQL", "Power BI", "Excel"],
             "seniority_raw": "junior",
             "work_modality_raw": "hibrido",
             "employment_type_raw": "contrato indefinido"
@@ -134,9 +136,9 @@ class LLMProcessor:
         "ofertas": [
           {
             "role_raw": "machine learning engineer",
-            "hard_skills_raw": ["Python", "MLOps", "despliegue de modelos"],
+            "hard_skills_raw": ["MLOps", "despliegue de modelos"],
             "soft_skills_raw": ["autonomía", "proactividad"],
-            "tools_raw": ["TensorFlow"],
+            "tools_raw": ["Python", "TensorFlow"],
             "seniority_raw": "",
             "work_modality_raw": "",
             "employment_type_raw": ""

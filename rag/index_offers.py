@@ -93,6 +93,14 @@ def build_offer_document(offer):
   if tools:
     parts.append(f"tools: {', '.join(tools)}")
 
+  normalized_technologies = [
+    str((item or {}).get("preferred_label", "") or "").strip()
+    for item in (offer.get("technologies_onet") or [])
+    if str((item or {}).get("preferred_label", "") or "").strip()
+  ]
+  if normalized_technologies:
+    parts.append(f"normalized_technologies: {', '.join(normalized_technologies)}")
+
   return " | ".join(parts) if parts else ""
 
 

@@ -25,6 +25,7 @@ class CareerService:
     "region": 1,
     "job_mapping": 1,
     "skills_sfia": 1,
+    "technologies_onet": 1,
     "hard_skills_raw": 1,
     "soft_skills_raw": 1,
     "tools_raw": 1,
@@ -137,7 +138,7 @@ class CareerService:
     soft_inputs = {normalize_text(str(value)) for value in (offer.get("soft_skills_raw") or [])}
     hard_inputs = {
       normalize_text(str(value))
-      for value in (offer.get("hard_skills_raw") or []) + (offer.get("tools_raw") or [])
+      for value in (offer.get("hard_skills_raw") or [])
     }
     if raw and raw in soft_inputs:
       return "soft"
@@ -169,6 +170,22 @@ class CareerService:
         aliases.setdefault(skill_id, set()).update({
           normalize_text(skill_name),
           normalize_text(str((item or {}).get("raw", "") or "")),
+        })
+
+      for item in offer.get("technologies_onet", []) or []:
+        technology_id = str((item or {}).get("technology_id", "") or "").strip()
+        preferred_label = str((item or {}).get("preferred_label", "") or "").strip()
+        if not technology_id or not preferred_label or technology_id in seen:
+          continue
+        seen.add(technology_id)
+        counts[technology_id] += 1
+        names[technology_id] = preferred_label
+        type_counts.setdefault(technology_id, Counter())["technology"] += 1
+        aliases.setdefault(technology_id, set()).add(normalize_text(preferred_label))
+        aliases[technology_id].update({
+          normalize_text(str(value))
+          for value in ((item or {}).get("raw_evidence") or [])
+          if str(value).strip()
         })
 
     total = len(offers)
@@ -214,25 +231,34 @@ class CareerService:
     if not unresolved:
       return covered_ids, evidence
 
-    try:
-      collection = self.vector_store.get_collection(Config.SKILLS_CHROMA_COLLECTION)
-      target_ids = {item["skill_id"] for item in target_skills}
-      for skill in unresolved:
-        embedding = self.llm_client_service.embed_text(f"skill: {skill}")
-        result = collection.query(
-          query_embeddings=[embedding],
-          n_results=1,
-          include=["metadatas", "distances"],
-        )
-        metadata = ((result.get("metadatas") or [[]])[0] or [{}])[0] or {}
-        distances = (result.get("distances") or [[]])[0]
-        score = 1 - float(distances[0]) if distances else 0.0
-        skill_id = str(metadata.get("skill_id", "") or "").strip()
-        if skill_id in target_ids and score >= self.PROFILE_SKILL_MATCH_MIN_SCORE:
-          covered_ids.add(skill_id)
-          evidence[skill_id] = skill
-    except Exception:
-      pass
+    target_ids = {item["skill_id"] for item in target_skills}
+    collection_specs = [
+      (Config.SKILLS_CHROMA_COLLECTION, "skill_id", "skill"),
+      (Config.ONET_TECHNOLOGIES_CHROMA_COLLECTION, "technology_id", "technology"),
+    ]
+    for skill in unresolved:
+      best_match = None
+      for collection_name, id_field, query_type in collection_specs:
+        try:
+          collection = self.vector_store.get_collection(collection_name)
+          embedding = self.llm_client_service.embed_text(f"{query_type}: {skill}")
+          result = collection.query(
+            query_embeddings=[embedding],
+            n_results=1,
+            include=["metadatas", "distances"],
+          )
+          metadata = ((result.get("metadatas") or [[]])[0] or [{}])[0] or {}
+          distances = (result.get("distances") or [[]])[0]
+          score = 1 - float(distances[0]) if distances else 0.0
+          item_id = str(metadata.get(id_field, "") or "").strip()
+          if item_id in target_ids and score >= self.PROFILE_SKILL_MATCH_MIN_SCORE:
+            if best_match is None or score > best_match[0]:
+              best_match = (score, item_id)
+        except Exception:
+          continue
+      if best_match:
+        covered_ids.add(best_match[1])
+        evidence[best_match[1]] = skill
 
     return covered_ids, evidence
 
@@ -299,6 +325,16 @@ class CareerService:
           f"Ejemplo conductual verificable sobre {', '.join(skill_names)}, con feedback recibido "
           "y resultado documentado mediante el método situación-acción-resultado."
         )
+      elif skill_type == "technology":
+        actions = [
+          f"Completar una práctica guiada con {', '.join(skill_names)}.",
+          f"Integrar {', '.join(skill_names)} en un caso demostrable relacionado con {target_role}.",
+          "Documentar configuración, decisiones, capturas y resultados para el portfolio.",
+        ]
+        success_evidence = (
+          f"Demostración reproducible del uso de {', '.join(skill_names)} "
+          "con repositorio, capturas o documentación técnica."
+        )
       else:
         actions = [
           f"Estudiar los fundamentos de {', '.join(skill_names)} con práctica guiada.",
@@ -332,6 +368,10 @@ class CareerService:
             "Solicitar feedback sobre comunicación, colaboración y autonomía.",
             "Practicar respuestas de entrevista basadas en situaciones reales.",
           ] if skill_type == "soft" else [
+            "Construir una práctica reproducible con las tecnologías prioritarias.",
+            "Documentar instalación, configuración y resultados obtenidos.",
+            "Añadir la evidencia al portfolio y preparar una explicación para entrevista.",
+          ] if skill_type == "technology" else [
             f"Preparar dos casos de portfolio alineados con {target_role}.",
             "Actualizar el CV con resultados medibles y evidencias técnicas.",
             "Practicar preguntas técnicas extraídas de las ofertas objetivo.",
@@ -340,15 +380,23 @@ class CareerService:
         "success_evidence": (
           "Tres ejemplos conductuales revisados y listos para entrevista."
           if skill_type == "soft"
+          else "Práctica tecnológica reproducible y documentada."
+          if skill_type == "technology"
           else "CV adaptado, portfolio revisado y simulación técnica completada."
         ),
       })
 
     return {
       "skill_type": skill_type,
-      "title": "Competencias técnicas" if skill_type == "hard" else "Competencias interpersonales",
+      "title": (
+        "Tecnologías y herramientas" if skill_type == "technology"
+        else "Competencias técnicas" if skill_type == "hard"
+        else "Competencias interpersonales"
+      ),
       "objective": (
-        f"Construir evidencias técnicas aplicables a posiciones de {target_role}."
+        f"Construir evidencias prácticas con tecnologías demandadas para posiciones de {target_role}."
+        if skill_type == "technology"
+        else f"Construir evidencias técnicas aplicables a posiciones de {target_role}."
         if skill_type == "hard"
         else f"Desarrollar comportamientos profesionales relevantes para posiciones de {target_role}."
       ),
@@ -358,6 +406,7 @@ class CareerService:
   def _build_plan(self, target_role: str, gaps: List[Dict[str, Any]]) -> Dict[str, Any]:
     tracks = [
       self._build_plan_track(target_role, "hard", gaps),
+      self._build_plan_track(target_role, "technology", gaps),
       self._build_plan_track(target_role, "soft", gaps),
     ]
     phases = [phase for track in tracks for phase in track["phases"]]
@@ -387,6 +436,7 @@ class CareerService:
     target_skills = self._target_skill_demand(target_offers)
     covered_ids, evidence = self._map_profile_skills(profile.get("skills") or [], target_skills)
     hard_readiness = self._readiness_for_type(target_skills, covered_ids, "hard")
+    technology_readiness = self._readiness_for_type(target_skills, covered_ids, "technology")
     soft_readiness = self._readiness_for_type(target_skills, covered_ids, "soft")
     total_weight = sum(item["demand"] for item in target_skills)
     covered_weight = sum(item["demand"] for item in target_skills if item["skill_id"] in covered_ids)
@@ -411,11 +461,13 @@ class CareerService:
     ]
     gaps_by_type = {
       "hard": [gap for gap in gaps if gap["skill_type"] == "hard"][:12],
+      "technology": [gap for gap in gaps if gap["skill_type"] == "technology"][:12],
       "soft": [gap for gap in gaps if gap["skill_type"] == "soft"][:12],
     }
-    displayed_gaps = gaps_by_type["hard"] + gaps_by_type["soft"]
+    displayed_gaps = gaps_by_type["hard"] + gaps_by_type["technology"] + gaps_by_type["soft"]
     strengths_by_type = {
       "hard": [skill for skill in strengths if skill["skill_type"] == "hard"],
+      "technology": [skill for skill in strengths if skill["skill_type"] == "technology"],
       "soft": [skill for skill in strengths if skill["skill_type"] == "soft"],
     }
     offers_analyzed = len(target_offers)
@@ -436,12 +488,13 @@ class CareerService:
         "target_skills": len(target_skills),
         "by_type": {
           "hard": hard_readiness,
+          "technology": technology_readiness,
           "soft": soft_readiness,
         },
       },
       "market": {
         "offers_analyzed": offers_analyzed,
-        "method": "demanda observada en ofertas mapeadas con SFIA",
+        "method": "demanda observada en ofertas normalizadas con SFIA y O*NET Software Skills",
         "confidence_label": confidence_label,
         "confidence_note": "La confianza refleja el tamaño de la muestra, no la calidad individual del candidato.",
       },

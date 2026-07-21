@@ -37,6 +37,7 @@ class TestDataPipeline(unittest.TestCase):
       "city: Madrid",
       "hard_skills: SQL",
       "tools: Python",
+      "normalized_technologies: Python",
     ]
 
     for text in expected_text:

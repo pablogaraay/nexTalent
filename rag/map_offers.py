@@ -3,6 +3,15 @@ from collections import Counter
 
 from config import Config
 from infra.embeddings import embed_text
+from rag.technology_mapping import (
+  TECHNOLOGY_MIN_MARGIN,
+  TECHNOLOGY_QUERY_RESULTS,
+  TECHNOLOGY_SEMANTIC_LIMIT,
+  TECHNOLOGY_STRONG_SCORE,
+  build_exact_technology_index,
+  match_technology,
+  normalize_technology_term,
+)
 from repositories.offer_repository import OfferRepository
 from repositories.vector_store import VectorStore
 from utils.text import normalize_text, unique_keep_order
@@ -91,7 +100,7 @@ def best_match(
 
 
 def parse_args():
-  parser = argparse.ArgumentParser(description="Map LLM-extracted offers to WEF/SFIA taxonomies.")
+  parser = argparse.ArgumentParser(description="Map LLM-extracted offers to WEF, SFIA and O*NET taxonomies.")
   parser.add_argument(
     "--refresh-all",
     action="store_true",
@@ -116,13 +125,17 @@ def main():
   vector_store = VectorStore()
   jobs_col = vector_store.get_collection(Config.JOBS_CHROMA_COLLECTION)
   skills_col = vector_store.get_collection(Config.SKILLS_CHROMA_COLLECTION)
+  technologies_col = vector_store.get_collection(Config.ONET_TECHNOLOGIES_CHROMA_COLLECTION)
   exact_skill_index = build_exact_skill_index(skills_col)
+  exact_technology_index = build_exact_technology_index(technologies_col)
 
   mapped_offers_batch = []
   total = 0
   persisted = 0
   mapping_cache = {}
+  technology_mapping_cache = {}
   mapping_stats = Counter()
+  technology_mapping_stats = Counter()
 
   for raw_offer in source_offers:
     offer = dict(raw_offer)
@@ -133,12 +146,19 @@ def main():
     hard_inputs = unique_keep_order([str(x) for x in (offer.get("hard_skills_raw", []) or [])])
     soft_inputs = unique_keep_order([str(x) for x in (offer.get("soft_skills_raw", []) or [])])
     tool_inputs = unique_keep_order([str(x) for x in (offer.get("tools_raw", []) or [])])
+    tool_keys = {normalize_technology_term(value) for value in tool_inputs}
+    hard_technology_fallback_inputs = [
+      value for value in hard_inputs
+      if normalize_technology_term(value) not in tool_keys
+    ]
+    technology_inputs = [
+      *[(value, True) for value in tool_inputs],
+      *[(value, False) for value in hard_technology_fallback_inputs],
+    ]
     skill_inputs = [
       *[(skill, "hard", "skill") for skill in hard_inputs],
       *[(skill, "soft", "attribute") for skill in soft_inputs],
     ]
-    mapping_stats["tools_excluded"] += len(tool_inputs)
-
     skills_by_id = {}
     offer_statuses = Counter()
     for skill, source_type, expected_item_type in skill_inputs:
@@ -192,20 +212,74 @@ def main():
 
     skills_mapped = list(skills_by_id.values())
 
+    technologies_by_id = {}
+    offer_technology_statuses = Counter()
+    for technology, allow_semantic in technology_inputs:
+      cache_key = (normalize_technology_term(technology), allow_semantic)
+      if cache_key not in technology_mapping_cache:
+        technology_mapping_cache[cache_key] = match_technology(
+          technologies_col,
+          technology,
+          embed_text,
+          exact_index=exact_technology_index,
+          allow_semantic=allow_semantic,
+        )
+      technology_match = technology_mapping_cache[cache_key]
+      offer_technology_statuses[technology_match["status"]] += 1
+      technology_mapping_stats[technology_match["status"]] += 1
+      if technology_match["status"] != "mapped" or not technology_match["top1"]:
+        continue
+
+      metadata = technology_match["top1"]["metadata"] or {}
+      technology_id = str(metadata.get("technology_id", "") or "").strip()
+      if not technology_id:
+        continue
+      mapped_technology = {
+        "technology_id": technology_id,
+        "preferred_label": metadata.get("preferred_label", ""),
+        "category_id": metadata.get("category_id", ""),
+        "score": technology_match["top1"]["score"],
+        "raw_evidence": [technology],
+        "mapping_method": technology_match.get("method", "semantic"),
+      }
+      existing = technologies_by_id.get(technology_id)
+      if existing:
+        existing["raw_evidence"] = unique_keep_order([*existing["raw_evidence"], technology])
+        if mapped_technology["score"] > existing["score"]:
+          mapped_technology["raw_evidence"] = existing["raw_evidence"]
+          technologies_by_id[technology_id] = mapped_technology
+      else:
+        technologies_by_id[technology_id] = mapped_technology
+
+    technologies_mapped = list(technologies_by_id.values())
+
     doc = {
       **offer,
       "job_mapping": {},
       "skills_sfia": [],
+      "technologies_onet": technologies_mapped,
       "skill_mapping_meta": {
         "taxonomy_collection": Config.SFIA_SKILLS_TAXONOMY_COLL,
         "hard_semantic_threshold": HARD_SKILL_LIMIT,
         "soft_semantic_threshold": SOFT_SKILL_LIMIT,
         "hard_inputs": len(hard_inputs),
         "soft_inputs": len(soft_inputs),
-        "tools_excluded": len(tool_inputs),
         "mapped": offer_statuses["mapped"],
         "ambiguous": offer_statuses["ambiguous"],
         "unmapped": offer_statuses["unmapped"],
+      },
+      "technology_mapping_meta": {
+        "taxonomy_collection": Config.ONET_TECHNOLOGIES_TAXONOMY_COLL,
+        "semantic_threshold": TECHNOLOGY_SEMANTIC_LIMIT,
+        "minimum_margin": TECHNOLOGY_MIN_MARGIN,
+        "strong_score": TECHNOLOGY_STRONG_SCORE,
+        "query_results": TECHNOLOGY_QUERY_RESULTS,
+        "inputs": len(technology_inputs),
+        "tool_inputs": len(tool_inputs),
+        "hard_exact_fallback_inputs": len(hard_technology_fallback_inputs),
+        "mapped": offer_technology_statuses["mapped"],
+        "ambiguous": offer_technology_statuses["ambiguous"],
+        "unmapped": offer_technology_statuses["unmapped"],
       },
     }
 
@@ -240,6 +314,8 @@ def main():
     print(f"Persisted in {Config.MAPPED_COLL}: {persisted}")
     print(f"Skill mapping stats: {dict(mapping_stats)}")
     print(f"Unique skill mapping queries: {len(mapping_cache)}")
+    print(f"Technology mapping stats: {dict(technology_mapping_stats)}")
+    print(f"Unique technology mapping queries: {len(technology_mapping_cache)}")
 
 
 if __name__ == "__main__":

@@ -93,44 +93,27 @@ cd ..
 ollama pull mxbai-embed-large:latest
 ```
 
-## Configuración (`.env`)
+## Configuración local (`.env`)
 
-Crear un archivo `.env` en la raíz del proyecto:
+La plantilla `.env.example` está destinada al despliegue local con Docker Compose.
+El quickstart la copia como `.env` en la raíz del proyecto. Su contenido
+configurable es:
 
 ```env
-# Con Docker Compose:
 MONGO_URI=mongodb://mongo:27017/nexTalent
-
-# Sin Docker (Mongo en local):
-# MONGO_URI=mongodb://localhost:27017/nexTalent
-GROQ_API_KEY=<tu_groq_api_key>
-
-# Chroma local: dejar CHROMA_HOST vacío
-CHROMA_HOST=
-CHROMA_PORT=8000
-CHROMA_SSL=false
-
-# URL pública de FastAPI usada por el frontend
+GROQ_API_KEY=
+AUTONOMOUS_AGENT_VERBOSE=true
 VITE_API_URL=
-
-# Orígenes adicionales permitidos por CORS, separados por comas
-CORS_ALLOWED_ORIGINS_EXTRA=
 ```
 
-Variables opcionales usadas por la web:
-- `API_PORT` (por defecto `8787`)
-- `VITE_API_URL` (vacío usa `/api` en el mismo origen; en desarrollo Vite lo redirige a FastAPI)
-- `VITE_PROXY_TARGET` (destino del proxy de desarrollo de Vite; por defecto `http://localhost:8787`)
-- `CORS_ALLOWED_ORIGINS_EXTRA` (orígenes adicionales separados por comas)
+- `GROQ_API_KEY` puede quedar vacía si no se utilizan las funciones que llaman al LLM.
+- `AUTONOMOUS_AGENT_VERBOSE` controla los logs de decisión del planificador.
+- Un `VITE_API_URL` vacío se resuelve en Docker Compose como `http://localhost:8787`.
+- MongoDB, Ollama y Chroma se ejecutan dentro del stack. Chroma usa el volumen persistente `chroma_data`.
 
-Variables opcionales de Chroma:
-- `CHROMA_HOST` vacío usa Chroma local persistente en `data/chroma`
-- `CHROMA_HOST=<host>` usa un servidor Chroma remoto
-- `CHROMA_PORT` por defecto `8000`
-- `CHROMA_SSL` (`true/false`, por defecto `false`)
-
-Variables opcionales del planificador autónomo:
-- `AUTONOMOUS_AGENT_VERBOSE` (`true/false`, imprime decisión del planner en logs)
+La configuración cloud no se carga desde este fichero. `.env.cloud.example` mantiene
+el inventario de variables que deben configurarse por separado en Cloud Run y en
+los secretos de GitHub Actions. No contiene credenciales ni direcciones reales.
 
 ## Quickstart con Docker (Fase 1)
 
@@ -184,11 +167,54 @@ Nota:
 El procesamiento periódico está separado en dos workflows:
 
 1. `Ingesta y Data Wrangling` (`scraper.py -> data_wrangler.py`), con cron `0 1 */15 * *` en UTC.
-2. `LLM + Taxonomy + Mapping` (`llm_processor.py -> rag/index_taxonomy.py -> rag/map_offers.py`), con cron `0 5 */2 * *` en UTC.
+2. `LLM + Taxonomy + Mapping` (`llm_processor.py -> rag/index_taxonomy.py -> rag/index_technology_taxonomy.py -> rag/map_offers.py`), con cron `0 5 */2 * *` en UTC.
 
 En el segundo workflow, `llm_processor.py` puede fallar (por cuota/tokens) y aun así se ejecutan indexado y mapping sobre lo ya procesado.
 `rag.index_taxonomy` lee las taxonomías desde las colecciones Mongo `wef_jobs_taxonomy` y `sfia_skills_taxonomy`, y reconstruye las colecciones vectoriales `wef_jobs` y `sfia_skills` en Chroma.
+`rag.index_technology_taxonomy` lee `onet_technologies_taxonomy` y reconstruye por separado la colección vectorial `onet_technologies`.
 GitHub Actions actualiza MongoDB. La base vectorial de ofertas en Chroma es un indice derivado por entorno: en local se mantiene con `data/chroma` y en cloud debe reindexarse desde GCP/VM ejecutando `python3 -m rag.index_offers` contra el Chroma correspondiente.
+
+### Taxonomía de tecnologías
+
+`onet_technologies_taxonomy` se mantiene separada de SFIA: contiene software, plataformas,
+frameworks, librerías, lenguajes y herramientas, pero no competencias profesionales
+ni atributos conductuales. El artefacto versionado se regenera desde O*NET con:
+
+```bash
+python3 scripts/build_technology_taxonomy.py /ruta/software_skills.json \
+  --output nexTalent.technology_skills.json
+```
+
+El JSON resultante es un array compacto importable en la colección Mongo
+`onet_technologies_taxonomy`. Cada documento contiene únicamente `technology_id`,
+`preferred_label`, `aliases` y `category_id`. La procedencia global de esta
+taxonomía es O*NET Software Skills 30.4 y se mantiene fuera de los documentos.
+Después de importarlo, su índice vectorial se reconstruye con:
+
+```bash
+python3 -m rag.index_technology_taxonomy
+```
+
+Las métricas O*NET y las ocupaciones asociadas no forman parte de la colección
+operativa. Si se necesitan para auditoría, pueden exportarse por separado con
+`--evidence-output`. Los indicadores `hot` e `in_demand` se consideran evidencia
+del mercado estadounidense, no demanda directa del mercado español.
+
+Durante el mapping, las competencias profesionales y conductuales se normalizan
+contra SFIA, mientras que las herramientas y tecnologías se normalizan contra
+O*NET y se guardan en `technologies_onet`. El matching tecnológico prioriza
+etiquetas y alias exactos; solo acepta coincidencias semánticas con umbral alto y
+margen suficiente para evitar asignaciones forzadas. Para datos históricos, también
+se comprueban coincidencias tecnológicas exactas que el LLM hubiera clasificado
+anteriormente como hard skills.
+
+Después de importar o modificar la taxonomía se debe remapear y reindexar:
+
+```bash
+python3 -m rag.index_technology_taxonomy
+python3 -m rag.map_offers --refresh-all
+python3 -m rag.index_offers
+```
 
 ### Reindexado de ofertas en Chroma
 
@@ -222,6 +248,10 @@ CHROMA_PORT=8000
 CHROMA_SSL=false
 ```
 
+Estas variables están recogidas en `.env.cloud.example`. La plantilla es una
+referencia: deben configurarse directamente en el Cloud Run Job y no copiarse como
+un fichero de entorno dentro de la imagen.
+
 El despliegue actual conecta el Cloud Run Job con Ollama y ChromaDB ejecutados en una VM mediante su IP privada y acceso VPC. Cloud Scheduler lanza el Job con cron `0 9 */2 * *`, usando la zona horaria configurada en el propio Scheduler. El servicio Cloud Run de la API debe usar las mismas variables `OLLAMA_HOST` y `CHROMA_*` para consultar el índice generado.
 
 Conviene programar el reindexado después del workflow de mapping. Si se necesita sincronización exacta, el Job puede dispararse explícitamente al terminar el workflow en lugar de depender solo del horario.
@@ -243,7 +273,18 @@ Cloud Scheduler
   -> reconstruye la colección `offers` en ChromaDB
 ```
 
-El frontend debe definir `VITE_API_URL` con la URL pública de FastAPI. La API debe incluir el dominio del frontend en `CORS_ALLOWED_ORIGINS_EXTRA`.
+El frontend debe definir `VITE_API_URL` con la URL pública de FastAPI. La API
+permite `nextalent.info` y `www.nextalent.info` como orígenes de producción.
+
+Resumen de configuración cloud:
+
+- Cloud Run Web: `VITE_API_URL`.
+- Cloud Run API: `MONGO_URI`, `GROQ_API_KEY`, `OLLAMA_HOST`, `CHROMA_HOST`,
+  `CHROMA_PORT` y `CHROMA_SSL`.
+- Cloud Run Job de indexado: `MONGO_URI`, `OLLAMA_HOST` y `CHROMA_*`.
+- GitHub Actions: `MONGO_URI` y `GROQ_API_KEY` como secretos. El workflow de
+  mapping define su propio `OLLAMA_HOST` porque levanta Ollama en el runner.
+- `PORT` no debe declararse manualmente en Cloud Run; la plataforma lo inyecta.
 
 ### Opción B: Manual (sin scheduler)
 
@@ -347,10 +388,12 @@ MongoDB (`DB_NAME = nexTalent`):
 - `offers_mapped`: ofertas activas mapeadas a las taxonomias.
 - `wef_jobs_taxonomy`
 - `sfia_skills_taxonomy`
+- `onet_technologies_taxonomy`
 
 ChromaDB:
 - `wef_jobs`
 - `sfia_skills`
+- `onet_technologies`
 - `offers`
 
 Sin `CHROMA_HOST`, Chroma usa persistencia local en `data/chroma`. Con `CHROMA_HOST`, tanto la API como los procesos de indexado usan el servidor Chroma remoto.

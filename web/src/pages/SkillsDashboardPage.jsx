@@ -6,12 +6,9 @@ import {
   Briefcase,
   ChevronDown,
   ChevronUp,
-  Database,
-  FileText,
+  Cpu,
   RefreshCw,
   SlidersHorizontal,
-  Upload,
-  X,
 } from "lucide-react";
 import { MarketChartPanel } from "@/components/insights/MarketChartPanel";
 import { MarketKpiGrid } from "@/components/insights/MarketKpiGrid";
@@ -19,20 +16,6 @@ import { MarketReading } from "@/components/insights/MarketReading";
 import { useMarketChartOption } from "@/components/insights/useMarketChartOption";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { insightsAPI } from "@/lib/api";
-
-const RAW_JSON_REQUIRED_FIELDS = [
-  "url",
-  "title",
-  "company",
-  "city",
-  "region",
-  "country",
-  "role_raw",
-  "hard_skills_raw",
-  "soft_skills_raw",
-  "tools_raw",
-  "seniority_raw",
-];
 
 function formatPct(value) {
   return Number(value || 0).toFixed(1);
@@ -53,58 +36,26 @@ export default function SkillsDashboardPage() {
   const [selectedCity, setSelectedCity] = useState("");
   const [selectedRegion, setSelectedRegion] = useState("");
   const [selectedSeniority, setSelectedSeniority] = useState("");
-  const [dataSource, setDataSource] = useState("database");
-  const [uploadedJsonFile, setUploadedJsonFile] = useState(null);
-  const [jsonWarnings, setJsonWarnings] = useState([]);
-  const [requiredFields, setRequiredFields] = useState(RAW_JSON_REQUIRED_FIELDS);
-  const [analystModeOpen, setAnalystModeOpen] = useState(false);
 
   const fetchData = useCallback(() => {
     setLoading(true);
     setError("");
-    setJsonWarnings([]);
 
-    const request = dataSource === "json"
-      ? (() => {
-        if (!uploadedJsonFile) {
-          setData(null);
-          setLoading(false);
-          return null;
-        }
-
-        const formData = new FormData();
-        formData.append("file", uploadedJsonFile);
-        formData.append("topN", String(topN));
-        formData.append("company", selectedCompany);
-        formData.append("city", selectedCity);
-        formData.append("region", selectedRegion);
-        formData.append("seniority", selectedSeniority);
-        return insightsAPI.uploadRaw(formData);
-      })()
-      : insightsAPI.get({
-        topN,
-        company: selectedCompany,
-        city: selectedCity,
-        region: selectedRegion,
-        seniority: selectedSeniority,
-      });
-
-    if (!request) {
-      return;
-    }
-
-    request
+    insightsAPI.get({
+      topN,
+      company: selectedCompany,
+      city: selectedCity,
+      region: selectedRegion,
+      seniority: selectedSeniority,
+    })
       .then(({ data: resp }) => {
         if (resp?.error) {
           throw new Error(resp.error);
         }
         const result = resp.result || resp;
         setData(result);
-        setJsonWarnings(result.warnings || []);
-        setRequiredFields(result.required_fields || RAW_JSON_REQUIRED_FIELDS);
       })
       .catch((err) => {
-        setRequiredFields(err.response?.data?.required_fields || RAW_JSON_REQUIRED_FIELDS);
         setError(
           err.response?.data?.detail ||
           err.response?.data?.error ||
@@ -115,7 +66,7 @@ export default function SkillsDashboardPage() {
       .finally(() => {
         setLoading(false);
       });
-  }, [dataSource, selectedCity, selectedCompany, selectedRegion, selectedSeniority, topN, uploadedJsonFile]);
+  }, [selectedCity, selectedCompany, selectedRegion, selectedSeniority, topN]);
 
   useEffect(() => {
     fetchData();
@@ -123,6 +74,7 @@ export default function SkillsDashboardPage() {
 
   const safeData = data || {};
   const topSkills = safeData.top_skills || [];
+  const topTechnologies = safeData.top_technologies || [];
   const topJobs = safeData.top_jobs || [];
   const summary = safeData.summary || {};
   const availableFilters = safeData.available_filters || {};
@@ -132,9 +84,9 @@ export default function SkillsDashboardPage() {
   const metricLabel = metricMode === "share" ? "% del total" : "Demanda";
   const metricSuffix = metricMode === "share" ? "%" : "";
 
-  const baseRows = viewMode === "skills" ? topSkills : topJobs;
-  const idField = viewMode === "skills" ? "skill_id" : "job_id";
-  const labelField = viewMode === "skills" ? "skill_name" : "job_title";
+  const baseRows = viewMode === "skills" ? topSkills : viewMode === "technologies" ? topTechnologies : topJobs;
+  const idField = viewMode === "skills" ? "skill_id" : viewMode === "technologies" ? "technology_id" : "job_id";
+  const labelField = viewMode === "skills" ? "skill_name" : viewMode === "technologies" ? "preferred_label" : "job_title";
   const companyOptions = availableFilters.companies || [];
   const cityOptions = availableFilters.cities || [];
   const regionOptions = availableFilters.regions || [];
@@ -154,6 +106,7 @@ export default function SkillsDashboardPage() {
   const chartRows = filteredRows.slice(0, topN);
 
   const topSkill = topSkills[0] || null;
+  const topTechnology = topTechnologies[0] || null;
   const topJob = topJobs[0] || null;
   const selectedFilterCount = [
     selectedCompany,
@@ -161,7 +114,6 @@ export default function SkillsDashboardPage() {
     selectedRegion,
     selectedSeniority,
   ].filter(Boolean).length;
-  const sourceLabel = dataSource === "json" ? "JSON externo" : "Base de datos";
   const careerTarget = activeFilter?.type === "jobs" ? activeFilter.label : topJob?.job_title;
 
   const kpis = [
@@ -181,9 +133,19 @@ export default function SkillsDashboardPage() {
       detail: `${summary.offers_with_skills_sfia || 0} ofertas con habilidades identificadas`,
     },
     {
+      label: "Tecnologías normalizadas",
+      value: `${formatPct(summary.technologies_onet_coverage_pct)}%`,
+      detail: `${summary.offers_with_technologies_onet || 0} ofertas con tecnologías O*NET`,
+    },
+    {
       label: "Habilidad principal",
       value: topSkill?.skill_name || "Sin datos",
       detail: topSkill ? `${topSkill.demand} ofertas` : "",
+    },
+    {
+      label: "Tecnología principal",
+      value: topTechnology?.preferred_label || "Sin datos",
+      detail: topTechnology ? `${topTechnology.demand} ofertas` : "",
     },
     {
       label: "Perfil principal",
@@ -211,9 +173,11 @@ export default function SkillsDashboardPage() {
     }).length;
     const coveragePct = viewMode === "skills"
       ? Number(summary.skills_sfia_coverage_pct || 0)
-      : Number(summary.job_mapping_coverage_pct || 0);
-    const itemSingular = viewMode === "skills" ? "habilidad" : "perfil";
-    const itemPlural = viewMode === "skills" ? "habilidades" : "perfiles";
+      : viewMode === "technologies"
+        ? Number(summary.technologies_onet_coverage_pct || 0)
+        : Number(summary.job_mapping_coverage_pct || 0);
+    const itemSingular = viewMode === "skills" ? "habilidad" : viewMode === "technologies" ? "tecnología" : "perfil";
+    const itemPlural = viewMode === "skills" ? "habilidades" : viewMode === "technologies" ? "tecnologías" : "perfiles";
     const concentrationLabel = top3Share >= 50 ? "Alta" : top3Share >= 30 ? "Media" : "Distribuida";
 
     return [
@@ -271,47 +235,12 @@ export default function SkillsDashboardPage() {
     setActiveFilter(null);
   };
 
-  const handleDataSourceChange = (nextSource) => {
-    setDataSource(nextSource);
-    setData(null);
-    setError("");
-    setJsonWarnings([]);
-    setActiveFilter(null);
-    resetFilters();
-  };
-
-  const handleJsonUpload = (event) => {
-    const file = event.target.files?.[0] || null;
-    setError("");
-    setJsonWarnings([]);
-    if (!file) {
-      return;
-    }
-    if (!file.name.toLowerCase().endsWith(".json")) {
-      setUploadedJsonFile(null);
-      setError("Solo se aceptan archivos JSON.");
-      return;
-    }
-    setDataSource("json");
-    setData(null);
-    setUploadedJsonFile(file);
-    setActiveFilter(null);
-    resetFilters();
-  };
-
-  const clearUploadedJson = () => {
-    setUploadedJsonFile(null);
-    setData(null);
-    setJsonWarnings([]);
-    setError("");
-  };
-
   if (loading) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center gap-3" style={{ backgroundColor: "var(--parchment)" }}>
         <div className="w-8 h-8 border-2 border-t-transparent rounded-full animate-spin" style={{ borderColor: "var(--ring-warm)", borderTopColor: "transparent" }} />
         <p className="font-sans text-sm" style={{ color: "var(--stone-gray)" }}>
-          {dataSource === "json" ? "Mapeando JSON externo y calculando tendencias..." : "Consultando base de datos de ofertas..."}
+          Consultando base de datos de ofertas...
         </p>
       </div>
     );
@@ -335,109 +264,11 @@ export default function SkillsDashboardPage() {
     <div data-testid="skills-dashboard-page" className="min-h-screen" style={{ backgroundColor: "var(--parchment)" }}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <PageHeader
-          badge={`Fuente: ${sourceLabel}`}
-          title="Habilidades y perfiles más demandados"
+          badge="Fuente: Base de datos"
+          title="Habilidades, tecnologías y perfiles más demandados"
           description={`Análisis de ${summary.filtered_offers || 0} ofertas dentro de una base de ${summary.total_offers || 0}. Filtra, compara y descubre patrones.`}
           actions={careerTarget ? <Link to={`/career?targetRole=${encodeURIComponent(careerTarget)}`} className="nt-button nt-button--primary nt-button--md">Crear plan para {careerTarget}</Link> : null}
         />
-
-        <button onClick={() => setAnalystModeOpen((current) => !current)} className="mb-4 px-3 py-2 rounded-lg text-xs" style={{ backgroundColor: "var(--warm-sand)", color: "var(--charcoal-warm)", fontWeight: 600 }}>{analystModeOpen ? "Ocultar modo analista" : "Abrir modo analista y datos externos"}</button>
-
-        <div className={`${analystModeOpen ? "" : "hidden"} rounded-2xl p-5 mb-8`} style={{ backgroundColor: "var(--ivory)", border: "1px solid var(--border-cream)" }}>
-          <div className="flex flex-col xl:flex-row xl:items-start justify-between gap-5">
-            <div>
-              <p className="font-sans text-[11px] uppercase tracking-wide mb-2" style={{ color: "var(--terracotta)", fontWeight: 700 }}>
-                Base de conocimiento
-              </p>
-              <div className="flex flex-wrap gap-2">
-                {[
-                  { key: "database", label: "Base de datos", icon: Database },
-                  { key: "json", label: "JSON externo", icon: FileText },
-                ].map((item) => {
-                  const Icon = item.icon;
-                  const active = dataSource === item.key;
-                  return (
-                    <button
-                      key={item.key}
-                      onClick={() => handleDataSourceChange(item.key)}
-                      className="px-3 py-2 rounded-lg text-sm font-sans flex items-center gap-2"
-                      style={{
-                        backgroundColor: active ? "var(--near-black)" : "var(--parchment)",
-                        color: active ? "var(--ivory)" : "var(--charcoal-warm)",
-                        border: active ? "1px solid var(--near-black)" : "1px solid var(--border-cream)",
-                        fontWeight: 600,
-                      }}
-                    >
-                      <Icon size={15} />
-                      {item.label}
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-
-            <div className="xl:min-w-[360px]">
-              <div className="flex flex-wrap items-center gap-2 mb-3">
-                <label
-                  className="inline-flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-sans cursor-pointer"
-                  style={{ backgroundColor: "var(--terracotta)", color: "var(--ivory)", fontWeight: 600 }}
-                >
-                  <Upload size={15} />
-                  Subir JSON
-                  <input
-                    type="file"
-                    accept="application/json,.json"
-                    onChange={handleJsonUpload}
-                    className="hidden"
-                  />
-                </label>
-                {uploadedJsonFile && (
-                  <div className="inline-flex min-w-0 items-center gap-2 px-3 py-2 rounded-lg" style={{ backgroundColor: "var(--parchment)", border: "1px solid var(--border-cream)" }}>
-                    <FileText size={14} style={{ color: "var(--terracotta)", flex: "0 0 auto" }} />
-                    <span className="font-sans text-xs truncate max-w-[220px]" style={{ color: "var(--charcoal-warm)", fontWeight: 600 }}>
-                      {uploadedJsonFile.name}
-                    </span>
-                    <button onClick={clearUploadedJson} className="p-0.5 rounded-full" style={{ backgroundColor: "var(--warm-sand)" }}>
-                      <X size={12} style={{ color: "var(--charcoal-warm)" }} />
-                    </button>
-                  </div>
-                )}
-              </div>
-
-              <p className="font-sans text-xs mb-2" style={{ color: "var(--stone-gray)", lineHeight: 1.45 }}>
-                Cada elemento del array JSON debe incluir estos campos:
-              </p>
-              <div className="flex flex-wrap gap-1.5">
-                {requiredFields.map((field) => (
-                  <span key={field} className="px-2 py-1 rounded-md text-[11px] font-sans" style={{ backgroundColor: "var(--parchment)", color: "var(--charcoal-warm)", border: "1px solid var(--border-cream)", fontWeight: 600 }}>
-                    {field}
-                  </span>
-                ))}
-              </div>
-
-              {dataSource === "json" && !uploadedJsonFile && (
-                <p className="font-sans text-xs mt-3" style={{ color: "var(--olive-gray)", lineHeight: 1.45 }}>
-                  Sube un JSON para calcular tendencias sobre una base externa sin modificar las ofertas almacenadas.
-                </p>
-              )}
-            </div>
-          </div>
-
-          {jsonWarnings.length > 0 && (
-            <div className="mt-4 rounded-xl p-3" style={{ backgroundColor: "rgba(201,100,66,0.08)", border: "1px solid rgba(201,100,66,0.16)" }}>
-              <div className="flex items-start gap-2">
-                <AlertCircle size={15} style={{ color: "var(--terracotta)", flex: "0 0 auto", marginTop: 2 }} />
-                <div className="space-y-1">
-                  {jsonWarnings.map((warning) => (
-                    <p key={warning} className="font-sans text-xs m-0" style={{ color: "var(--charcoal-warm)", lineHeight: 1.45 }}>
-                      {warning}
-                    </p>
-                  ))}
-                </div>
-              </div>
-            </div>
-          )}
-        </div>
 
         <MarketKpiGrid items={kpis} />
 
@@ -570,6 +401,7 @@ export default function SkillsDashboardPage() {
                       <div className="flex flex-wrap gap-2">
                         {[
                           { key: "skills", label: "Habilidades", icon: BarChart3 },
+                          { key: "technologies", label: "Tecnologías", icon: Cpu },
                           { key: "jobs", label: "Perfiles", icon: Briefcase },
                         ].map((item) => {
                           const Icon = item.icon;
@@ -720,7 +552,7 @@ export default function SkillsDashboardPage() {
         <MarketChartPanel
           chartKey={`${viewMode}-${chartType}-${metricMode}`}
           events={chartEvents}
-          metricLabel={`${viewMode === "skills" ? "Habilidades" : "Perfiles"} · ${metricLabel}`}
+          metricLabel={`${viewMode === "skills" ? "Habilidades" : viewMode === "technologies" ? "Tecnologías" : "Perfiles"} · ${metricLabel}`}
           option={chartOption}
           resultCount={chartRows.length}
         />

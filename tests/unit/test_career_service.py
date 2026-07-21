@@ -125,6 +125,48 @@ class TestCareerService(unittest.TestCase):
     self.assertEqual(result["readiness"]["by_type"]["soft"]["score"], 100)
     self.assertEqual(result["readiness"]["by_type"]["hard"]["score"], 0)
 
+  def test_builds_separate_technology_gap_and_plan_track(self):
+    result = self.service.use_case_career(
+      profile={"skills": ["AWS"]},
+      target_role="Cloud Engineer",
+      offers=[
+        {
+          "technologies_onet": [
+            {
+              "technology_id": "TECH_AWS",
+              "preferred_label": "Amazon Web Services (AWS)",
+              "raw_evidence": ["AWS"],
+            },
+            {
+              "technology_id": "TECH_TERRAFORM",
+              "preferred_label": "Terraform",
+              "raw_evidence": ["Terraform"],
+            },
+          ],
+        },
+        {
+          "technologies_onet": [
+            {
+              "technology_id": "TECH_AWS",
+              "preferred_label": "Amazon Web Services (AWS)",
+              "raw_evidence": ["AWS"],
+            },
+          ],
+        },
+      ],
+    )
+
+    self.assertEqual(result["readiness"]["by_type"]["technology"]["score"], 67)
+    self.assertEqual(
+      result["strengths_by_type"]["technology"][0]["skill_name"],
+      "Amazon Web Services (AWS)",
+    )
+    self.assertEqual(result["gaps_by_type"]["technology"][0]["skill_name"], "Terraform")
+    technology_track = next(
+      track for track in result["plan"]["tracks"] if track["skill_type"] == "technology"
+    )
+    self.assertIn("Terraform", technology_track["phases"][0]["skills"])
+
 
 if __name__ == "__main__":
   unittest.main()
