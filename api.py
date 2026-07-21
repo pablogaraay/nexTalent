@@ -8,10 +8,12 @@ import uvicorn
 from fastapi import FastAPI, File, Form, Query, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
+from groq import RateLimitError
 
 from config import Config
 from multiagent import run_multiagent_flow
 from multiagent.cv_parser import SUPPORTED_CV_EXTENSIONS
+from multiagent.langgraph_flow import AI_RATE_LIMIT_ERROR_CODE
 
 
 logger = logging.getLogger(__name__)
@@ -28,19 +30,19 @@ app.add_middleware(
 SUPPORTED_CV_LABEL = "PDF o DOCX"
 MAX_CV_BYTES = 100 * 1024 * 1024
 RATE_LIMIT_MESSAGE = (
-  "Se ha alcanzado el límite diario del servicio de IA. "
+  "Se ha alcanzado el límite de uso del servicio de IA. "
   "No se ha podido analizar el CV en este momento. Inténtalo de nuevo más tarde."
 )
 
 
-def is_ai_rate_limit_error(message: str) -> bool:
-  normalized = str(message or "").lower()
-  return (
-    "error code: 429" in normalized
-    or "rate_limit" in normalized
-    or "rate limit" in normalized
-    or "tokens per day" in normalized
-  )
+def ai_rate_limit_response(details: str = "") -> JSONResponse:
+  content = {
+    "error": RATE_LIMIT_MESSAGE,
+    "code": AI_RATE_LIMIT_ERROR_CODE,
+  }
+  if details:
+    content["details"] = details
+  return JSONResponse(status_code=429, content=content)
 
 
 @app.get("/api/health")
@@ -89,29 +91,16 @@ async def search(
     )
     if payload.get("error"):
       error_message = str(payload.get("error") or "")
-      if is_ai_rate_limit_error(error_message):
-        return JSONResponse(
-          status_code=429,
-          content={
-            "error": RATE_LIMIT_MESSAGE,
-            "details": error_message,
-            "code": "ai_rate_limit_exceeded",
-          }
-        )
+      if payload.get("error_code") == AI_RATE_LIMIT_ERROR_CODE:
+        return ai_rate_limit_response(error_message)
       return JSONResponse(status_code=500, content=payload)
 
     return JSONResponse(status_code=200, content=payload)
+  except RateLimitError as exc:
+    logger.warning("Límite de Groq alcanzado ejecutando /api/search")
+    return ai_rate_limit_response(str(exc))
   except Exception as exc:
     logger.exception("Error ejecutando /api/search")
-    if is_ai_rate_limit_error(str(exc)):
-      return JSONResponse(
-        status_code=429,
-        content={
-          "error": RATE_LIMIT_MESSAGE,
-          "details": str(exc),
-          "code": "ai_rate_limit_exceeded",
-        }
-      )
     return JSONResponse(
       status_code=500,
       content={
@@ -171,24 +160,15 @@ async def career_plan(
     })
     if payload.get("error"):
       error_message = str(payload.get("error") or "")
-      if is_ai_rate_limit_error(error_message):
-        return JSONResponse(
-          status_code=429,
-          content={
-            "error": RATE_LIMIT_MESSAGE,
-            "details": error_message,
-            "code": "ai_rate_limit_exceeded",
-          },
-        )
+      if payload.get("error_code") == AI_RATE_LIMIT_ERROR_CODE:
+        return ai_rate_limit_response(error_message)
       return JSONResponse(status_code=500, content=payload)
     return JSONResponse(status_code=200, content=payload)
+  except RateLimitError as exc:
+    logger.warning("Límite de Groq alcanzado ejecutando /api/career-plan")
+    return ai_rate_limit_response(str(exc))
   except Exception as exc:
     logger.exception("Error ejecutando /api/career-plan")
-    if is_ai_rate_limit_error(str(exc)):
-      return JSONResponse(
-        status_code=429,
-        content={"error": RATE_LIMIT_MESSAGE, "details": str(exc), "code": "ai_rate_limit_exceeded"},
-      )
     return JSONResponse(
       status_code=500,
       content={"error": "Falló la generación del plan de carrera.", "details": str(exc)},

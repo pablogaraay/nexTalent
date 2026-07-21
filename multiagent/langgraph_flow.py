@@ -5,6 +5,7 @@ from time import monotonic
 from typing import Any, Dict, List, TypedDict
 from uuid import uuid4
 
+from groq import RateLimitError
 from langgraph.graph import END, StateGraph
 
 from config import Config
@@ -28,11 +29,25 @@ class GraphState(TypedDict, total=False):
   plan: Dict[str, Any]
   result: Dict[str, Any]
   error: str
+  error_code: str
   use_case: str
 
 
 _COMPILED_GRAPH = None
 logger = logging.getLogger(__name__)
+
+AI_RATE_LIMIT_ERROR_CODE = "ai_rate_limit_exceeded"
+INTERNAL_ERROR_CODE = "internal_error"
+
+
+def _error_state(state: GraphState, message: str, exc: Exception, **updates) -> GraphState:
+  error_code = AI_RATE_LIMIT_ERROR_CODE if isinstance(exc, RateLimitError) else INTERNAL_ERROR_CODE
+  return {
+    **state,
+    **updates,
+    "error": f"{message}: {exc}",
+    "error_code": error_code,
+  }
 
 
 def _parse_top_n_param(params: Dict[str, Any], default: int = 10) -> int:
@@ -88,7 +103,7 @@ def build_multiagent_graph():
         }
       return {**state, "offers": [], "use_case": use_case, "total_candidates": total_candidates}
     except Exception as exc:
-      return {**state, "offers": [], "error": f"Error cargando datos desde Mongo: {exc}"}
+      return _error_state(state, "Error cargando datos desde Mongo", exc, offers=[])
 
   def route_after_load(state: GraphState) -> str:
     if state.get("error"):
@@ -113,10 +128,7 @@ def build_multiagent_graph():
         "profile_enrichment_attempted": False,
       }
     except Exception as exc:
-      return {
-        **state,
-        "error": f"Error parseando perfil con LLM: {exc}",
-      }
+      return _error_state(state, "Error parseando perfil con LLM", exc)
 
   def assess_profile_signal_node(state: GraphState) -> GraphState:
     if state.get("error"):
@@ -125,10 +137,7 @@ def build_multiagent_graph():
       signal = profile_service.assess_profile_signal(state.get("profile", {}) or {})
       return {**state, "profile_signal": signal}
     except Exception as exc:
-      return {
-        **state,
-        "error": f"Error evaluando perfil: {exc}",
-      }
+      return _error_state(state, "Error evaluando perfil", exc)
 
   def route_after_profile_assessment(state: GraphState) -> str:
     if state.get("error"):
@@ -206,10 +215,7 @@ def build_multiagent_graph():
       )
       return {**state, "plan": plan, "result": result}
     except Exception as exc:
-      return {
-        **state,
-        "error": f"Error en ranking LLM: {exc}",
-      }
+      return _error_state(state, "Error en ranking LLM", exc)
 
   def insights_node(state: GraphState) -> GraphState:
     if state.get("error"):
@@ -230,10 +236,7 @@ def build_multiagent_graph():
       )
       return {**state, "result": result}
     except Exception as exc:
-      return {
-        **state,
-        "error": f"Error generando insights de mercado: {exc}",
-      }
+      return _error_state(state, "Error generando insights de mercado", exc)
 
   def career_node(state: GraphState) -> GraphState:
     if state.get("error"):
@@ -247,10 +250,7 @@ def build_multiagent_graph():
       )
       return {**state, "result": result}
     except Exception as exc:
-      return {
-        **state,
-        "error": f"Error generando el análisis de brecha y plan de carrera: {exc}",
-      }
+      return _error_state(state, "Error generando el análisis de brecha y plan de carrera", exc)
 
   graph.add_node("load_data", load_data_node)
   graph.add_node("parse_profile", parse_profile_node)
@@ -315,6 +315,7 @@ def run_multiagent_flow(params: Dict[str, Any]) -> Dict[str, Any]:
   return {
     "use_case": use_case,
     "error": state.get("error"),
+    "error_code": state.get("error_code"),
     "result": state.get("result", {}),
     "meta": {"run_id": run_id, "duration_ms": duration_ms},
   }

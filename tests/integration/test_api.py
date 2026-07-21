@@ -94,7 +94,8 @@ class TestApi(unittest.TestCase):
   def test_search_returns_429_when_flow_reports_ai_rate_limit(self, multiagent_flow):
     multiagent_flow.return_value = {
       "use_case": "search",
-      "error": "Error parseando perfil con LLM: Error code: 429 - rate_limit_exceeded on tokens per day",
+      "error": "Error parseando perfil con LLM: provider quota exceeded",
+      "error_code": "ai_rate_limit_exceeded",
       "result": {},
     }
 
@@ -102,13 +103,14 @@ class TestApi(unittest.TestCase):
 
     self.assertEqual(response.status_code, 429)
     self.assertEqual(response.json()["code"], "ai_rate_limit_exceeded")
-    self.assertIn("límite diario", response.json()["error"])
+    self.assertIn("límite de uso", response.json()["error"])
 
   @patch("api.run_multiagent_flow")
   def test_search_returns_500_when_flow_reports_generic_error(self, multiagent_flow):
     multiagent_flow.return_value = {
       "use_case": "search",
       "error": "Error parseando perfil con LLM: schema rejected",
+      "error_code": "internal_error",
       "result": {},
     }
 
@@ -117,11 +119,41 @@ class TestApi(unittest.TestCase):
     self.assertEqual(response.status_code, 500)
     self.assertIn("schema rejected", response.json()["error"])
 
+  @patch("api.run_multiagent_flow")
+  def test_search_does_not_infer_rate_limit_from_error_text(self, multiagent_flow):
+    multiagent_flow.return_value = {
+      "use_case": "search",
+      "error": "Un error interno menciona rate limit sin ser un 429 de Groq",
+      "error_code": "internal_error",
+      "result": {},
+    }
+
+    response = self.client.post("/api/search", data={"profileText": "Data engineer"})
+
+    self.assertEqual(response.status_code, 500)
+
   def test_career_plan_requires_target_role(self):
     response = self.client.post("/api/career-plan", data={"profileText": "Python y SQL"})
 
     self.assertEqual(response.status_code, 400)
     self.assertIn("rol objetivo", response.json()["error"])
+
+  @patch("api.run_multiagent_flow")
+  def test_career_plan_returns_429_when_flow_reports_ai_rate_limit(self, multiagent_flow):
+    multiagent_flow.return_value = {
+      "use_case": "career",
+      "error": "Error generando el plan: provider quota exceeded",
+      "error_code": "ai_rate_limit_exceeded",
+      "result": {},
+    }
+
+    response = self.client.post(
+      "/api/career-plan",
+      data={"targetRole": "Data Engineer", "profileText": "Python y SQL"},
+    )
+
+    self.assertEqual(response.status_code, 429)
+    self.assertEqual(response.json()["code"], "ai_rate_limit_exceeded")
 
   @patch("api.run_multiagent_flow")
   def test_career_plan(self, multiagent_flow):

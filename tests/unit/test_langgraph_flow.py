@@ -1,7 +1,20 @@
 import unittest
 from unittest.mock import patch
 
-from multiagent.langgraph_flow import _parse_top_n_param, build_multiagent_graph
+import httpx
+from groq import RateLimitError
+
+from multiagent.langgraph_flow import _parse_top_n_param, build_multiagent_graph, run_multiagent_flow
+
+
+def build_rate_limit_error():
+  request = httpx.Request("POST", "https://api.groq.com/openai/v1/chat/completions")
+  response = httpx.Response(429, request=request)
+  return RateLimitError(
+    "Error code: 429",
+    response=response,
+    body={"error": {"message": "Rate limit reached"}},
+  )
 
 
 class TestLanggraphFlow(unittest.TestCase):
@@ -25,7 +38,36 @@ class TestLanggraphFlow(unittest.TestCase):
       state = graph.invoke({"params": {"use_case": "search", "profile_text": "Data analyst"}})
 
     self.assertIn("schema rejected", state["error"])
+    self.assertEqual(state["error_code"], "internal_error")
     self.assertNotIn("result", state)
+
+  def test_profile_rate_limit_is_preserved_as_structured_error(self):
+    with patch("multiagent.langgraph_flow.ProfileService") as profile_service_cls, \
+      patch("multiagent.langgraph_flow.SearchService"), \
+      patch("multiagent.langgraph_flow.InsightsService"), \
+      patch("multiagent.langgraph_flow.CareerService"), \
+      patch("multiagent.langgraph_flow.OfferRepository") as offer_repository_cls:
+      offer_repository_cls.return_value.count_mapped_offers.return_value = 1
+      profile_service_cls.return_value.parse_profile.side_effect = build_rate_limit_error()
+
+      graph = build_multiagent_graph()
+      state = graph.invoke({"params": {"use_case": "search", "profile_text": "Data analyst"}})
+
+    self.assertEqual(state["error_code"], "ai_rate_limit_exceeded")
+    self.assertIn("429", state["error"])
+    self.assertNotIn("result", state)
+
+  @patch("multiagent.langgraph_flow.get_multiagent_graph")
+  def test_run_multiagent_flow_exposes_structured_error_code(self, get_graph):
+    get_graph.return_value.invoke.return_value = {
+      "use_case": "search",
+      "error": "Error code: 429",
+      "error_code": "ai_rate_limit_exceeded",
+    }
+
+    payload = run_multiagent_flow({"use_case": "search"})
+
+    self.assertEqual(payload["error_code"], "ai_rate_limit_exceeded")
 
   def test_career_flow_routes_to_skill_gap_and_plan(self):
     with patch("multiagent.langgraph_flow.ProfileService") as profile_service_cls, \
